@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.onedayclass.member.mapper.MemberMapper">
+
+    <select id="existsById" parameterType="string" resultType="boolean">
+        select exists(select 1 from memberList where uId = #{uId})
+    </select>
+
+    <insert id="insert" parameterType="com.example.onedayclass.member.dto.MemberDto">
+        insert into memberList (
+            uId, uPw, uName, uPhone, uZip, uAddr1, uAddr2, uEmail, uLevel, sName, sSns
+        ) values (
+            #{uId}, #{uPw}, #{uName}, #{uPhone}, #{uZip}, #{uAddr1}, #{uAddr2}, #{uEmail}, '1', #{sName}, #{sSns}
+        )
+    </insert>
+
+    <select id="login" resultType="com.example.onedayclass.member.dto.MemberDto">
+        select * from memberList where uId = #{uId} and uPw = #{uPw}
+    </select>
+
+    <select id="findById" parameterType="string" resultType="com.example.onedayclass.member.dto.MemberDto">
+        select * from memberList where uId = #{uId}
+    </select>
+
+    <update id="update" parameterType="com.example.onedayclass.member.dto.MemberDto">
+        update memberList
+        set uPw = #{uPw},
+            uPhone = #{uPhone},
+            uZip = #{uZip},
+            uAddr1 = #{uAddr1},
+            uAddr2 = #{uAddr2},
+            uEmail = #{uEmail}
+        where uId = #{uId}
+    </update>
+
+    <delete id="delete" parameterType="string">
+        delete from memberList where uId = #{uId}
+    </delete>
+
+    <update id="promoteToTeacher">
+        update memberList
+        set uLevel = '2',
+            sName = #{sName},
+            sSns = #{sSns}
+        where uId = #{uId}
+    </update>
+</mapper>

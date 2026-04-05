@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.onedayclass.payment.mapper.PaymentMapper">
+
+    <insert id="insertPaymentInfo" parameterType="com.example.onedayclass.payment.dto.PaymentRequestDto" useGeneratedKeys="true" keyProperty="pNum">
+        insert into paymentInfo (
+            uId, rName, rPhone, rZip, rAddr1, rAddr2, rEmail, totalPrice, totalDeli, totalPay, payDate
+        ) values (
+            #{uId}, #{rName}, #{rPhone}, #{rZip}, #{rAddr1}, #{rAddr2}, #{rEmail}, #{totalPrice}, #{totalDeli}, #{totalPay}, now()
+        )
+    </insert>
+
+    <insert id="insertPaymentComplete" parameterType="com.example.onedayclass.payment.dto.PaymentHistoryDto">
+        insert into payComplete (
+            uId, cNum, cUid, cTitle, pNum, pQty, payDate
+        ) values (
+            #{uId}, #{cNum}, #{cUid}, #{cTitle}, #{pNum}, #{pQty}, now()
+        )
+    </insert>
+
+    <select id="countCart" parameterType="string" resultType="int">
+        select count(*) from cartList where uId = #{uId}
+    </select>
+
+    <select id="existsCart" resultType="boolean">
+        select exists(select 1 from cartList where uId = #{uId} and cNum = #{cNum})
+    </select>
+
+    <insert id="insertCart">
+        insert into cartList(uId, cNum) values (#{uId}, #{cNum})
+    </insert>
+
+    <delete id="deleteCart">
+        delete from cartList where uId = #{uId} and cNum = #{cNum}
+    </delete>
+
+    <select id="findCartItems" parameterType="string" resultType="com.example.onedayclass.payment.dto.CartItemDto">
+        select c.uId,
+               c.cNum,
+               b.cUid,
+               b.cTitle,
+               b.cPrice,
+               b.cDelivery,
+               b.cMaxStu,
+               b.cApplyStu
+        from cartList c
+        join classBBS b on c.cNum = b.cNum
+        where c.uId = #{uId}
+        order by c.cNum desc
+    </select>
+
+    <select id="findStudentPayments" parameterType="string" resultType="com.example.onedayclass.payment.dto.PaymentHistoryDto">
+        select p.pNum,
+               p.uId,
+               p.cNum,
+               p.cUid,
+               p.cTitle,
+               p.pQty,
+               p.payDate,
+               b.cCategory,
+               b.cPrice,
+               b.cDelivery
+        from payComplete p
+        join classBBS b on p.cNum = b.cNum
+        where p.uId = #{uId}
+        order by p.pNum desc
+    </select>
+
+    <select id="findTeacherPayments" parameterType="string" resultType="com.example.onedayclass.payment.dto.PaymentHistoryDto">
+        select p.pNum,
+               p.uId,
+               p.cNum,
+               p.cUid,
+               p.cTitle,
+               p.pQty,
+               p.payDate,
+               i.rEmail
+        from payComplete p
+        join paymentInfo i on p.pNum = i.pNum
+        where p.cUid = #{uId}
+        order by p.pNum desc
+    </select>
+</mapper>

@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.onedayclass.qna.mapper.QnaMapper">
+
+    <select id="findAll" resultType="com.example.onedayclass.qna.dto.QnaDto">
+        select * from qnaBBS
+        where 1 = 1
+        <if test="!includeDeleted">
+            and qStatus &lt; 3
+        </if>
+        <if test="keyword != null and keyword != ''">
+            and ${keyField} like concat('%', #{keyword}, '%')
+        </if>
+        order by qRef desc, qPos asc
+    </select>
+
+    <select id="findByClass" resultType="com.example.onedayclass.qna.dto.QnaDto">
+        select * from qnaBBS
+        where cNum = #{cNum}
+          and qStatus &lt; 3
+        <if test="keyword != null and keyword != ''">
+            and ${keyField} like concat('%', #{keyword}, '%')
+        </if>
+        order by qRef desc, qPos asc
+    </select>
+
+    <select id="findById" parameterType="int" resultType="com.example.onedayclass.qna.dto.QnaDto">
+        select * from qnaBBS where qNum = #{qNum}
+    </select>
+
+    <select id="findNextRef" resultType="int">
+        select coalesce(max(qRef), 0) + 1 from qnaBBS
+    </select>
+
+    <insert id="insert" parameterType="com.example.onedayclass.qna.dto.QnaDto" useGeneratedKeys="true" keyProperty="qNum">
+        insert into qnaBBS (
+            qUid, qTitle, qContent, qRegDate, qPos, qRef, qDepth, qOriUid, qFileName, qFileSize, qStatus, cNum
+        ) values (
+            #{qUid}, #{qTitle}, #{qContent}, now(), #{qPos}, #{qRef}, #{qDepth}, #{qOriUid}, #{qFileName}, #{qFileSize}, #{qStatus}, #{cNum}
+        )
+    </insert>
+
+    <update id="update" parameterType="com.example.onedayclass.qna.dto.QnaDto">
+        update qnaBBS
+        set qTitle = #{qTitle},
+            qContent = #{qContent},
+            qStatus = #{qStatus}
+        where qNum = #{qNum}
+    </update>
+
+    <update id="softDeleteThread" parameterType="int">
+        update qnaBBS set qStatus = 3 where qRef = #{qRef}
+    </update>
+
+    <update id="updateReplyPositions">
+        update qnaBBS
+        set qPos = qPos + 1
+        where qRef = #{qRef}
+          and qPos &gt; #{qPos}
+    </update>
+</mapper>

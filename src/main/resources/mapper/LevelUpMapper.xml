@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.onedayclass.levelup.mapper.LevelUpMapper">
+
+    <select id="findAll" resultType="com.example.onedayclass.levelup.dto.LevelUpDto">
+        select * from levelUpBBS
+        where 1 = 1
+        <if test="admin">
+            and lvlStatus &lt;= 3
+        </if>
+        <if test="!admin">
+            and ((lvlUid = #{uId} and lvlStatus = 1) or lvlOriUid = #{uId})
+        </if>
+        order by lvlRef desc, lvlPos asc
+    </select>
+
+    <select id="findPending" resultType="com.example.onedayclass.levelup.dto.LevelUpDto">
+        select * from levelUpBBS where lvlStatus = 1 order by lvlRef desc, lvlPos asc
+    </select>
+
+    <select id="findById" parameterType="int" resultType="com.example.onedayclass.levelup.dto.LevelUpDto">
+        select * from levelUpBBS where lvlNum = #{lvlNum}
+    </select>
+
+    <select id="findNextRef" resultType="int">
+        select coalesce(max(lvlRef), 0) + 1 from levelUpBBS
+    </select>
+
+    <insert id="insert" parameterType="com.example.onedayclass.levelup.dto.LevelUpDto" useGeneratedKeys="true" keyProperty="lvlNum">
+        insert into levelUpBBS (
+            lvlUid, lvlTitle, lvlContent, lvlName, lvlSns, lvlRegDate, lvlPos, lvlRef, lvlDepth, lvlFileName, lvlFileSize, lvlStatus, lvlOriUid
+        ) values (
+            #{lvlUid}, #{lvlTitle}, #{lvlContent}, #{lvlName}, #{lvlSns}, now(), #{lvlPos}, #{lvlRef}, #{lvlDepth}, #{lvlFileName}, #{lvlFileSize}, #{lvlStatus}, #{lvlOriUid}
+        )
+    </insert>
+
+    <update id="update" parameterType="com.example.onedayclass.levelup.dto.LevelUpDto">
+        update levelUpBBS
+        set lvlTitle = #{lvlTitle},
+            lvlContent = #{lvlContent},
+            lvlName = #{lvlName},
+            lvlSns = #{lvlSns}
+        where lvlNum = #{lvlNum}
+    </update>
+
+    <update id="updateStatus">
+        update levelUpBBS set lvlStatus = #{status} where lvlNum = #{lvlNum}
+    </update>
+
+    <update id="updateReplyPositions">
+        update levelUpBBS
+        set lvlPos = lvlPos + 1
+        where lvlRef = #{lvlRef}
+          and lvlPos &gt; #{lvlPos}
+    </update>
+</mapper>

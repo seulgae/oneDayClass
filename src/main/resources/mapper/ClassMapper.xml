@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.onedayclass.clazz.mapper.ClassMapper">
+
+    <select id="findAll" resultType="com.example.onedayclass.clazz.dto.ClassDto">
+        select *
+        from classBBS
+        where 1 = 1
+        <if test="!includeHidden">
+            and cStatus &lt; 3
+        </if>
+        <if test="onoff != null and onoff != ''">
+            and cOnoff = #{onoff}
+        </if>
+        <if test="category != null and category != ''">
+            and cCategory = #{category}
+        </if>
+        order by cNum desc
+    </select>
+
+    <select id="findFeatured" resultType="com.example.onedayclass.clazz.dto.ClassDto">
+        select *
+        from classBBS
+        where cStatus &lt; 3
+        <if test="onoff != null and onoff != ''">
+            and cOnoff = #{onoff}
+        </if>
+        <if test="category != null and category != ''">
+            and cCategory = #{category}
+        </if>
+        order by cLikes desc, cNum desc
+        limit #{limit}
+    </select>
+
+    <select id="findPending" resultType="com.example.onedayclass.clazz.dto.ClassDto">
+        select * from classBBS where cStatus = 1 order by cNum desc
+    </select>
+
+    <select id="findById" parameterType="int" resultType="com.example.onedayclass.clazz.dto.ClassDto">
+        select * from classBBS where cNum = #{cNum}
+    </select>
+
+    <insert id="insert" parameterType="com.example.onedayclass.clazz.dto.ClassDto" useGeneratedKeys="true" keyProperty="cNum">
+        insert into classBBS (
+            cCode, cTeacher, cUid, cCategory, cTitle, cContent, cRegDate, cPrice, cDelivery,
+            cThumbName, cThumbSize, cFileName, cFileSize, cMaxStu, cApplyStu, cArea, cOnoff, cStatus, cLikes
+        ) values (
+            #{cCode}, #{cTeacher}, #{cUid}, #{cCategory}, #{cTitle}, #{cContent}, now(), #{cPrice}, #{cDelivery},
+            #{cThumbName}, #{cThumbSize}, #{cFileName}, #{cFileSize}, #{cMaxStu}, #{cApplyStu}, #{cArea}, #{cOnoff}, #{cStatus}, #{cLikes}
+        )
+    </insert>
+
+    <update id="update" parameterType="com.example.onedayclass.clazz.dto.ClassDto">
+        update classBBS
+        set cTeacher = #{cTeacher},
+            cCategory = #{cCategory},
+            cTitle = #{cTitle},
+            cContent = #{cContent},
+            cPrice = #{cPrice},
+            cDelivery = #{cDelivery},
+            cMaxStu = #{cMaxStu},
+            cArea = #{cArea},
+            cOnoff = #{cOnoff}
+        where cNum = #{cNum}
+    </update>
+
+    <update id="updateStatus">
+        update classBBS set cStatus = #{status} where cNum = #{cNum}
+    </update>
+
+    <update id="increaseLikes" parameterType="int">
+        update classBBS set cLikes = cLikes + 1 where cNum = #{cNum}
+    </update>
+
+    <select id="existsLike" resultType="boolean">
+        select exists(select 1 from classLikes where uId = #{uId} and cNum = #{cNum})
+    </select>
+
+    <insert id="insertLike">
+        insert into classLikes(uId, cNum) values (#{uId}, #{cNum})
+    </insert>
+
+    <update id="increaseApplyStu">
+        update classBBS set cApplyStu = cApplyStu + #{amount} where cNum = #{cNum}
+    </update>
+</mapper>

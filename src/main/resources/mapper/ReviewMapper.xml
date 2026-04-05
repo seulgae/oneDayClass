@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.onedayclass.review.mapper.ReviewMapper">
+
+    <select id="findAll" resultType="com.example.onedayclass.review.dto.ReviewDto">
+        select * from reviewBBS
+        <if test="!includeDeleted">
+            where rStatus = 2
+        </if>
+        order by rNum desc
+    </select>
+
+    <select id="findByClass" parameterType="int" resultType="com.example.onedayclass.review.dto.ReviewDto">
+        select * from reviewBBS where cNum = #{cNum} and rStatus = 2 order by rNum desc
+    </select>
+
+    <select id="findRecent" parameterType="int" resultType="com.example.onedayclass.review.dto.ReviewDto">
+        select * from reviewBBS where rStatus = 2 order by rRegDate desc, rNum desc limit #{limit}
+    </select>
+
+    <select id="findById" parameterType="int" resultType="com.example.onedayclass.review.dto.ReviewDto">
+        select * from reviewBBS where rNum = #{rNum}
+    </select>
+
+    <insert id="insert" parameterType="com.example.onedayclass.review.dto.ReviewDto" useGeneratedKeys="true" keyProperty="rNum">
+        insert into reviewBBS (
+            rUid, rTitle, rContent, rCnt, rLikes, rRegDate, rFileName, rFileSize, rStatus, cNum
+        ) values (
+            #{rUid}, #{rTitle}, #{rContent}, 0, 0, now(), #{rFileName}, #{rFileSize}, #{rStatus}, #{cNum}
+        )
+    </insert>
+
+    <update id="update" parameterType="com.example.onedayclass.review.dto.ReviewDto">
+        update reviewBBS
+        set rTitle = #{rTitle},
+            rContent = #{rContent}
+        where rNum = #{rNum}
+    </update>
+
+    <update id="increaseReadCount" parameterType="int">
+        update reviewBBS set rCnt = rCnt + 1 where rNum = #{rNum}
+    </update>
+
+    <update id="updateStatus">
+        update reviewBBS set rStatus = #{status} where rNum = #{rNum}
+    </update>
+
+    <select id="existsLike" resultType="boolean">
+        select exists(select 1 from reviewLikes where uId = #{uId} and rNum = #{rNum})
+    </select>
+
+    <insert id="insertLike">
+        insert into reviewLikes(uId, rNum) values (#{uId}, #{rNum})
+    </insert>
+
+    <update id="increaseLikes" parameterType="int">
+        update reviewBBS set rLikes = rLikes + 1 where rNum = #{rNum}
+    </update>
+</mapper>
