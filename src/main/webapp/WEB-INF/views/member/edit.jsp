@@ -32,7 +32,7 @@
                 </label>
                 <label class="field-block">
                     <span class="field-label">비밀번호 <span class="required-mark">*</span></span>
-                    <input type="password" id="editPassword" name="uPw" value="${memberDto.UPw}" required pattern="^(?=.*[A-Za-z])(?=.*[0-9])(?=.*[!@#$%^&*()_+\-={}\[\]:;,.?/]).{8,20}$" title="비밀번호는 영문, 숫자, 특수문자를 포함한 8~20자입니다." autocomplete="new-password">
+                    <input type="password" id="editPassword" name="uPw" required pattern="^(?=.*[A-Za-z])(?=.*[0-9])(?=.*[!@#$%^&*()_+\-={}\[\]:;,.?/]).{8,20}$" title="비밀번호는 영문, 숫자, 특수문자를 포함한 8~20자입니다." autocomplete="new-password">
                 </label>
                 <label class="field-block">
                     <span class="field-label">비밀번호 확인 <span class="required-mark">*</span></span>

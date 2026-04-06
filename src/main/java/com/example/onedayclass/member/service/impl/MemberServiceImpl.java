@@ -3,15 +3,18 @@ package com.example.onedayclass.member.service.impl;
 import com.example.onedayclass.member.dto.MemberDto;
 import com.example.onedayclass.member.mapper.MemberMapper;
 import com.example.onedayclass.member.service.MemberService;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
 public class MemberServiceImpl implements MemberService {
 
     private final MemberMapper memberMapper;
+    private final PasswordEncoder passwordEncoder;
 
-    public MemberServiceImpl(MemberMapper memberMapper) {
+    public MemberServiceImpl(MemberMapper memberMapper, PasswordEncoder passwordEncoder) {
         this.memberMapper = memberMapper;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
@@ -27,12 +30,17 @@ public class MemberServiceImpl implements MemberService {
             memberDto.setSName(null);
             memberDto.setSSns(null);
         }
+        memberDto.setUPw(passwordEncoder.encode(memberDto.getUPw()));
         return memberMapper.insert(memberDto) > 0;
     }
 
     @Override
     public MemberDto login(String uId, String uPw) {
-        return memberMapper.login(uId, uPw);
+        MemberDto member = memberMapper.findById(uId);
+        if (member == null || !passwordEncoder.matches(uPw, member.getUPw())) {
+            return null;
+        }
+        return member;
     }
 
     @Override
@@ -42,6 +50,7 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     public boolean update(MemberDto memberDto) {
+        memberDto.setUPw(passwordEncoder.encode(memberDto.getUPw()));
         return memberMapper.update(memberDto) > 0;
     }
 
