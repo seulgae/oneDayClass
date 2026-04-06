@@ -3,20 +3,20 @@
 <jsp:include page="../include/header.jsp" />
 <section class="two-column">
     <article class="panel">
-        <h2>Pending Classes</h2>
+        <h2>승인 대기 클래스</h2>
         <c:forEach var="item" items="${pendingClasses}">
             <div class="list-link">
                 ${item.CTitle}<em>${item.CUid}</em>
                 <form method="post" action="/admin/classes/${item.CNum}/approve" class="inline-form">
-                    <button type="submit">Approve</button>
+                    <button type="submit">승인</button>
                 </form>
             </div>
         </c:forEach>
     </article>
     <article class="panel">
-        <h2>Pending Level Up</h2>
+        <h2>등업 신청 대기</h2>
         <c:forEach var="item" items="${pendingLevelUps}">
-            <a class="list-link" href="/levelups/${item.LvlNum}">${item.LvlTitle}<em>${item.LvlUid}</em></a>
+            <a class="list-link" href="/levelups/${item.lvlNum}">${item.lvlTitle}<em>${item.lvlUid}</em></a>
         </c:forEach>
     </article>
 </section>
@@ -28,7 +28,7 @@
         </c:forEach>
     </article>
     <article class="panel">
-        <h2>Reviews</h2>
+        <h2>후기</h2>
         <c:forEach var="item" items="${reviews}">
             <a class="list-link" href="/reviews/${item.RNum}">${item.RTitle}<em>${item.RUid}</em></a>
         </c:forEach>

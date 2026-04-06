@@ -1,0 +1,130 @@
+CREATE TABLE IF NOT EXISTS memberList (
+    uId VARCHAR(50) PRIMARY KEY,
+    uPw VARCHAR(100) NOT NULL,
+    uName VARCHAR(100) NOT NULL,
+    uPhone VARCHAR(30),
+    uZip VARCHAR(20),
+    uAddr1 VARCHAR(255),
+    uAddr2 VARCHAR(255),
+    uEmail VARCHAR(255),
+    uLevel VARCHAR(10) DEFAULT '1',
+    sName VARCHAR(100),
+    sSns VARCHAR(255)
+);
+
+CREATE TABLE IF NOT EXISTS classBBS (
+    cNum INT AUTO_INCREMENT PRIMARY KEY,
+    cCode VARCHAR(100) NOT NULL,
+    cTeacher VARCHAR(100),
+    cUid VARCHAR(50) NOT NULL,
+    cCategory VARCHAR(100),
+    cTitle VARCHAR(255) NOT NULL,
+    cContent CLOB,
+    cRegDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    cPrice INT DEFAULT 0,
+    cDelivery INT DEFAULT 0,
+    cThumbName VARCHAR(255),
+    cThumbSize INT,
+    cFileName VARCHAR(255),
+    cFileSize INT,
+    cMaxStu INT DEFAULT 0,
+    cApplyStu INT DEFAULT 0,
+    cArea VARCHAR(100),
+    cOnoff VARCHAR(10),
+    cStatus INT DEFAULT 1,
+    cLikes INT DEFAULT 0
+);
+
+CREATE TABLE IF NOT EXISTS classLikes (
+    likeNum INT AUTO_INCREMENT PRIMARY KEY,
+    uId VARCHAR(50) NOT NULL,
+    cNum INT NOT NULL,
+    CONSTRAINT uk_classLikes UNIQUE (uId, cNum)
+);
+
+CREATE TABLE IF NOT EXISTS levelUpBBS (
+    lvlNum INT AUTO_INCREMENT PRIMARY KEY,
+    lvlUid VARCHAR(50) NOT NULL,
+    lvlTitle VARCHAR(255) NOT NULL,
+    lvlContent CLOB,
+    lvlName VARCHAR(100),
+    lvlSns VARCHAR(255),
+    lvlRegDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    lvlPos INT DEFAULT 0,
+    lvlRef INT DEFAULT 0,
+    lvlDepth INT DEFAULT 0,
+    lvlFileName VARCHAR(255),
+    lvlFileSize INT,
+    lvlStatus INT DEFAULT 1,
+    lvlOriUid VARCHAR(50)
+);
+
+CREATE TABLE IF NOT EXISTS qnaBBS (
+    qNum INT AUTO_INCREMENT PRIMARY KEY,
+    qUid VARCHAR(50) NOT NULL,
+    qTitle VARCHAR(255) NOT NULL,
+    qContent CLOB,
+    qRegDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    qPos INT DEFAULT 0,
+    qRef INT DEFAULT 0,
+    qDepth INT DEFAULT 0,
+    qOriUid VARCHAR(50),
+    qFileName VARCHAR(255),
+    qFileSize INT,
+    qStatus INT DEFAULT 1,
+    cNum INT
+);
+
+CREATE TABLE IF NOT EXISTS reviewBBS (
+    rNum INT AUTO_INCREMENT PRIMARY KEY,
+    rUid VARCHAR(50) NOT NULL,
+    rTitle VARCHAR(255) NOT NULL,
+    rContent CLOB,
+    rCnt INT DEFAULT 0,
+    rLikes INT DEFAULT 0,
+    rRegDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    rFileName VARCHAR(255),
+    rFileSize INT,
+    rStatus INT DEFAULT 2,
+    cNum INT
+);
+
+CREATE TABLE IF NOT EXISTS reviewLikes (
+    likeNum INT AUTO_INCREMENT PRIMARY KEY,
+    uId VARCHAR(50) NOT NULL,
+    rNum INT NOT NULL,
+    CONSTRAINT uk_reviewLikes UNIQUE (uId, rNum)
+);
+
+CREATE TABLE IF NOT EXISTS paymentInfo (
+    pNum INT AUTO_INCREMENT PRIMARY KEY,
+    uId VARCHAR(50) NOT NULL,
+    rName VARCHAR(100) NOT NULL,
+    rPhone VARCHAR(30),
+    rZip VARCHAR(20),
+    rAddr1 VARCHAR(255),
+    rAddr2 VARCHAR(255),
+    rEmail VARCHAR(255),
+    totalPrice INT DEFAULT 0,
+    totalDeli INT DEFAULT 0,
+    totalPay INT DEFAULT 0,
+    payDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS payComplete (
+    pcNum INT AUTO_INCREMENT PRIMARY KEY,
+    uId VARCHAR(50) NOT NULL,
+    cNum INT NOT NULL,
+    cUid VARCHAR(50) NOT NULL,
+    cTitle VARCHAR(255) NOT NULL,
+    pNum INT NOT NULL,
+    pQty INT DEFAULT 1,
+    payDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS cartList (
+    cartNum INT AUTO_INCREMENT PRIMARY KEY,
+    uId VARCHAR(50) NOT NULL,
+    cNum INT NOT NULL,
+    CONSTRAINT uk_cartList UNIQUE (uId, cNum)
+);

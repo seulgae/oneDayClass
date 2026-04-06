@@ -2,16 +2,16 @@
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <jsp:include page="../include/header.jsp" />
 <section class="panel">
-    <div class="section-head"><h2>Level Up Board</h2><a class="btn" href="/levelups/new">New request</a></div>
+    <div class="section-head"><h2>등업 신청 게시판</h2><a class="btn" href="/levelups/new">신청하기</a></div>
     <table class="table">
-        <thead><tr><th>No</th><th>Title</th><th>Writer</th><th>Status</th></tr></thead>
+        <thead><tr><th>번호</th><th>제목</th><th>작성자</th><th>상태</th></tr></thead>
         <tbody>
         <c:forEach var="item" items="${requests}">
             <tr>
-                <td>${item.LvlNum}</td>
-                <td><a href="/levelups/${item.LvlNum}">${item.LvlTitle}</a></td>
-                <td>${item.LvlUid}</td>
-                <td>${item.LvlStatus}</td>
+                <td>${item.lvlNum}</td>
+                <td><a href="/levelups/${item.lvlNum}">${item.lvlTitle}</a></td>
+                <td>${item.lvlUid}</td>
+                <td>${item.lvlStatus}</td>
             </tr>
         </c:forEach>
         </tbody>

@@ -2,9 +2,9 @@
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <jsp:include page="../include/header.jsp" />
 <section class="panel">
-    <div class="section-head"><h2>QnA Board</h2><a class="btn" href="/qna/new">New question</a></div>
+    <div class="section-head"><h2>QnA 게시판</h2><a class="btn" href="/qna/new">문의하기</a></div>
     <table class="table">
-        <thead><tr><th>No</th><th>Title</th><th>Writer</th><th>Status</th><th>Date</th></tr></thead>
+        <thead><tr><th>번호</th><th>제목</th><th>작성자</th><th>상태</th><th>작성일</th></tr></thead>
         <tbody>
         <c:forEach var="item" items="${questions}">
             <tr>

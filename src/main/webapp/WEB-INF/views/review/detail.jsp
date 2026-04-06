@@ -1,13 +1,13 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <jsp:include page="../include/header.jsp" />
 <section class="panel detail">
-    <div class="section-head"><h2>${review.RTitle}</h2><a class="btn secondary" href="/reviews">Back</a></div>
-    <dl><dt>Writer</dt><dd>${review.RUid}</dd></dl>
-    <dl><dt>Stats</dt><dd>read ${review.RCnt} / likes ${review.RLikes}</dd></dl>
-    <dl><dt>Content</dt><dd>${review.RContent}</dd></dl>
+    <div class="section-head"><h2>${review.RTitle}</h2><a class="btn secondary" href="/reviews">목록으로</a></div>
+    <dl><dt>작성자</dt><dd>${review.RUid}</dd></dl>
+    <dl><dt>통계</dt><dd>조회 ${review.RCnt} / 좋아요 ${review.RLikes}</dd></dl>
+    <dl><dt>내용</dt><dd>${review.RContent}</dd></dl>
     <div class="actions">
-        <form method="post" action="/reviews/${review.RNum}/like" class="inline-form"><button type="submit">Like</button></form>
-        <form method="post" action="/reviews/${review.RNum}/delete" class="inline-form"><button type="submit">Delete</button></form>
+        <form method="post" action="/reviews/${review.RNum}/like" class="inline-form"><button type="submit">좋아요</button></form>
+        <form method="post" action="/reviews/${review.RNum}/delete" class="inline-form"><button type="submit">삭제</button></form>
     </div>
 </section>
 <jsp:include page="../include/footer.jsp" />

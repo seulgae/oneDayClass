@@ -3,13 +3,13 @@
 <jsp:include page="../include/header.jsp" />
 <section class="two-column">
     <article class="panel">
-        <h2>Student Payments</h2>
+        <h2>내 결제내역</h2>
         <c:forEach var="item" items="${studentPayments}">
-            <div class="list-link">${item.CTitle}<em>${item.PayDate} / ${item.CPrice}</em></div>
+            <div class="list-link">${item.CTitle}<em>${item.payDate} / ${item.CPrice}</em></div>
         </c:forEach>
     </article>
     <article class="panel">
-        <h2>Teacher Sales</h2>
+        <h2>판매내역</h2>
         <c:forEach var="item" items="${teacherPayments}">
             <div class="list-link">${item.CTitle}<em>${item.UId} / ${item.REmail}</em></div>
         </c:forEach>
