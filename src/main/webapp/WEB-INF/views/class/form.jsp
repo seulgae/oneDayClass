@@ -7,7 +7,7 @@
     <c:if test="${classDto.CNum != null}">
         <c:url var="formAction" value="/classes/${classDto.CNum}/edit" />
     </c:if>
-    <form method="post" action="${formAction}">
+    <form method="post" action="${formAction}" enctype="multipart/form-data">
         <div class="form-grid">
             <input type="text" name="cTeacher" value="${classDto.CTeacher}" placeholder="강사명">
             <input type="text" name="cCategory" value="${classDto.CCategory}" placeholder="카테고리">
@@ -20,6 +20,22 @@
             <input type="number" name="cDelivery" value="${classDto.CDelivery}" placeholder="배송비">
             <input type="number" name="cMaxStu" value="${classDto.CMaxStu}" placeholder="최대 수강 인원">
             <input type="text" name="cArea" value="${classDto.CArea}" placeholder="지역">
+        </div>
+        <div class="form-grid">
+            <div class="file-field">
+                <label for="thumbnailImage">썸네일 이미지</label>
+                <input id="thumbnailImage" type="file" name="thumbnailImage" accept="image/*">
+                <c:if test="${not empty classDto.CThumbName}">
+                    <img class="form-preview" src="/uploads/classes/${classDto.CThumbName}" alt="썸네일 미리보기">
+                </c:if>
+            </div>
+            <div class="file-field">
+                <label for="detailImage">소개 이미지</label>
+                <input id="detailImage" type="file" name="detailImage" accept="image/*">
+                <c:if test="${not empty classDto.CFileName}">
+                    <img class="form-preview" src="/uploads/classes/${classDto.CFileName}" alt="소개 이미지 미리보기">
+                </c:if>
+            </div>
         </div>
         <textarea name="cContent" placeholder="클래스 소개">${classDto.CContent}</textarea>
         <button type="submit">저장</button>

@@ -6,11 +6,14 @@
         <div class="form-grid">
             <input type="text" name="rName" placeholder="받는 분 이름" required>
             <input type="text" name="rPhone" placeholder="받는 분 연락처" required>
-            <input type="text" name="rZip" placeholder="우편번호">
+            <div class="zip-field">
+                <input type="text" id="rZip" name="rZip" placeholder="우편번호" readonly>
+                <button type="button" class="btn secondary" onclick="openPostcode('rZip', 'rAddr1', 'rAddr2')">주소찾기</button>
+            </div>
             <input type="email" name="rEmail" placeholder="이메일">
         </div>
-        <input type="text" name="rAddr1" placeholder="기본주소">
-        <input type="text" name="rAddr2" placeholder="상세주소">
+        <input type="text" id="rAddr1" name="rAddr1" placeholder="기본주소" readonly>
+        <input type="text" id="rAddr2" name="rAddr2" placeholder="상세주소">
         <div class="form-grid">
             <input type="number" name="totalPrice" placeholder="상품 금액" required>
             <input type="number" name="totalDeli" placeholder="배송비 합계" required>
@@ -19,4 +22,16 @@
         <button type="submit">결제 완료</button>
     </form>
 </section>
+<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+<script>
+    function openPostcode(zipId, addr1Id, addr2Id) {
+        new daum.Postcode({
+            oncomplete: function(data) {
+                document.getElementById(zipId).value = data.zonecode;
+                document.getElementById(addr1Id).value = data.roadAddress || data.jibunAddress;
+                document.getElementById(addr2Id).focus();
+            }
+        }).open();
+    }
+</script>
 <jsp:include page="../include/footer.jsp" />

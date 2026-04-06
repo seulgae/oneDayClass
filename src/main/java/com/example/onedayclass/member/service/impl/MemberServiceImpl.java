@@ -21,6 +21,12 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     public boolean register(MemberDto memberDto) {
+        String userLevel = "2".equals(memberDto.getULevel()) ? "2" : "1";
+        memberDto.setULevel(userLevel);
+        if (!"2".equals(userLevel)) {
+            memberDto.setSName(null);
+            memberDto.setSSns(null);
+        }
         return memberMapper.insert(memberDto) > 0;
     }
 

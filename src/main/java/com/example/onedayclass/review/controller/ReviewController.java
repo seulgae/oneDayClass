@@ -24,9 +24,9 @@ public class ReviewController {
     }
 
     @GetMapping
-    public String list(HttpSession session, Model model) {
+    public String list(@RequestParam(defaultValue = "1") int page, HttpSession session, Model model) {
         MemberDto loginMember = (MemberDto) session.getAttribute("loginMember");
-        model.addAttribute("reviews", reviewService.getReviews(loginMember == null ? null : loginMember.getUId()));
+        model.addAttribute("reviewPage", reviewService.getReviewsPage(loginMember == null ? null : loginMember.getUId(), page, 12));
         return "review/list";
     }
 

@@ -1,5 +1,7 @@
 package com.example.onedayclass.levelup.service.impl;
 
+import com.example.onedayclass.common.paging.PageResult;
+import com.example.onedayclass.common.paging.PagingUtils;
 import com.example.onedayclass.levelup.dto.LevelUpDto;
 import com.example.onedayclass.levelup.mapper.LevelUpMapper;
 import com.example.onedayclass.levelup.service.LevelUpService;
@@ -23,6 +25,11 @@ public class LevelUpServiceImpl implements LevelUpService {
     @Override
     public List<LevelUpDto> getRequests(String uId, boolean admin) {
         return levelUpMapper.findAll(uId, admin);
+    }
+
+    @Override
+    public PageResult<LevelUpDto> getRequestsPage(String uId, boolean admin, int page, int pageSize) {
+        return PagingUtils.slice(levelUpMapper.findAll(uId, admin), page, pageSize);
     }
 
     @Override

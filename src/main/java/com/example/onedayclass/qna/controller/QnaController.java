@@ -25,10 +25,13 @@ public class QnaController {
     @GetMapping
     public String list(@RequestParam(required = false, defaultValue = "qTitle") String keyField,
                        @RequestParam(required = false) String keyword,
+                       @RequestParam(defaultValue = "1") int page,
                        HttpSession session,
                        Model model) {
         MemberDto loginMember = (MemberDto) session.getAttribute("loginMember");
-        model.addAttribute("questions", qnaService.getQuestions(keyField, keyword, loginMember == null ? null : loginMember.getUId()));
+        model.addAttribute("questionPage", qnaService.getQuestionsPage(keyField, keyword, loginMember == null ? null : loginMember.getUId(), page, 10));
+        model.addAttribute("selectedKeyField", keyField);
+        model.addAttribute("keyword", keyword);
         return "qna/list";
     }
 

@@ -59,6 +59,10 @@
             cContent = #{cContent},
             cPrice = #{cPrice},
             cDelivery = #{cDelivery},
+            cThumbName = #{cThumbName},
+            cThumbSize = #{cThumbSize},
+            cFileName = #{cFileName},
+            cFileSize = #{cFileSize},
             cMaxStu = #{cMaxStu},
             cArea = #{cArea},
             cOnoff = #{cOnoff}

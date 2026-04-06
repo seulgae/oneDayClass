@@ -1,5 +1,7 @@
 package com.example.onedayclass.review.service.impl;
 
+import com.example.onedayclass.common.paging.PageResult;
+import com.example.onedayclass.common.paging.PagingUtils;
 import com.example.onedayclass.review.dto.ReviewDto;
 import com.example.onedayclass.review.mapper.ReviewMapper;
 import com.example.onedayclass.review.service.ReviewService;
@@ -20,6 +22,11 @@ public class ReviewServiceImpl implements ReviewService {
     @Override
     public List<ReviewDto> getReviews(String viewerId) {
         return reviewMapper.findAll("admin".equals(viewerId));
+    }
+
+    @Override
+    public PageResult<ReviewDto> getReviewsPage(String viewerId, int page, int pageSize) {
+        return PagingUtils.slice(reviewMapper.findAll("admin".equals(viewerId)), page, pageSize);
     }
 
     @Override

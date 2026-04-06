@@ -13,13 +13,27 @@
         <button type="submit">검색</button>
     </form>
     <div class="card-grid">
-        <c:forEach var="item" items="${classes}">
+        <c:forEach var="item" items="${classPage.items}">
             <a class="card" href="/classes/${item.CNum}">
+                <c:if test="${not empty item.CThumbName}">
+                    <img class="card-thumb" src="/uploads/classes/${item.CThumbName}" alt="${item.CTitle}">
+                </c:if>
                 <strong>${item.CTitle}</strong>
                 <span>${item.CTeacher}</span>
                 <span>${item.CCategory} / ${item.CPrice}원 / 좋아요 ${item.CLikes}</span>
             </a>
         </c:forEach>
+    </div>
+    <div class="pagination">
+        <c:if test="${classPage.hasPrevious}">
+            <a href="/classes?page=${classPage.startPage - 1}&category=${selectedCategory}&onoff=${selectedOnOff}">이전</a>
+        </c:if>
+        <c:forEach begin="${classPage.startPage}" end="${classPage.endPage}" var="pageNum">
+            <a class="${pageNum == classPage.currentPage ? 'active' : ''}" href="/classes?page=${pageNum}&category=${selectedCategory}&onoff=${selectedOnOff}">${pageNum}</a>
+        </c:forEach>
+        <c:if test="${classPage.hasNext}">
+            <a href="/classes?page=${classPage.endPage + 1}&category=${selectedCategory}&onoff=${selectedOnOff}">다음</a>
+        </c:if>
     </div>
 </section>
 <jsp:include page="../include/footer.jsp" />

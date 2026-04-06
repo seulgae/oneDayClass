@@ -1,11 +1,14 @@
 package com.example.onedayclass.clazz.service;
 
 import com.example.onedayclass.clazz.dto.ClassDto;
+import com.example.onedayclass.common.paging.PageResult;
 
 import java.util.List;
 
 public interface ClassService {
     List<ClassDto> getClasses(String category, String onoff, boolean includeHidden);
+
+    PageResult<ClassDto> getClassesPage(String category, String onoff, boolean includeHidden, int page, int pageSize);
 
     List<ClassDto> getFeaturedClasses(String category, String onoff, int limit);
 

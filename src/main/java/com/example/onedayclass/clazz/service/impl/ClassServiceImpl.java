@@ -3,6 +3,8 @@ package com.example.onedayclass.clazz.service.impl;
 import com.example.onedayclass.clazz.dto.ClassDto;
 import com.example.onedayclass.clazz.mapper.ClassMapper;
 import com.example.onedayclass.clazz.service.ClassService;
+import com.example.onedayclass.common.paging.PageResult;
+import com.example.onedayclass.common.paging.PagingUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -20,6 +22,11 @@ public class ClassServiceImpl implements ClassService {
     @Override
     public List<ClassDto> getClasses(String category, String onoff, boolean includeHidden) {
         return classMapper.findAll(category, onoff, includeHidden);
+    }
+
+    @Override
+    public PageResult<ClassDto> getClassesPage(String category, String onoff, boolean includeHidden, int page, int pageSize) {
+        return PagingUtils.slice(classMapper.findAll(category, onoff, includeHidden), page, pageSize);
     }
 
     @Override

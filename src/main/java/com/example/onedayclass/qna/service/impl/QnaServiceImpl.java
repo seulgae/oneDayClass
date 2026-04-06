@@ -1,5 +1,7 @@
 package com.example.onedayclass.qna.service.impl;
 
+import com.example.onedayclass.common.paging.PageResult;
+import com.example.onedayclass.common.paging.PagingUtils;
 import com.example.onedayclass.qna.dto.QnaDto;
 import com.example.onedayclass.qna.mapper.QnaMapper;
 import com.example.onedayclass.qna.service.QnaService;
@@ -20,6 +22,15 @@ public class QnaServiceImpl implements QnaService {
     @Override
     public List<QnaDto> getQuestions(String keyField, String keyword, String viewerId) {
         return qnaMapper.findAll(keyword, normalizeField(keyField), "admin".equals(viewerId));
+    }
+
+    @Override
+    public PageResult<QnaDto> getQuestionsPage(String keyField, String keyword, String viewerId, int page, int pageSize) {
+        return PagingUtils.slice(
+                qnaMapper.findAll(keyword, normalizeField(keyField), "admin".equals(viewerId)),
+                page,
+                pageSize
+        );
     }
 
     @Override

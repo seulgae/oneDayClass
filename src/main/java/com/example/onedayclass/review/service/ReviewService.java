@@ -1,11 +1,14 @@
 package com.example.onedayclass.review.service;
 
+import com.example.onedayclass.common.paging.PageResult;
 import com.example.onedayclass.review.dto.ReviewDto;
 
 import java.util.List;
 
 public interface ReviewService {
     List<ReviewDto> getReviews(String viewerId);
+
+    PageResult<ReviewDto> getReviewsPage(String viewerId, int page, int pageSize);
 
     List<ReviewDto> getClassReviews(int cNum, String viewerId);
 

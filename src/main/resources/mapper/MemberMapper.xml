@@ -11,7 +11,7 @@
         insert into memberList (
             uId, uPw, uName, uPhone, uZip, uAddr1, uAddr2, uEmail, uLevel, sName, sSns
         ) values (
-            #{uId}, #{uPw}, #{uName}, #{uPhone}, #{uZip}, #{uAddr1}, #{uAddr2}, #{uEmail}, '1', #{sName}, #{sSns}
+            #{uId}, #{uPw}, #{uName}, #{uPhone}, #{uZip}, #{uAddr1}, #{uAddr2}, #{uEmail}, #{uLevel}, #{sName}, #{sSns}
         )
     </insert>
 

@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 @RequestMapping("/levelups")
@@ -22,10 +23,10 @@ public class LevelUpController {
     }
 
     @GetMapping
-    public String list(HttpSession session, Model model) {
+    public String list(@RequestParam(defaultValue = "1") int page, HttpSession session, Model model) {
         MemberDto loginMember = (MemberDto) session.getAttribute("loginMember");
         boolean admin = loginMember != null && "3".equals(loginMember.getULevel());
-        model.addAttribute("requests", levelUpService.getRequests(loginMember == null ? null : loginMember.getUId(), admin));
+        model.addAttribute("requestPage", levelUpService.getRequestsPage(loginMember == null ? null : loginMember.getUId(), admin, page, 10));
         return "levelup/list";
     }
 

@@ -7,6 +7,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
+import java.util.List;
+
 @Controller
 public class HomeController {
 
@@ -22,10 +24,14 @@ public class HomeController {
 
     @GetMapping("/")
     public String home(Model model) {
-        model.addAttribute("featuredClasses", classService.getFeaturedClasses(null, "N", 6));
-        model.addAttribute("offlineClasses", classService.getFeaturedClasses(null, "Y", 6));
-        model.addAttribute("latestReviews", reviewService.getRecentReviews(5));
-        model.addAttribute("pendingLevelUps", levelUpService.getPendingRequests());
+        model.addAttribute("featuredClasses", classService.getFeaturedClasses(null, "N", 12));
+        model.addAttribute("offlineClasses", classService.getFeaturedClasses(null, "Y", 12));
+        model.addAttribute("latestReviews", reviewService.getRecentReviews(3));
+        model.addAttribute("pendingLevelUps", limit(levelUpService.getPendingRequests(), 3));
         return "home";
+    }
+
+    private <T> List<T> limit(List<T> items, int size) {
+        return items.stream().limit(size).toList();
     }
 }
