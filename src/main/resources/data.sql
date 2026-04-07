@@ -1,5 +1,13 @@
 INSERT INTO memberList (uId, uPw, uName, uPhone, uZip, uAddr1, uAddr2, uEmail, uLevel, sName, sSns)
-SELECT 'admin', 'admin1234', 'Admin', '010-0000-0000', '00000', 'Seoul Gangnam', 'Admin Room', 'admin@oneday.local', '3', NULL, NULL
+SELECT 'user', '1234', 'Default User', '010-1234-1000', '00001', 'Seoul', 'User Room', 'user@oneday.local', '1', NULL, NULL
+WHERE NOT EXISTS (SELECT 1 FROM memberList WHERE uId = 'user');
+
+INSERT INTO memberList (uId, uPw, uName, uPhone, uZip, uAddr1, uAddr2, uEmail, uLevel, sName, sSns)
+SELECT 'manager', '1234', 'Default Manager', '010-1234-2000', '00002', 'Seoul', 'Manager Room', 'manager@oneday.local', '2', 'Manager Studio', '@manager'
+WHERE NOT EXISTS (SELECT 1 FROM memberList WHERE uId = 'manager');
+
+INSERT INTO memberList (uId, uPw, uName, uPhone, uZip, uAddr1, uAddr2, uEmail, uLevel, sName, sSns)
+SELECT 'admin', '1234', 'Admin', '010-0000-0000', '00000', 'Seoul Gangnam', 'Admin Room', 'admin@oneday.local', '3', NULL, NULL
 WHERE NOT EXISTS (SELECT 1 FROM memberList WHERE uId = 'admin');
 
 INSERT INTO memberList (uId, uPw, uName, uPhone, uZip, uAddr1, uAddr2, uEmail, uLevel, sName, sSns)
