@@ -12,7 +12,11 @@ public interface QnaMapper {
 
     List<QnaDto> findByClass(@Param("cNum") int cNum, @Param("keyword") String keyword, @Param("keyField") String keyField);
 
+    List<QnaDto> findNotices();
+
     QnaDto findById(int qNum);
+
+    QnaDto findNoticeById(int qNum);
 
     QnaDto findRootByRef(int qRef);
 

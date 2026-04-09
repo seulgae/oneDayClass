@@ -7,6 +7,7 @@
         select * from qnaBBS
         where 1 = 1
           and qDepth = 0
+          and qTitle not like '[공지]%'
         <if test="!includeDeleted">
             and qStatus &lt; 3
         </if>
@@ -20,6 +21,7 @@
         select * from qnaBBS
         where cNum = #{cNum}
           and qDepth = 0
+          and qTitle not like '[공지]%'
           and qStatus &lt; 3
         <if test="keyword != null and keyword != ''">
             and ${keyField} like concat('%', #{keyword}, '%')
@@ -27,8 +29,24 @@
         order by qRef desc, qPos asc
     </select>
 
+    <select id="findNotices" resultType="com.example.onedayclass.qna.dto.QnaDto">
+        select * from qnaBBS
+        where qDepth = 0
+          and qTitle like '[공지]%'
+          and qStatus &lt; 3
+        order by qRegDate desc, qNum desc
+    </select>
+
     <select id="findById" parameterType="int" resultType="com.example.onedayclass.qna.dto.QnaDto">
         select * from qnaBBS where qNum = #{qNum}
+    </select>
+
+    <select id="findNoticeById" parameterType="int" resultType="com.example.onedayclass.qna.dto.QnaDto">
+        select * from qnaBBS
+        where qNum = #{qNum}
+          and qDepth = 0
+          and qTitle like '[공지]%'
+          and qStatus &lt; 3
     </select>
 
     <select id="findRootByRef" parameterType="int" resultType="com.example.onedayclass.qna.dto.QnaDto">

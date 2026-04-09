@@ -1,5 +1,6 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
+<%@ taglib prefix="fn" uri="jakarta.tags.functions" %>
 <%@ include file="../include/header.jsp" %>
 <section class="panel">
     <c:set var="toolbarTitle" value="문의 QnA" />
@@ -32,7 +33,7 @@
                         <c:otherwise>문의</c:otherwise>
                     </c:choose>
                 </td>
-                <td>${item.QRegDate}</td>
+                <td>${fn:substring(item.QRegDate, 0, 10)}</td>
             </tr>
         </c:forEach>
         </tbody>

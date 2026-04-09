@@ -4,8 +4,8 @@
     <h2>문의 작성</h2>
     <form method="post" action="/qna">
         <input type="hidden" name="cNum" value="${qnaDto.CNum}">
-        <input type="text" name="qTitle" placeholder="제목" required>
-        <textarea name="qContent" placeholder="문의 내용을 입력하세요" rows="8" required></textarea>
+        <input type="text" name="qTitle" placeholder="제목" required maxlength="80" pattern="^.{4,80}$" title="제목은 4~80자 이내로 입력해 주세요.">
+        <textarea name="qContent" placeholder="문의 내용을 입력하세요" rows="8" required minlength="10" maxlength="3000" title="문의 내용은 10자 이상 입력해 주세요."></textarea>
         <button type="submit">등록</button>
     </form>
 </section>

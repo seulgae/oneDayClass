@@ -27,6 +27,14 @@
                 </select>
                 <input type="text" name="keyword" value="${keyword}" placeholder="검색어를 입력하세요">
             </c:when>
+            <c:when test="${toolbarScope eq 'request'}">
+                <select name="keyField">
+                    <option value="reqTitle" ${selectedKeyField eq 'reqTitle' ? 'selected' : ''}>제목</option>
+                    <option value="reqUid" ${selectedKeyField eq 'reqUid' ? 'selected' : ''}>작성자</option>
+                    <option value="reqContent" ${selectedKeyField eq 'reqContent' ? 'selected' : ''}>내용</option>
+                </select>
+                <input type="text" name="keyword" value="${keyword}" placeholder="검색어를 입력하세요">
+            </c:when>
             <c:otherwise>
                 <select name="keyField">
                     <option value="rTitle" ${selectedKeyField eq 'rTitle' ? 'selected' : ''}>제목</option>

@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.onedayclass.requestboard.mapper.RequestBoardMapper">
+
+    <select id="findAll" resultType="com.example.onedayclass.requestboard.dto.RequestBoardDto">
+        select * from requestBBS
+        where 1 = 1
+          and reqDepth = 0
+        <if test="!includeDeleted">
+            and reqStatus &lt; 3
+        </if>
+        <if test="keyword != null and keyword != ''">
+            and ${keyField} like concat('%', #{keyword}, '%')
+        </if>
+        order by reqRef desc, reqPos asc
+    </select>
+
+    <select id="findById" parameterType="int" resultType="com.example.onedayclass.requestboard.dto.RequestBoardDto">
+        select * from requestBBS where reqNum = #{reqNum}
+    </select>
+
+    <select id="findRootByRef" parameterType="int" resultType="com.example.onedayclass.requestboard.dto.RequestBoardDto">
+        select * from requestBBS where reqRef = #{reqRef} and reqDepth = 0
+    </select>
+
+    <select id="findRepliesByRef" parameterType="int" resultType="com.example.onedayclass.requestboard.dto.RequestBoardDto">
+        select * from requestBBS
+        where reqRef = #{reqRef}
+          and reqDepth &gt; 0
+          and reqStatus &lt; 3
+        order by reqPos asc, reqNum asc
+    </select>
+
+    <select id="findNextRef" resultType="int">
+        select coalesce(max(reqRef), 0) + 1 from requestBBS
+    </select>
+
+    <select id="findMaxPosByRef" parameterType="int" resultType="int">
+        select coalesce(max(reqPos), 0) from requestBBS where reqRef = #{reqRef}
+    </select>
+
+    <insert id="insert" parameterType="com.example.onedayclass.requestboard.dto.RequestBoardDto" useGeneratedKeys="true" keyProperty="reqNum">
+        insert into requestBBS (
+            reqUid, reqTitle, reqContent, reqRegDate, reqPos, reqRef, reqDepth, parentReqNum, reqOriUid, reqStatus,
+            createdDate, createdBy, updatedDate, updatedBy
+        ) values (
+            #{reqUid}, #{reqTitle}, #{reqContent}, now(), #{reqPos}, #{reqRef}, #{reqDepth}, #{parentReqNum}, #{reqOriUid}, #{reqStatus},
+            current_timestamp, coalesce(#{createdBy}, #{reqUid}), current_timestamp, coalesce(#{updatedBy}, #{reqUid})
+        )
+    </insert>
+
+    <update id="update" parameterType="com.example.onedayclass.requestboard.dto.RequestBoardDto">
+        update requestBBS
+        set reqTitle = #{reqTitle},
+            reqContent = #{reqContent},
+            reqStatus = #{reqStatus},
+            updatedDate = current_timestamp,
+            updatedBy = coalesce(#{updatedBy}, #{reqUid})
+        where reqNum = #{reqNum}
+    </update>
+
+    <update id="softDeleteThread" parameterType="int">
+        update requestBBS
+        set reqStatus = 3,
+            updatedDate = current_timestamp
+        where reqRef = #{reqRef}
+    </update>
+
+    <update id="softDeleteOne" parameterType="int">
+        update requestBBS
+        set reqStatus = 3,
+            updatedDate = current_timestamp
+        where reqNum = #{reqNum}
+    </update>
+</mapper>

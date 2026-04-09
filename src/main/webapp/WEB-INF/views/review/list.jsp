@@ -1,5 +1,6 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
+<%@ taglib prefix="fn" uri="jakarta.tags.functions" %>
 <%@ include file="../include/header.jsp" %>
 <section class="panel">
     <c:set var="toolbarTitle" value="사용자 후기" />
@@ -26,7 +27,7 @@
                 <td><a href="/reviews/${item.RNum}">${item.RTitle}</a></td>
                 <td>${item.RUid}</td>
                 <td>조회 ${item.RCnt} / 좋아요 ${item.RLikes}</td>
-                <td>${item.RRegDate}</td>
+                <td>${fn:substring(item.RRegDate, 0, 10)}</td>
             </tr>
         </c:forEach>
         </tbody>

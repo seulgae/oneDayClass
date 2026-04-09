@@ -22,6 +22,8 @@
                 <a href="/qna">QnA</a>
                 <a href="/payments/cart">장바구니</a>
                 <a href="/levelups">등업요청</a>
+                <a href="/notices">공지사항</a>
+                <a href="/requests">요청게시판</a>
                 <c:if test="${loginMember != null and loginMember.ULevel eq '3'}">
                     <a href="/admin">관리자</a>
                 </c:if>

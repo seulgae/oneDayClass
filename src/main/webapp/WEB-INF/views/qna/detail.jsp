@@ -1,5 +1,6 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
+<%@ taglib prefix="fn" uri="jakarta.tags.functions" %>
 <%@ include file="../include/header.jsp" %>
 <section class="panel detail">
     <div class="section-head">
@@ -8,7 +9,7 @@
     </div>
     <dl><dt>작성자</dt><dd>${question.QUid}</dd></dl>
     <dl><dt>문의번호</dt><dd>${question.QRef}</dd></dl>
-    <dl><dt>작성일</dt><dd>${question.QRegDate}</dd></dl>
+    <dl><dt>작성일</dt><dd>${fn:substring(question.QRegDate, 0, 10)}</dd></dl>
     <dl><dt>내용</dt><dd>${question.QContent}</dd></dl>
     <div class="actions">
         <c:if test="${loginMember != null}">
@@ -33,7 +34,7 @@
             <article class="qna-reply qna-depth-${reply.QDepth}">
                 <div class="qna-reply-head">
                     <strong>${reply.QUid}</strong>
-                    <span class="muted">${reply.QRegDate}</span>
+                    <span class="muted">${fn:substring(reply.QRegDate, 0, 10)}</span>
                 </div>
                 <h3>${reply.QTitle}</h3>
                 <p>${reply.QContent}</p>

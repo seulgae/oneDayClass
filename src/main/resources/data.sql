@@ -6,6 +6,7 @@ DELETE FROM classLikes;
 DELETE FROM reviewBBS;
 DELETE FROM qnaBBS;
 DELETE FROM levelUpBBS;
+DELETE FROM requestBBS;
 DELETE FROM classBBS;
 DELETE FROM memberList;
 
@@ -126,3 +127,11 @@ INSERT INTO levelUpBBS (
     createdBy, updatedBy
 ) VALUES
 ('user1', '플라워 클래스 강사 입점 요청', '플라워샵 운영 경험을 바탕으로 테이블 센터피스와 시즌 꽃다발 클래스를 제안드립니다.', '하늘플라워', '@haneul.flower', DATEADD('DAY', -4, CURRENT_TIMESTAMP), 0, 7001, 0, NULL, NULL, 1, 'user1', 'user1', 'user1');
+
+INSERT INTO requestBBS (
+    reqUid, reqTitle, reqContent, reqRegDate, reqPos, reqRef, reqDepth, parentReqNum, reqOriUid, reqStatus, createdBy, updatedBy
+) VALUES
+('user1', '모바일에서 클래스 필터를 더 쉽게 보고 싶어요', '카테고리와 온라인/오프라인 필터가 한 번에 보이면 더 편할 것 같습니다. 모바일에서 특히 바로 선택하고 싶어요.', DATEADD('DAY', -3, CURRENT_TIMESTAMP), 0, 5001, 0, NULL, 'user1', 1, 'user1', 'user1'),
+('admin', '모바일 필터 UI는 개선 예정입니다.', '좋은 의견 감사합니다. 상단 고정 필터와 모바일 전용 버튼형 필터 UI를 우선 검토하고 있습니다.', DATEADD('DAY', -2, CURRENT_TIMESTAMP), 1, 5001, 1, 1, 'user1', 1, 'admin', 'admin'),
+('user1', '필터 선택 후 바로 결과가 보이면 좋겠습니다.', '적용 버튼 없이 바로 바뀌면 더 편할 것 같아요.', DATEADD('DAY', -1, CURRENT_TIMESTAMP), 2, 5001, 2, 2, 'admin', 1, 'user1', 'user1'),
+('user2', '클래스 상세에 준비물 요약 박스가 있으면 좋겠어요', '상세 페이지를 끝까지 읽지 않아도 준비물과 소요시간을 한눈에 볼 수 있으면 좋겠습니다.', DATEADD('DAY', -1, CURRENT_TIMESTAMP), 0, 5002, 0, NULL, 'user2', 1, 'user2', 'user2');

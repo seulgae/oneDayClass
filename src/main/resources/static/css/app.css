@@ -985,6 +985,16 @@ textarea {
     margin: 0;
 }
 
+.board-guide {
+    margin: -4px 0 18px;
+    padding: 14px 16px;
+    border-radius: 18px;
+    background: rgba(255, 248, 243, 0.92);
+    border: 1px solid rgba(190, 112, 68, 0.12);
+    color: var(--muted);
+    line-height: 1.6;
+}
+
 .board-table td a {
     color: var(--text);
     font-weight: 700;
