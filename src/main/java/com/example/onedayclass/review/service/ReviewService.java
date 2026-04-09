@@ -6,9 +6,9 @@ import com.example.onedayclass.review.dto.ReviewDto;
 import java.util.List;
 
 public interface ReviewService {
-    List<ReviewDto> getReviews(String viewerId);
+    List<ReviewDto> getReviews(String keyField, String keyword, String viewerId);
 
-    PageResult<ReviewDto> getReviewsPage(String viewerId, int page, int pageSize);
+    PageResult<ReviewDto> getReviewsPage(String keyField, String keyword, String viewerId, int page, int pageSize);
 
     List<ReviewDto> getClassReviews(int cNum, String viewerId);
 

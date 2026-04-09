@@ -1,6 +1,6 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
-<jsp:include page="../include/header.jsp" />
+<%@ include file="../include/header.jsp" %>
 <section class="form-panel">
     <h2>로그인</h2>
     <c:if test="${param.error ne null}">
@@ -15,4 +15,4 @@
         </div>
     </form>
 </section>
-<jsp:include page="../include/footer.jsp" />
+<%@ include file="../include/footer.jsp" %>

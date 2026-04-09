@@ -1,6 +1,6 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
-<jsp:include page="../include/header.jsp" />
+<%@ include file="../include/header.jsp" %>
 <section class="two-column">
     <article class="panel">
         <h2>승인 대기 클래스</h2>
@@ -34,4 +34,4 @@
         </c:forEach>
     </article>
 </section>
-<jsp:include page="../include/footer.jsp" />
+<%@ include file="../include/footer.jsp" %>

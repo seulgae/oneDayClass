@@ -3,7 +3,8 @@ package com.example.onedayclass.review.controller;
 import com.example.onedayclass.member.dto.MemberDto;
 import com.example.onedayclass.review.dto.ReviewDto;
 import com.example.onedayclass.review.service.ReviewService;
-import jakarta.servlet.http.HttpSession;
+import com.example.onedayclass.security.MemberPrincipal;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,9 +25,18 @@ public class ReviewController {
     }
 
     @GetMapping
-    public String list(@RequestParam(defaultValue = "1") int page, HttpSession session, Model model) {
-        MemberDto loginMember = (MemberDto) session.getAttribute("loginMember");
-        model.addAttribute("reviewPage", reviewService.getReviewsPage(loginMember == null ? null : loginMember.getUId(), page, 12));
+    public String list(@RequestParam(required = false, defaultValue = "rTitle") String keyField,
+                       @RequestParam(required = false) String keyword,
+                       @RequestParam(defaultValue = "1") int page,
+                       @AuthenticationPrincipal MemberPrincipal principal,
+                       Model model) {
+        MemberDto loginMember = principal == null ? null : principal.getMember();
+        model.addAttribute(
+                "reviewPage",
+                reviewService.getReviewsPage(keyField, keyword, loginMember == null ? null : loginMember.getUId(), page, 12)
+        );
+        model.addAttribute("selectedKeyField", keyField);
+        model.addAttribute("keyword", keyword);
         return "review/list";
     }
 
@@ -37,11 +47,9 @@ public class ReviewController {
     }
 
     @GetMapping("/new")
-    public String form(@RequestParam(required = false) Integer cNum, HttpSession session, Model model) {
-        MemberDto loginMember = (MemberDto) session.getAttribute("loginMember");
-        if (loginMember == null) {
-            return "redirect:/members/login";
-        }
+    public String form(@RequestParam(required = false) Integer cNum,
+                       @AuthenticationPrincipal(expression = "member") MemberDto loginMember,
+                       Model model) {
         ReviewDto reviewDto = new ReviewDto();
         reviewDto.setRUid(loginMember.getUId());
         reviewDto.setCNum(cNum);
@@ -50,22 +58,16 @@ public class ReviewController {
     }
 
     @PostMapping
-    public String create(ReviewDto reviewDto, HttpSession session) {
-        MemberDto loginMember = (MemberDto) session.getAttribute("loginMember");
-        if (loginMember == null) {
-            return "redirect:/members/login";
-        }
+    public String create(ReviewDto reviewDto, @AuthenticationPrincipal(expression = "member") MemberDto loginMember) {
         reviewDto.setRUid(loginMember.getUId());
         reviewService.createReview(reviewDto);
         return "redirect:/reviews";
     }
 
     @PostMapping("/{rNum}/like")
-    public String like(@PathVariable int rNum, HttpSession session, RedirectAttributes redirectAttributes) {
-        MemberDto loginMember = (MemberDto) session.getAttribute("loginMember");
-        if (loginMember == null) {
-            return "redirect:/members/login";
-        }
+    public String like(@PathVariable int rNum,
+                       @AuthenticationPrincipal(expression = "member") MemberDto loginMember,
+                       RedirectAttributes redirectAttributes) {
         if (!reviewService.likeReview(loginMember.getUId(), rNum)) {
             redirectAttributes.addFlashAttribute("message", "이미 추천한 후기입니다.");
         }

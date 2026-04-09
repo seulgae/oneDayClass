@@ -1,5 +1,5 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
-<jsp:include page="../include/header.jsp" />
+<%@ include file="../include/header.jsp" %>
 <section class="form-panel">
     <h2>등업 신청 답변</h2>
     <p class="muted">원글: ${parent.lvlTitle}</p>
@@ -11,4 +11,4 @@
         <button type="submit">답변 저장</button>
     </form>
 </section>
-<jsp:include page="../include/footer.jsp" />
+<%@ include file="../include/footer.jsp" %>

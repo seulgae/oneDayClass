@@ -6,6 +6,7 @@
     <select id="findAll" resultType="com.example.onedayclass.qna.dto.QnaDto">
         select * from qnaBBS
         where 1 = 1
+          and qDepth = 0
         <if test="!includeDeleted">
             and qStatus &lt; 3
         </if>
@@ -18,6 +19,7 @@
     <select id="findByClass" resultType="com.example.onedayclass.qna.dto.QnaDto">
         select * from qnaBBS
         where cNum = #{cNum}
+          and qDepth = 0
           and qStatus &lt; 3
         <if test="keyword != null and keyword != ''">
             and ${keyField} like concat('%', #{keyword}, '%')
@@ -29,15 +31,33 @@
         select * from qnaBBS where qNum = #{qNum}
     </select>
 
+    <select id="findRootByRef" parameterType="int" resultType="com.example.onedayclass.qna.dto.QnaDto">
+        select * from qnaBBS where qRef = #{qRef} and qDepth = 0
+    </select>
+
+    <select id="findRepliesByRef" parameterType="int" resultType="com.example.onedayclass.qna.dto.QnaDto">
+        select * from qnaBBS
+        where qRef = #{qRef}
+          and qDepth &gt; 0
+          and qStatus &lt; 3
+        order by qPos asc, qNum asc
+    </select>
+
     <select id="findNextRef" resultType="int">
         select coalesce(max(qRef), 0) + 1 from qnaBBS
     </select>
 
+    <select id="findMaxPosByRef" parameterType="int" resultType="int">
+        select coalesce(max(qPos), 0) from qnaBBS where qRef = #{qRef}
+    </select>
+
     <insert id="insert" parameterType="com.example.onedayclass.qna.dto.QnaDto" useGeneratedKeys="true" keyProperty="qNum">
         insert into qnaBBS (
-            qUid, qTitle, qContent, qRegDate, qPos, qRef, qDepth, qOriUid, qFileName, qFileSize, qStatus, cNum
+            qUid, qTitle, qContent, qRegDate, qPos, qRef, qDepth, parentQNum, qOriUid, qFileName, qFileSize, qStatus, cNum,
+            createdDate, createdBy, updatedDate, updatedBy
         ) values (
-            #{qUid}, #{qTitle}, #{qContent}, now(), #{qPos}, #{qRef}, #{qDepth}, #{qOriUid}, #{qFileName}, #{qFileSize}, #{qStatus}, #{cNum}
+            #{qUid}, #{qTitle}, #{qContent}, now(), #{qPos}, #{qRef}, #{qDepth}, #{parentQNum}, #{qOriUid}, #{qFileName}, #{qFileSize}, #{qStatus}, #{cNum},
+            current_timestamp, coalesce(#{createdBy}, #{qUid}), current_timestamp, coalesce(#{updatedBy}, #{qUid})
         )
     </insert>
 
@@ -45,18 +65,23 @@
         update qnaBBS
         set qTitle = #{qTitle},
             qContent = #{qContent},
-            qStatus = #{qStatus}
+            qStatus = #{qStatus},
+            updatedDate = current_timestamp,
+            updatedBy = coalesce(#{updatedBy}, #{qUid})
         where qNum = #{qNum}
     </update>
 
     <update id="softDeleteThread" parameterType="int">
-        update qnaBBS set qStatus = 3 where qRef = #{qRef}
+        update qnaBBS
+        set qStatus = 3,
+            updatedDate = current_timestamp
+        where qRef = #{qRef}
     </update>
 
-    <update id="updateReplyPositions">
+    <update id="softDeleteOne" parameterType="int">
         update qnaBBS
-        set qPos = qPos + 1
-        where qRef = #{qRef}
-          and qPos &gt; #{qPos}
+        set qStatus = 3,
+            updatedDate = current_timestamp
+        where qNum = #{qNum}
     </update>
 </mapper>

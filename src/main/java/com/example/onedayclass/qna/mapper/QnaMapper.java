@@ -14,7 +14,13 @@ public interface QnaMapper {
 
     QnaDto findById(int qNum);
 
+    QnaDto findRootByRef(int qRef);
+
+    List<QnaDto> findRepliesByRef(int qRef);
+
     Integer findNextRef();
+
+    Integer findMaxPosByRef(int qRef);
 
     int insert(QnaDto qnaDto);
 
@@ -22,5 +28,5 @@ public interface QnaMapper {
 
     int softDeleteThread(int qRef);
 
-    int updateReplyPositions(@Param("qRef") int qRef, @Param("qPos") int qPos);
+    int softDeleteOne(int qNum);
 }

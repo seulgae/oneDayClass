@@ -1,5 +1,5 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
-<jsp:include page="../include/header.jsp" />
+<%@ include file="../include/header.jsp" %>
 <section class="form-panel">
     <h2>후기 작성</h2>
     <form method="post" action="/reviews">
@@ -9,4 +9,4 @@
         <button type="submit">저장</button>
     </form>
 </section>
-<jsp:include page="../include/footer.jsp" />
+<%@ include file="../include/footer.jsp" %>

@@ -1,9 +1,12 @@
 package com.example.onedayclass.levelup.dto;
 
+import com.example.onedayclass.common.dto.BaseVo;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 @Data
-public class LevelUpDto {
+@EqualsAndHashCode(callSuper = true)
+public class LevelUpDto extends BaseVo {
     private Integer lvlNum;
     private String lvlUid;
     private String lvlTitle;

@@ -20,13 +20,17 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     @Override
-    public List<ReviewDto> getReviews(String viewerId) {
-        return reviewMapper.findAll("admin".equals(viewerId));
+    public List<ReviewDto> getReviews(String keyField, String keyword, String viewerId) {
+        return reviewMapper.findAll(keyword, normalizeField(keyField), "admin".equals(viewerId));
     }
 
     @Override
-    public PageResult<ReviewDto> getReviewsPage(String viewerId, int page, int pageSize) {
-        return PagingUtils.slice(reviewMapper.findAll("admin".equals(viewerId)), page, pageSize);
+    public PageResult<ReviewDto> getReviewsPage(String keyField, String keyword, String viewerId, int page, int pageSize) {
+        return PagingUtils.slice(
+                reviewMapper.findAll(keyword, normalizeField(keyField), "admin".equals(viewerId)),
+                page,
+                pageSize
+        );
     }
 
     @Override
@@ -73,5 +77,12 @@ public class ReviewServiceImpl implements ReviewService {
             return false;
         }
         return reviewMapper.insertLike(uId, rNum) > 0 && reviewMapper.increaseLikes(rNum) > 0;
+    }
+
+    private String normalizeField(String keyField) {
+        if ("rUid".equals(keyField) || "rContent".equals(keyField)) {
+            return keyField;
+        }
+        return "rTitle";
     }
 }

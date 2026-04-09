@@ -2,6 +2,7 @@ package com.example.onedayclass.security;
 
 import com.example.onedayclass.member.dto.MemberDto;
 import com.example.onedayclass.member.service.MemberService;
+import jakarta.servlet.DispatcherType;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -34,15 +35,23 @@ public class SecurityConfig {
                 .headers(headers -> headers.frameOptions(frame -> frame.sameOrigin()))
                 .userDetailsService(userDetailsService)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/", "/css/**", "/uploads/**", "/h2-console/**").permitAll()
-                        .requestMatchers("/members/login", "/members/join").permitAll()
+                        .dispatcherTypeMatchers(DispatcherType.FORWARD, DispatcherType.ERROR).permitAll()
+                        .requestMatchers("/", "/error", "/css/**", "/uploads/**", "/h2-console/**").permitAll()
+                        .requestMatchers("/members/login", "/members/join", "/members/logout").permitAll()
                         .requestMatchers(HttpMethod.GET, "/classes", "/classes/*", "/reviews", "/reviews/*", "/qna", "/qna/*", "/levelups", "/levelups/*").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/classes/*/like", "/reviews/*/like").authenticated()
+                        .requestMatchers(HttpMethod.POST, "/reviews", "/reviews/*/delete", "/qna", "/qna/*/reply", "/qna/*/delete", "/levelups", "/levelups/*/reply", "/levelups/*/delete").authenticated()
+                        .requestMatchers(HttpMethod.POST, "/members/edit", "/members/delete").authenticated()
+                        .requestMatchers(HttpMethod.GET, "/members/mypage", "/members/edit").authenticated()
+                        .requestMatchers("/payments/**").authenticated()
                         .requestMatchers("/admin/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/admin/classes/*/approve").hasRole("ADMIN")
                         .requestMatchers("/classes/new", "/classes/*/edit", "/classes/*/delete").hasAnyRole("TEACHER", "ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/classes", "/classes/*/edit", "/classes/*/delete").hasAnyRole("TEACHER", "ADMIN")
                         .requestMatchers("/levelups/*/approve").hasRole("ADMIN")
-                        .requestMatchers("/members/mypage", "/members/edit", "/members/delete").authenticated()
-                        .requestMatchers("/reviews/new", "/qna/new", "/levelups/new", "/qna/*/reply", "/levelups/*/reply", "/payments/**").authenticated()
-                        .anyRequest().permitAll()
+                        .requestMatchers(HttpMethod.GET, "/reviews/new", "/qna/new", "/levelups/new").authenticated()
+                        .requestMatchers(HttpMethod.GET, "/qna/*/reply", "/levelups/*/reply").authenticated()
+                        .anyRequest().denyAll()
                 )
                 .formLogin(form -> form
                         .loginPage("/members/login")

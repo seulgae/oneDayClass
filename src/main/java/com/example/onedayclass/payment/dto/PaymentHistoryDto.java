@@ -1,9 +1,12 @@
 package com.example.onedayclass.payment.dto;
 
+import com.example.onedayclass.common.dto.BaseVo;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 @Data
-public class PaymentHistoryDto {
+@EqualsAndHashCode(callSuper = true)
+public class PaymentHistoryDto extends BaseVo {
     private Integer pNum;
     private String uId;
     private Integer cNum;

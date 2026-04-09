@@ -9,9 +9,11 @@
 
     <insert id="insert" parameterType="com.example.onedayclass.member.dto.MemberDto">
         insert into memberList (
-            uId, uPw, uName, uPhone, uZip, uAddr1, uAddr2, uEmail, uLevel, sName, sSns
+            uId, uPw, uName, uPhone, uZip, uAddr1, uAddr2, uEmail, uLevel, sName, sSns,
+            createdDate, createdBy, updatedDate, updatedBy
         ) values (
-            #{uId}, #{uPw}, #{uName}, #{uPhone}, #{uZip}, #{uAddr1}, #{uAddr2}, #{uEmail}, #{uLevel}, #{sName}, #{sSns}
+            #{uId}, #{uPw}, #{uName}, #{uPhone}, #{uZip}, #{uAddr1}, #{uAddr2}, #{uEmail}, #{uLevel}, #{sName}, #{sSns},
+            current_timestamp, coalesce(#{createdBy}, #{uId}), current_timestamp, coalesce(#{updatedBy}, #{uId})
         )
     </insert>
 
@@ -30,7 +32,9 @@
             uZip = #{uZip},
             uAddr1 = #{uAddr1},
             uAddr2 = #{uAddr2},
-            uEmail = #{uEmail}
+            uEmail = #{uEmail},
+            updatedDate = current_timestamp,
+            updatedBy = coalesce(#{updatedBy}, #{uId})
         where uId = #{uId}
     </update>
 
@@ -42,7 +46,9 @@
         update memberList
         set uLevel = '2',
             sName = #{sName},
-            sSns = #{sSns}
+            sSns = #{sSns},
+            updatedDate = current_timestamp,
+            updatedBy = #{uId}
         where uId = #{uId}
     </update>
 </mapper>

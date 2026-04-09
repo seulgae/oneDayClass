@@ -24,8 +24,8 @@ public class HomeController {
 
     @GetMapping("/")
     public String home(Model model) {
-        model.addAttribute("featuredClasses", classService.getFeaturedClasses(null, "N", 12));
-        model.addAttribute("offlineClasses", classService.getFeaturedClasses(null, "Y", 12));
+        model.addAttribute("featuredClasses", classService.getFeaturedClasses(null, null, "N", 12));
+        model.addAttribute("offlineClasses", classService.getFeaturedClasses(null, null, "Y", 12));
         model.addAttribute("latestReviews", reviewService.getRecentReviews(3));
         model.addAttribute("pendingLevelUps", limit(levelUpService.getPendingRequests(), 3));
         return "home";

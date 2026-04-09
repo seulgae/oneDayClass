@@ -1,9 +1,12 @@
 package com.example.onedayclass.clazz.dto;
 
+import com.example.onedayclass.common.dto.BaseVo;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 @Data
-public class ClassDto {
+@EqualsAndHashCode(callSuper = true)
+public class ClassDto extends BaseVo {
     private Integer cNum;
     private String cCode;
     private String cTeacher;

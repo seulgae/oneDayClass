@@ -8,7 +8,9 @@ import java.util.List;
 
 @Mapper
 public interface ReviewMapper {
-    List<ReviewDto> findAll(@Param("includeDeleted") boolean includeDeleted);
+    List<ReviewDto> findAll(@Param("keyword") String keyword,
+                            @Param("keyField") String keyField,
+                            @Param("includeDeleted") boolean includeDeleted);
 
     List<ReviewDto> findByClass(int cNum);
 

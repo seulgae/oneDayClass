@@ -5,17 +5,20 @@
 
     <insert id="insertPaymentInfo" parameterType="com.example.onedayclass.payment.dto.PaymentRequestDto" useGeneratedKeys="true" keyProperty="pNum">
         insert into paymentInfo (
-            uId, rName, rPhone, rZip, rAddr1, rAddr2, rEmail, totalPrice, totalDeli, totalPay, payDate
+            uId, rName, rPhone, rZip, rAddr1, rAddr2, rEmail, totalPrice, totalDeli, totalPay, payDate,
+            createdDate, createdBy, updatedDate, updatedBy
         ) values (
-            #{uId}, #{rName}, #{rPhone}, #{rZip}, #{rAddr1}, #{rAddr2}, #{rEmail}, #{totalPrice}, #{totalDeli}, #{totalPay}, now()
+            #{uId}, #{rName}, #{rPhone}, #{rZip}, #{rAddr1}, #{rAddr2}, #{rEmail}, #{totalPrice}, #{totalDeli}, #{totalPay}, now(),
+            current_timestamp, coalesce(#{createdBy}, #{uId}), current_timestamp, coalesce(#{updatedBy}, #{uId})
         )
     </insert>
 
     <insert id="insertPaymentComplete" parameterType="com.example.onedayclass.payment.dto.PaymentHistoryDto">
         insert into payComplete (
-            uId, cNum, cUid, cTitle, pNum, pQty, payDate
+            uId, cNum, cUid, cTitle, pNum, pQty, payDate, createdDate, createdBy, updatedDate, updatedBy
         ) values (
-            #{uId}, #{cNum}, #{cUid}, #{cTitle}, #{pNum}, #{pQty}, now()
+            #{uId}, #{cNum}, #{cUid}, #{cTitle}, #{pNum}, #{pQty}, now(),
+            current_timestamp, coalesce(#{createdBy}, #{uId}), current_timestamp, coalesce(#{updatedBy}, #{uId})
         )
     </insert>
 
@@ -28,7 +31,8 @@
     </select>
 
     <insert id="insertCart">
-        insert into cartList(uId, cNum) values (#{uId}, #{cNum})
+        insert into cartList(uId, cNum, createdDate, createdBy, updatedDate, updatedBy)
+        values (#{uId}, #{cNum}, current_timestamp, #{uId}, current_timestamp, #{uId})
     </insert>
 
     <delete id="deleteCart">

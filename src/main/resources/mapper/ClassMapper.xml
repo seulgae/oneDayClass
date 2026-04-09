@@ -13,8 +13,8 @@
         <if test="onoff != null and onoff != ''">
             and cOnoff = #{onoff}
         </if>
-        <if test="category != null and category != ''">
-            and cCategory = #{category}
+        <if test="keyword != null and keyword != ''">
+            and ${keyField} like concat('%', #{keyword}, '%')
         </if>
         order by cNum desc
     </select>
@@ -26,8 +26,8 @@
         <if test="onoff != null and onoff != ''">
             and cOnoff = #{onoff}
         </if>
-        <if test="category != null and category != ''">
-            and cCategory = #{category}
+        <if test="keyword != null and keyword != ''">
+            and ${keyField} like concat('%', #{keyword}, '%')
         </if>
         order by cLikes desc, cNum desc
         limit #{limit}
@@ -44,10 +44,12 @@
     <insert id="insert" parameterType="com.example.onedayclass.clazz.dto.ClassDto" useGeneratedKeys="true" keyProperty="cNum">
         insert into classBBS (
             cCode, cTeacher, cUid, cCategory, cTitle, cContent, cRegDate, cPrice, cDelivery,
-            cThumbName, cThumbSize, cFileName, cFileSize, cMaxStu, cApplyStu, cArea, cOnoff, cStatus, cLikes
+            cThumbName, cThumbSize, cFileName, cFileSize, cMaxStu, cApplyStu, cArea, cOnoff, cStatus, cLikes,
+            createdDate, createdBy, updatedDate, updatedBy
         ) values (
             #{cCode}, #{cTeacher}, #{cUid}, #{cCategory}, #{cTitle}, #{cContent}, now(), #{cPrice}, #{cDelivery},
-            #{cThumbName}, #{cThumbSize}, #{cFileName}, #{cFileSize}, #{cMaxStu}, #{cApplyStu}, #{cArea}, #{cOnoff}, #{cStatus}, #{cLikes}
+            #{cThumbName}, #{cThumbSize}, #{cFileName}, #{cFileSize}, #{cMaxStu}, #{cApplyStu}, #{cArea}, #{cOnoff}, #{cStatus}, #{cLikes},
+            current_timestamp, coalesce(#{createdBy}, #{cUid}), current_timestamp, coalesce(#{updatedBy}, #{cUid})
         )
     </insert>
 
@@ -65,12 +67,17 @@
             cFileSize = #{cFileSize},
             cMaxStu = #{cMaxStu},
             cArea = #{cArea},
-            cOnoff = #{cOnoff}
+            cOnoff = #{cOnoff},
+            updatedDate = current_timestamp,
+            updatedBy = coalesce(#{updatedBy}, #{cUid})
         where cNum = #{cNum}
     </update>
 
     <update id="updateStatus">
-        update classBBS set cStatus = #{status} where cNum = #{cNum}
+        update classBBS
+        set cStatus = #{status},
+            updatedDate = current_timestamp
+        where cNum = #{cNum}
     </update>
 
     <update id="increaseLikes" parameterType="int">

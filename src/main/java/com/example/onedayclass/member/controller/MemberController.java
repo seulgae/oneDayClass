@@ -2,7 +2,10 @@ package com.example.onedayclass.member.controller;
 
 import com.example.onedayclass.member.dto.MemberDto;
 import com.example.onedayclass.member.service.MemberService;
-import jakarta.servlet.http.HttpSession;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -27,17 +30,6 @@ public class MemberController {
         return "member/login";
     }
 
-    @PostMapping("/login")
-    public String login(String uId, String uPw, HttpSession session, RedirectAttributes redirectAttributes) {
-        MemberDto memberDto = memberService.login(uId, uPw);
-        if (memberDto == null) {
-            redirectAttributes.addFlashAttribute("message", "아이디 또는 비밀번호가 올바르지 않습니다.");
-            return "redirect:/members/login";
-        }
-        session.setAttribute("loginMember", memberDto);
-        return "redirect:/";
-    }
-
     @GetMapping("/join")
     public String joinForm(Model model) {
         model.addAttribute("memberDto", new MemberDto());
@@ -59,51 +51,33 @@ public class MemberController {
     }
 
     @GetMapping("/mypage")
-    public String mypage(HttpSession session, Model model) {
-        MemberDto loginMember = (MemberDto) session.getAttribute("loginMember");
-        if (loginMember == null) {
-            return "redirect:/members/login";
-        }
-        model.addAttribute("member", memberService.getMember(loginMember.getUId()));
+    public String mypage(@AuthenticationPrincipal(expression = "username") String username, Model model) {
+        model.addAttribute("member", memberService.getMember(username));
         return "member/mypage";
     }
 
     @GetMapping("/edit")
-    public String editForm(HttpSession session, Model model) {
-        MemberDto loginMember = (MemberDto) session.getAttribute("loginMember");
-        if (loginMember == null) {
-            return "redirect:/members/login";
-        }
-        model.addAttribute("memberDto", memberService.getMember(loginMember.getUId()));
+    public String editForm(@AuthenticationPrincipal(expression = "username") String username, Model model) {
+        model.addAttribute("memberDto", memberService.getMember(username));
         return "member/edit";
     }
 
     @PostMapping("/edit")
-    public String edit(@ModelAttribute MemberDto memberDto, HttpSession session, RedirectAttributes redirectAttributes) {
-        MemberDto loginMember = (MemberDto) session.getAttribute("loginMember");
-        if (loginMember == null) {
-            return "redirect:/members/login";
-        }
-        memberDto.setUId(loginMember.getUId());
+    public String edit(@ModelAttribute MemberDto memberDto,
+                       @AuthenticationPrincipal(expression = "username") String username,
+                       RedirectAttributes redirectAttributes) {
+        memberDto.setUId(username);
         memberService.update(memberDto);
-        session.setAttribute("loginMember", memberService.getMember(loginMember.getUId()));
         redirectAttributes.addFlashAttribute("message", "회원 정보가 수정되었습니다.");
         return "redirect:/members/mypage";
     }
 
     @PostMapping("/delete")
-    public String delete(HttpSession session) {
-        MemberDto loginMember = (MemberDto) session.getAttribute("loginMember");
-        if (loginMember != null) {
-            memberService.delete(loginMember.getUId());
-        }
-        session.invalidate();
-        return "redirect:/";
-    }
-
-    @GetMapping("/logout")
-    public String logout(HttpSession session) {
-        session.invalidate();
+    public String delete(@AuthenticationPrincipal(expression = "username") String username,
+                         HttpServletRequest request,
+                         HttpServletResponse response) {
+        memberService.delete(username);
+        new SecurityContextLogoutHandler().logout(request, response, null);
         return "redirect:/";
     }
 }

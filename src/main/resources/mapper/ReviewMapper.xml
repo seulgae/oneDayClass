@@ -5,8 +5,12 @@
 
     <select id="findAll" resultType="com.example.onedayclass.review.dto.ReviewDto">
         select * from reviewBBS
+        where 1 = 1
         <if test="!includeDeleted">
-            where rStatus = 2
+            and rStatus = 2
+        </if>
+        <if test="keyword != null and keyword != ''">
+            and ${keyField} like concat('%', #{keyword}, '%')
         </if>
         order by rNum desc
     </select>
@@ -25,16 +29,20 @@
 
     <insert id="insert" parameterType="com.example.onedayclass.review.dto.ReviewDto" useGeneratedKeys="true" keyProperty="rNum">
         insert into reviewBBS (
-            rUid, rTitle, rContent, rCnt, rLikes, rRegDate, rFileName, rFileSize, rStatus, cNum
+            rUid, rTitle, rContent, rCnt, rLikes, rRegDate, rFileName, rFileSize, rStatus, cNum,
+            createdDate, createdBy, updatedDate, updatedBy
         ) values (
-            #{rUid}, #{rTitle}, #{rContent}, 0, 0, now(), #{rFileName}, #{rFileSize}, #{rStatus}, #{cNum}
+            #{rUid}, #{rTitle}, #{rContent}, 0, 0, now(), #{rFileName}, #{rFileSize}, #{rStatus}, #{cNum},
+            current_timestamp, coalesce(#{createdBy}, #{rUid}), current_timestamp, coalesce(#{updatedBy}, #{rUid})
         )
     </insert>
 
     <update id="update" parameterType="com.example.onedayclass.review.dto.ReviewDto">
         update reviewBBS
         set rTitle = #{rTitle},
-            rContent = #{rContent}
+            rContent = #{rContent},
+            updatedDate = current_timestamp,
+            updatedBy = coalesce(#{updatedBy}, #{rUid})
         where rNum = #{rNum}
     </update>
 
@@ -43,7 +51,10 @@
     </update>
 
     <update id="updateStatus">
-        update reviewBBS set rStatus = #{status} where rNum = #{rNum}
+        update reviewBBS
+        set rStatus = #{status},
+            updatedDate = current_timestamp
+        where rNum = #{rNum}
     </update>
 
     <select id="existsLike" resultType="boolean">

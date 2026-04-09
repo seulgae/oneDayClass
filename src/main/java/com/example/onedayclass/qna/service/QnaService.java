@@ -14,11 +14,15 @@ public interface QnaService {
 
     QnaDto getQuestion(int qNum);
 
+    QnaDto getRootQuestion(int qRef);
+
+    List<QnaDto> getReplies(int qRef);
+
     boolean createQuestion(QnaDto qnaDto);
 
     boolean updateQuestion(QnaDto qnaDto);
 
-    boolean deleteQuestion(int qRef);
+    boolean deleteQuestion(int qNum);
 
     boolean replyQuestion(QnaDto qnaDto);
 }

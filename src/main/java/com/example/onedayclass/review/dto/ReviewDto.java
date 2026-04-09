@@ -1,9 +1,12 @@
 package com.example.onedayclass.review.dto;
 
+import com.example.onedayclass.common.dto.BaseVo;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 @Data
-public class ReviewDto {
+@EqualsAndHashCode(callSuper = true)
+public class ReviewDto extends BaseVo {
     private String rUid;
     private Integer rNum;
     private String rTitle;

@@ -20,18 +20,18 @@ public class ClassServiceImpl implements ClassService {
     }
 
     @Override
-    public List<ClassDto> getClasses(String category, String onoff, boolean includeHidden) {
-        return classMapper.findAll(category, onoff, includeHidden);
+    public List<ClassDto> getClasses(String keyField, String keyword, String onoff, boolean includeHidden) {
+        return classMapper.findAll(keyword, normalizeField(keyField), onoff, includeHidden);
     }
 
     @Override
-    public PageResult<ClassDto> getClassesPage(String category, String onoff, boolean includeHidden, int page, int pageSize) {
-        return PagingUtils.slice(classMapper.findAll(category, onoff, includeHidden), page, pageSize);
+    public PageResult<ClassDto> getClassesPage(String keyField, String keyword, String onoff, boolean includeHidden, int page, int pageSize) {
+        return PagingUtils.slice(classMapper.findAll(keyword, normalizeField(keyField), onoff, includeHidden), page, pageSize);
     }
 
     @Override
-    public List<ClassDto> getFeaturedClasses(String category, String onoff, int limit) {
-        return classMapper.findFeatured(category, onoff, limit);
+    public List<ClassDto> getFeaturedClasses(String keyField, String keyword, String onoff, int limit) {
+        return classMapper.findFeatured(keyword, normalizeField(keyField), onoff, limit);
     }
 
     @Override
@@ -80,5 +80,12 @@ public class ClassServiceImpl implements ClassService {
             return false;
         }
         return classMapper.insertLike(uId, cNum) > 0 && classMapper.increaseLikes(cNum) > 0;
+    }
+
+    private String normalizeField(String keyField) {
+        if ("cCategory".equals(keyField)) {
+            return "cCategory";
+        }
+        return "cTitle";
     }
 }

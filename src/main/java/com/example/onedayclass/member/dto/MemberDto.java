@@ -1,11 +1,14 @@
 package com.example.onedayclass.member.dto;
 
+import com.example.onedayclass.common.dto.BaseVo;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 @Data
-public class MemberDto {
+@EqualsAndHashCode(callSuper = true)
+public class MemberDto extends BaseVo {
     @NotBlank
     private String uId;
 

@@ -3,7 +3,8 @@ package com.example.onedayclass.levelup.controller;
 import com.example.onedayclass.levelup.dto.LevelUpDto;
 import com.example.onedayclass.levelup.service.LevelUpService;
 import com.example.onedayclass.member.dto.MemberDto;
-import jakarta.servlet.http.HttpSession;
+import com.example.onedayclass.security.MemberPrincipal;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,10 +24,13 @@ public class LevelUpController {
     }
 
     @GetMapping
-    public String list(@RequestParam(defaultValue = "1") int page, HttpSession session, Model model) {
-        MemberDto loginMember = (MemberDto) session.getAttribute("loginMember");
+    public String list(@RequestParam(defaultValue = "1") int page,
+                       @AuthenticationPrincipal MemberPrincipal principal,
+                       Model model) {
+        MemberDto loginMember = principal == null ? null : principal.getMember();
         boolean admin = loginMember != null && "3".equals(loginMember.getULevel());
-        model.addAttribute("requestPage", levelUpService.getRequestsPage(loginMember == null ? null : loginMember.getUId(), admin, page, 10));
+        model.addAttribute("requestPage",
+                levelUpService.getRequestsPage(loginMember == null ? null : loginMember.getUId(), admin, page, 10));
         return "levelup/list";
     }
 
@@ -37,11 +41,7 @@ public class LevelUpController {
     }
 
     @GetMapping("/new")
-    public String form(HttpSession session, Model model) {
-        MemberDto loginMember = (MemberDto) session.getAttribute("loginMember");
-        if (loginMember == null) {
-            return "redirect:/members/login";
-        }
+    public String form(@AuthenticationPrincipal(expression = "member") MemberDto loginMember, Model model) {
         LevelUpDto levelUpDto = new LevelUpDto();
         levelUpDto.setLvlUid(loginMember.getUId());
         levelUpDto.setLvlName(loginMember.getUName());
@@ -50,31 +50,23 @@ public class LevelUpController {
     }
 
     @PostMapping
-    public String create(LevelUpDto levelUpDto, HttpSession session) {
-        MemberDto loginMember = (MemberDto) session.getAttribute("loginMember");
-        if (loginMember == null) {
-            return "redirect:/members/login";
-        }
+    public String create(LevelUpDto levelUpDto,
+                         @AuthenticationPrincipal(expression = "member") MemberDto loginMember) {
         levelUpDto.setLvlUid(loginMember.getUId());
         levelUpService.createRequest(levelUpDto);
         return "redirect:/levelups";
     }
 
     @GetMapping("/{lvlNum}/reply")
-    public String replyForm(@PathVariable int lvlNum, Model model, HttpSession session) {
-        if (session.getAttribute("loginMember") == null) {
-            return "redirect:/members/login";
-        }
+    public String replyForm(@PathVariable int lvlNum, Model model) {
         model.addAttribute("parent", levelUpService.getRequest(lvlNum));
         return "levelup/reply";
     }
 
     @PostMapping("/{lvlNum}/reply")
-    public String reply(@PathVariable int lvlNum, LevelUpDto levelUpDto, HttpSession session) {
-        MemberDto loginMember = (MemberDto) session.getAttribute("loginMember");
-        if (loginMember == null) {
-            return "redirect:/members/login";
-        }
+    public String reply(@PathVariable int lvlNum,
+                        LevelUpDto levelUpDto,
+                        @AuthenticationPrincipal(expression = "member") MemberDto loginMember) {
         LevelUpDto parent = levelUpService.getRequest(lvlNum);
         levelUpDto.setLvlUid(loginMember.getUId());
         levelUpDto.setLvlRef(parent.getLvlRef());

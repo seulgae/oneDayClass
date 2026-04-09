@@ -1,6 +1,6 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
-<jsp:include page="../include/header.jsp" />
+<%@ include file="../include/header.jsp" %>
 <section class="panel">
     <div class="section-head"><h2>장바구니</h2><a class="btn" href="/payments/checkout">결제하기</a></div>
     <table class="table">
@@ -21,4 +21,4 @@
         </tbody>
     </table>
 </section>
-<jsp:include page="../include/footer.jsp" />
+<%@ include file="../include/footer.jsp" %>

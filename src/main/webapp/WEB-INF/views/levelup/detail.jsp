@@ -1,5 +1,5 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
-<jsp:include page="../include/header.jsp" />
+<%@ include file="../include/header.jsp" %>
 <section class="panel detail">
     <div class="section-head"><h2>${requestItem.lvlTitle}</h2><a class="btn secondary" href="/levelups">목록으로</a></div>
     <dl><dt>작성자</dt><dd>${requestItem.lvlUid}</dd></dl>
@@ -12,4 +12,4 @@
         <form method="post" action="/levelups/${requestItem.lvlNum}/delete" class="inline-form"><button type="submit">삭제</button></form>
     </div>
 </section>
-<jsp:include page="../include/footer.jsp" />
+<%@ include file="../include/footer.jsp" %>

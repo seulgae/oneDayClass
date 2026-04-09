@@ -3,7 +3,8 @@ package com.example.onedayclass.qna.controller;
 import com.example.onedayclass.member.dto.MemberDto;
 import com.example.onedayclass.qna.dto.QnaDto;
 import com.example.onedayclass.qna.service.QnaService;
-import jakarta.servlet.http.HttpSession;
+import com.example.onedayclass.security.MemberPrincipal;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,6 +12,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+
+import java.util.List;
 
 @Controller
 @RequestMapping("/qna")
@@ -26,10 +29,13 @@ public class QnaController {
     public String list(@RequestParam(required = false, defaultValue = "qTitle") String keyField,
                        @RequestParam(required = false) String keyword,
                        @RequestParam(defaultValue = "1") int page,
-                       HttpSession session,
+                       @AuthenticationPrincipal MemberPrincipal principal,
                        Model model) {
-        MemberDto loginMember = (MemberDto) session.getAttribute("loginMember");
-        model.addAttribute("questionPage", qnaService.getQuestionsPage(keyField, keyword, loginMember == null ? null : loginMember.getUId(), page, 10));
+        MemberDto loginMember = principal == null ? null : principal.getMember();
+        model.addAttribute(
+                "questionPage",
+                qnaService.getQuestionsPage(keyField, keyword, loginMember == null ? null : loginMember.getUId(), page, 10)
+        );
         model.addAttribute("selectedKeyField", keyField);
         model.addAttribute("keyword", keyword);
         return "qna/list";
@@ -37,16 +43,24 @@ public class QnaController {
 
     @GetMapping("/{qNum}")
     public String detail(@PathVariable int qNum, Model model) {
-        model.addAttribute("question", qnaService.getQuestion(qNum));
+        QnaDto question = qnaService.getQuestion(qNum);
+        if (question != null && question.getQDepth() != null && question.getQDepth() > 0) {
+            QnaDto root = qnaService.getRootQuestion(question.getQRef());
+            if (root != null) {
+                question = root;
+            }
+        }
+
+        List<QnaDto> replies = question == null ? List.of() : qnaService.getReplies(question.getQRef());
+        model.addAttribute("question", question);
+        model.addAttribute("replies", replies);
         return "qna/detail";
     }
 
     @GetMapping("/new")
-    public String form(@RequestParam(required = false) Integer cNum, HttpSession session, Model model) {
-        MemberDto loginMember = (MemberDto) session.getAttribute("loginMember");
-        if (loginMember == null) {
-            return "redirect:/members/login";
-        }
+    public String form(@RequestParam(required = false) Integer cNum,
+                       @AuthenticationPrincipal(expression = "member") MemberDto loginMember,
+                       Model model) {
         QnaDto qnaDto = new QnaDto();
         qnaDto.setQUid(loginMember.getUId());
         qnaDto.setCNum(cNum);
@@ -55,47 +69,38 @@ public class QnaController {
     }
 
     @PostMapping
-    public String create(QnaDto qnaDto, HttpSession session) {
-        MemberDto loginMember = (MemberDto) session.getAttribute("loginMember");
-        if (loginMember == null) {
-            return "redirect:/members/login";
-        }
+    public String create(QnaDto qnaDto, @AuthenticationPrincipal(expression = "member") MemberDto loginMember) {
         qnaDto.setQUid(loginMember.getUId());
         qnaService.createQuestion(qnaDto);
         return "redirect:/qna";
     }
 
     @GetMapping("/{qNum}/reply")
-    public String replyForm(@PathVariable int qNum, HttpSession session, Model model) {
-        MemberDto loginMember = (MemberDto) session.getAttribute("loginMember");
-        if (loginMember == null) {
-            return "redirect:/members/login";
-        }
+    public String replyForm(@PathVariable int qNum, Model model) {
         model.addAttribute("parent", qnaService.getQuestion(qNum));
         return "qna/reply";
     }
 
     @PostMapping("/{qNum}/reply")
-    public String reply(@PathVariable int qNum, QnaDto qnaDto, HttpSession session) {
-        MemberDto loginMember = (MemberDto) session.getAttribute("loginMember");
-        if (loginMember == null) {
-            return "redirect:/members/login";
-        }
+    public String reply(@PathVariable int qNum,
+                        QnaDto qnaDto,
+                        @AuthenticationPrincipal(expression = "member") MemberDto loginMember) {
         QnaDto parent = qnaService.getQuestion(qNum);
         qnaDto.setQUid(loginMember.getUId());
-        qnaDto.setQRef(parent.getQRef());
-        qnaDto.setQPos(parent.getQPos());
-        qnaDto.setQDepth(parent.getQDepth());
-        qnaDto.setQOriUid(parent.getQUid());
-        qnaDto.setCNum(parent.getCNum());
+        qnaDto.setParentQNum(qNum);
         qnaDto.setQStatus(1);
         qnaService.replyQuestion(qnaDto);
-        return "redirect:/qna";
+
+        if (parent != null && parent.getQDepth() != null && parent.getQDepth() > 0) {
+            QnaDto root = qnaService.getRootQuestion(parent.getQRef());
+            return "redirect:/qna/" + (root == null ? qNum : root.getQNum());
+        }
+        return "redirect:/qna/" + qNum;
     }
 
-    @PostMapping("/{qRef}/delete")
-    public String delete(@PathVariable int qRef) {
-        qnaService.deleteQuestion(qRef);
+    @PostMapping("/{qNum}/delete")
+    public String delete(@PathVariable int qNum) {
+        qnaService.deleteQuestion(qNum);
         return "redirect:/qna";
     }
 }

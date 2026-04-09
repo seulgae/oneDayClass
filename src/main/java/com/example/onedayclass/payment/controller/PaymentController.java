@@ -3,7 +3,7 @@ package com.example.onedayclass.payment.controller;
 import com.example.onedayclass.member.dto.MemberDto;
 import com.example.onedayclass.payment.dto.PaymentRequestDto;
 import com.example.onedayclass.payment.service.PaymentService;
-import jakarta.servlet.http.HttpSession;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,68 +22,43 @@ public class PaymentController {
     }
 
     @GetMapping("/cart")
-    public String cart(HttpSession session, Model model) {
-        MemberDto loginMember = requireLogin(session);
-        if (loginMember == null) {
-            return "redirect:/members/login";
-        }
+    public String cart(@AuthenticationPrincipal(expression = "member") MemberDto loginMember, Model model) {
         model.addAttribute("cartItems", paymentService.getCartItems(loginMember.getUId()));
         model.addAttribute("cartCount", paymentService.getCartCount(loginMember.getUId()));
         return "payment/cart";
     }
 
     @PostMapping("/cart/{cNum}")
-    public String addCart(@PathVariable int cNum, HttpSession session) {
-        MemberDto loginMember = requireLogin(session);
-        if (loginMember == null) {
-            return "redirect:/members/login";
-        }
+    public String addCart(@PathVariable int cNum,
+                          @AuthenticationPrincipal(expression = "member") MemberDto loginMember) {
         paymentService.addCart(loginMember.getUId(), cNum);
         return "redirect:/payments/cart";
     }
 
     @PostMapping("/cart/{cNum}/delete")
-    public String deleteCart(@PathVariable int cNum, HttpSession session) {
-        MemberDto loginMember = requireLogin(session);
-        if (loginMember == null) {
-            return "redirect:/members/login";
-        }
+    public String deleteCart(@PathVariable int cNum,
+                             @AuthenticationPrincipal(expression = "member") MemberDto loginMember) {
         paymentService.removeCart(loginMember.getUId(), cNum);
         return "redirect:/payments/cart";
     }
 
     @GetMapping("/checkout")
-    public String checkoutForm(HttpSession session, Model model) {
-        MemberDto loginMember = requireLogin(session);
-        if (loginMember == null) {
-            return "redirect:/members/login";
-        }
+    public String checkoutForm(@AuthenticationPrincipal(expression = "member") MemberDto loginMember, Model model) {
         model.addAttribute("cartItems", paymentService.getCartItems(loginMember.getUId()));
         return "payment/checkout";
     }
 
     @PostMapping("/checkout")
-    public String checkout(PaymentRequestDto paymentRequestDto, HttpSession session) {
-        MemberDto loginMember = requireLogin(session);
-        if (loginMember == null) {
-            return "redirect:/members/login";
-        }
+    public String checkout(PaymentRequestDto paymentRequestDto,
+                           @AuthenticationPrincipal(expression = "member") MemberDto loginMember) {
         paymentService.checkout(paymentRequestDto, loginMember.getUId());
         return "redirect:/payments/history";
     }
 
     @GetMapping("/history")
-    public String history(HttpSession session, Model model) {
-        MemberDto loginMember = requireLogin(session);
-        if (loginMember == null) {
-            return "redirect:/members/login";
-        }
+    public String history(@AuthenticationPrincipal(expression = "member") MemberDto loginMember, Model model) {
         model.addAttribute("studentPayments", paymentService.getStudentPayments(loginMember.getUId()));
         model.addAttribute("teacherPayments", paymentService.getTeacherPayments(loginMember.getUId()));
         return "payment/history";
-    }
-
-    private MemberDto requireLogin(HttpSession session) {
-        return (MemberDto) session.getAttribute("loginMember");
     }
 }

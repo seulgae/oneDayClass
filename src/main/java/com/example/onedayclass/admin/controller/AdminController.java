@@ -32,7 +32,7 @@ public class AdminController {
         model.addAttribute("pendingClasses", classService.getPendingClasses());
         model.addAttribute("pendingLevelUps", levelUpService.getPendingRequests());
         model.addAttribute("questions", qnaService.getQuestions("qTitle", null, "admin"));
-        model.addAttribute("reviews", reviewService.getReviews("admin"));
+        model.addAttribute("reviews", reviewService.getReviews("rTitle", null, "admin"));
         return "admin/dashboard";
     }
 

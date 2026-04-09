@@ -8,9 +8,15 @@ import java.util.List;
 
 @Mapper
 public interface ClassMapper {
-    List<ClassDto> findAll(@Param("category") String category, @Param("onoff") String onoff, @Param("includeHidden") boolean includeHidden);
+    List<ClassDto> findAll(@Param("keyword") String keyword,
+                           @Param("keyField") String keyField,
+                           @Param("onoff") String onoff,
+                           @Param("includeHidden") boolean includeHidden);
 
-    List<ClassDto> findFeatured(@Param("category") String category, @Param("onoff") String onoff, @Param("limit") int limit);
+    List<ClassDto> findFeatured(@Param("keyword") String keyword,
+                                @Param("keyField") String keyField,
+                                @Param("onoff") String onoff,
+                                @Param("limit") int limit);
 
     List<ClassDto> findPending();
 

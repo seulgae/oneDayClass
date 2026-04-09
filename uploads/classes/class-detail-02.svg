@@ -1,0 +1,29 @@
+﻿<svg xmlns='http://www.w3.org/2000/svg' width='1400' height='960' viewBox='0 0 1400 960'>
+  <defs>
+    <linearGradient id='dgradMain' x1='0' y1='0' x2='1' y2='1'>
+      <stop offset='0%' stop-color='#F6E2B3'/>
+      <stop offset='100%' stop-color='#A86A3D'/>
+    </linearGradient>
+  </defs>
+  <rect width='1400' height='960' fill='#f7f1eb'/>
+  <rect x='48' y='48' width='1304' height='864' rx='40' fill='url(#dgradMain)'/>
+  <rect x='96' y='98' width='560' height='764' rx='32' fill='#ffffff' fill-opacity='0.14'/>
+  <text x='110' y='170' font-family='Pretendard, Apple SD Gothic Neo, Malgun Gothic, sans-serif' font-size='28' fill='#fffdf9'>CLASS GUIDE</text>
+  <text x='110' y='260' font-family='Pretendard, Apple SD Gothic Neo, Malgun Gothic, sans-serif' font-size='64' font-weight='700' fill='#ffffff'>휘낭시에 & 마들렌</text>
+  <text x='110' y='320' font-family='Pretendard, Apple SD Gothic Neo, Malgun Gothic, sans-serif' font-size='30' fill='#fffdf9'>베이킹 클래스 | 서울 한남</text>
+  <text x='110' y='430' font-family='Pretendard, Apple SD Gothic Neo, Malgun Gothic, sans-serif' font-size='28' fill='#ffffff'>1. 기본 이론 설명 후 단계별 시연</text>
+  <text x='110' y='485' font-family='Pretendard, Apple SD Gothic Neo, Malgun Gothic, sans-serif' font-size='28' fill='#ffffff'>2. 참여자 개별 실습과 피드백 진행</text>
+  <text x='110' y='540' font-family='Pretendard, Apple SD Gothic Neo, Malgun Gothic, sans-serif' font-size='28' fill='#ffffff'>3. 결과물 완성과 촬영, 집에서의 응용 팁 안내</text>
+  <rect x='764' y='134' width='490' height='250' rx='28' fill='#ffffff' fill-opacity='0.2'/>
+  <text x='806' y='215' font-family='Pretendard, Apple SD Gothic Neo, Malgun Gothic, sans-serif' font-size='30' font-weight='700' fill='#ffffff'>수업 포인트</text>
+  <text x='806' y='270' font-family='Pretendard, Apple SD Gothic Neo, Malgun Gothic, sans-serif' font-size='26' fill='#ffffff'>- 초보자도 따라올 수 있는 난이도</text>
+  <text x='806' y='318' font-family='Pretendard, Apple SD Gothic Neo, Malgun Gothic, sans-serif' font-size='26' fill='#ffffff'>- 완성작 또는 결과물 직접 소장</text>
+  <text x='806' y='366' font-family='Pretendard, Apple SD Gothic Neo, Malgun Gothic, sans-serif' font-size='26' fill='#ffffff'>- 클래스 후 복습용 가이드 제공</text>
+  <rect x='764' y='430' width='490' height='330' rx='28' fill='#111111' fill-opacity='0.18'/>
+  <text x='806' y='515' font-family='Georgia, serif' font-size='44' fill='#ffffff'>Butter Dessert Class</text>
+  <text x='806' y='590' font-family='Pretendard, Apple SD Gothic Neo, Malgun Gothic, sans-serif' font-size='28' fill='#ffffff'>운영 강사: 온기 클래스랩</text>
+  <text x='806' y='640' font-family='Pretendard, Apple SD Gothic Neo, Malgun Gothic, sans-serif' font-size='28' fill='#ffffff'>참가비: 64,000원</text>
+  <text x='806' y='690' font-family='Pretendard, Apple SD Gothic Neo, Malgun Gothic, sans-serif' font-size='28' fill='#ffffff'>준비물: 현장 제공 또는 배송 키트 포함</text>
+  <text x='1248' y='858' text-anchor='end' font-family='Georgia, serif' font-size='24' fill='#ffffff' fill-opacity='0.92'>One Day Class Studio</text>
+</svg>
+

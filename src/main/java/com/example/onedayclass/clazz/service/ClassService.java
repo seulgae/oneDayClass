@@ -6,11 +6,11 @@ import com.example.onedayclass.common.paging.PageResult;
 import java.util.List;
 
 public interface ClassService {
-    List<ClassDto> getClasses(String category, String onoff, boolean includeHidden);
+    List<ClassDto> getClasses(String keyField, String keyword, String onoff, boolean includeHidden);
 
-    PageResult<ClassDto> getClassesPage(String category, String onoff, boolean includeHidden, int page, int pageSize);
+    PageResult<ClassDto> getClassesPage(String keyField, String keyword, String onoff, boolean includeHidden, int page, int pageSize);
 
-    List<ClassDto> getFeaturedClasses(String category, String onoff, int limit);
+    List<ClassDto> getFeaturedClasses(String keyField, String keyword, String onoff, int limit);
 
     List<ClassDto> getPendingClasses();
 

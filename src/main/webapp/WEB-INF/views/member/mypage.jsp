@@ -1,5 +1,5 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
-<jsp:include page="../include/header.jsp" />
+<%@ include file="../include/header.jsp" %>
 <section class="panel detail">
     <div class="section-head"><h2>마이페이지</h2><a class="btn secondary" href="/members/edit">수정</a></div>
     <dl><dt>아이디</dt><dd>${member.UId}</dd></dl>
@@ -15,4 +15,4 @@
         </form>
     </div>
 </section>
-<jsp:include page="../include/footer.jsp" />
+<%@ include file="../include/footer.jsp" %>

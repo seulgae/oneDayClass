@@ -6,7 +6,8 @@ import com.example.onedayclass.common.storage.FileStorageService;
 import com.example.onedayclass.member.dto.MemberDto;
 import com.example.onedayclass.qna.service.QnaService;
 import com.example.onedayclass.review.service.ReviewService;
-import jakarta.servlet.http.HttpSession;
+import com.example.onedayclass.security.MemberPrincipal;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -39,23 +40,27 @@ public class ClassController {
     }
 
     @GetMapping
-    public String list(@RequestParam(required = false) String category,
+    public String list(@RequestParam(required = false, defaultValue = "cTitle") String keyField,
+                       @RequestParam(required = false) String keyword,
                        @RequestParam(required = false) String onoff,
                        @RequestParam(defaultValue = "1") int page,
-                       HttpSession session,
+                       @AuthenticationPrincipal MemberPrincipal principal,
                        Model model) {
-        MemberDto loginMember = (MemberDto) session.getAttribute("loginMember");
+        MemberDto loginMember = principal == null ? null : principal.getMember();
         boolean includeHidden = loginMember != null && ("2".equals(loginMember.getULevel()) || "3".equals(loginMember.getULevel()));
-        model.addAttribute("classPage", classService.getClassesPage(category, onoff, includeHidden, page, 12));
-        model.addAttribute("featured", classService.getFeaturedClasses(category, onoff, 4));
+        model.addAttribute("classPage", classService.getClassesPage(keyField, keyword, onoff, includeHidden, page, 12));
+        model.addAttribute("featured", classService.getFeaturedClasses(keyField, keyword, onoff, 4));
+        model.addAttribute("selectedKeyField", keyField);
+        model.addAttribute("keyword", keyword);
         model.addAttribute("selectedOnOff", onoff);
-        model.addAttribute("selectedCategory", category);
         return "class/list";
     }
 
     @GetMapping("/{cNum}")
-    public String detail(@PathVariable int cNum, HttpSession session, Model model) {
-        MemberDto loginMember = (MemberDto) session.getAttribute("loginMember");
+    public String detail(@PathVariable int cNum,
+                         @AuthenticationPrincipal MemberPrincipal principal,
+                         Model model) {
+        MemberDto loginMember = principal == null ? null : principal.getMember();
         model.addAttribute("classItem", classService.getClass(cNum));
         model.addAttribute("reviews", reviewService.getClassReviews(cNum, loginMember == null ? null : loginMember.getUId()));
         model.addAttribute("questions", qnaService.getClassQuestions(cNum, "qTitle", null));
@@ -63,14 +68,7 @@ public class ClassController {
     }
 
     @GetMapping("/new")
-    public String createForm(HttpSession session, Model model) {
-        MemberDto loginMember = (MemberDto) session.getAttribute("loginMember");
-        if (loginMember == null) {
-            return "redirect:/members/login";
-        }
-        if (!canManageClasses(loginMember)) {
-            return "redirect:/classes";
-        }
+    public String createForm(@AuthenticationPrincipal(expression = "member") MemberDto loginMember, Model model) {
         ClassDto classDto = new ClassDto();
         classDto.setCUid(loginMember.getUId());
         classDto.setCTeacher(loginMember.getSName() == null ? loginMember.getUName() : loginMember.getSName());
@@ -83,14 +81,7 @@ public class ClassController {
     public String create(ClassDto classDto,
                          @RequestParam(name = "thumbnailImage", required = false) MultipartFile thumbnailImage,
                          @RequestParam(name = "detailImage", required = false) MultipartFile detailImage,
-                         HttpSession session) throws IOException {
-        MemberDto loginMember = (MemberDto) session.getAttribute("loginMember");
-        if (loginMember == null) {
-            return "redirect:/members/login";
-        }
-        if (!canManageClasses(loginMember)) {
-            return "redirect:/classes";
-        }
+                         @AuthenticationPrincipal(expression = "member") MemberDto loginMember) throws IOException {
         classDto.setCUid(loginMember.getUId());
         classDto.setCTeacher(loginMember.getSName() == null ? loginMember.getUName() : loginMember.getSName());
         applyUploadedFiles(classDto, null, thumbnailImage, detailImage);
@@ -99,14 +90,7 @@ public class ClassController {
     }
 
     @GetMapping("/{cNum}/edit")
-    public String editForm(@PathVariable int cNum, HttpSession session, Model model) {
-        MemberDto loginMember = (MemberDto) session.getAttribute("loginMember");
-        if (loginMember == null) {
-            return "redirect:/members/login";
-        }
-        if (!canManageClasses(loginMember)) {
-            return "redirect:/classes/" + cNum;
-        }
+    public String editForm(@PathVariable int cNum, Model model) {
         model.addAttribute("classDto", classService.getClass(cNum));
         return "class/form";
     }
@@ -116,27 +100,20 @@ public class ClassController {
                        ClassDto classDto,
                        @RequestParam(name = "thumbnailImage", required = false) MultipartFile thumbnailImage,
                        @RequestParam(name = "detailImage", required = false) MultipartFile detailImage,
-                       HttpSession session) throws IOException {
-        MemberDto loginMember = (MemberDto) session.getAttribute("loginMember");
-        if (loginMember == null) {
-            return "redirect:/members/login";
-        }
-        if (!canManageClasses(loginMember)) {
-            return "redirect:/classes/" + cNum;
-        }
+                       @AuthenticationPrincipal(expression = "member") MemberDto loginMember) throws IOException {
         ClassDto currentClass = classService.getClass(cNum);
         classDto.setCNum(cNum);
+        classDto.setCUid(loginMember.getUId());
+        classDto.setCTeacher(loginMember.getSName() == null ? loginMember.getUName() : loginMember.getSName());
         applyUploadedFiles(classDto, currentClass, thumbnailImage, detailImage);
         classService.updateClass(classDto);
         return "redirect:/classes/" + cNum;
     }
 
     @PostMapping("/{cNum}/like")
-    public String like(@PathVariable int cNum, HttpSession session, RedirectAttributes redirectAttributes) {
-        MemberDto loginMember = (MemberDto) session.getAttribute("loginMember");
-        if (loginMember == null) {
-            return "redirect:/members/login";
-        }
+    public String like(@PathVariable int cNum,
+                       @AuthenticationPrincipal(expression = "member") MemberDto loginMember,
+                       RedirectAttributes redirectAttributes) {
         if (!classService.likeClass(loginMember.getUId(), cNum)) {
             redirectAttributes.addFlashAttribute("message", "이미 추천한 클래스입니다.");
         }
@@ -144,14 +121,7 @@ public class ClassController {
     }
 
     @PostMapping("/{cNum}/delete")
-    public String delete(@PathVariable int cNum, HttpSession session) {
-        MemberDto loginMember = (MemberDto) session.getAttribute("loginMember");
-        if (loginMember == null) {
-            return "redirect:/members/login";
-        }
-        if (!canManageClasses(loginMember)) {
-            return "redirect:/classes/" + cNum;
-        }
+    public String delete(@PathVariable int cNum) {
         classService.deleteClass(cNum);
         return "redirect:/classes";
     }
@@ -182,9 +152,5 @@ public class ClassController {
             target.setCFileName(fileStorageService.store(detailImage, "classes"));
             target.setCFileSize((int) detailImage.getSize());
         }
-    }
-
-    private boolean canManageClasses(MemberDto loginMember) {
-        return loginMember != null && ("2".equals(loginMember.getULevel()) || "3".equals(loginMember.getULevel()));
     }
 }

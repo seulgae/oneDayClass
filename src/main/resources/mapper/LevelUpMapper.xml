@@ -29,9 +29,11 @@
 
     <insert id="insert" parameterType="com.example.onedayclass.levelup.dto.LevelUpDto" useGeneratedKeys="true" keyProperty="lvlNum">
         insert into levelUpBBS (
-            lvlUid, lvlTitle, lvlContent, lvlName, lvlSns, lvlRegDate, lvlPos, lvlRef, lvlDepth, lvlFileName, lvlFileSize, lvlStatus, lvlOriUid
+            lvlUid, lvlTitle, lvlContent, lvlName, lvlSns, lvlRegDate, lvlPos, lvlRef, lvlDepth, lvlFileName, lvlFileSize, lvlStatus, lvlOriUid,
+            createdDate, createdBy, updatedDate, updatedBy
         ) values (
-            #{lvlUid}, #{lvlTitle}, #{lvlContent}, #{lvlName}, #{lvlSns}, now(), #{lvlPos}, #{lvlRef}, #{lvlDepth}, #{lvlFileName}, #{lvlFileSize}, #{lvlStatus}, #{lvlOriUid}
+            #{lvlUid}, #{lvlTitle}, #{lvlContent}, #{lvlName}, #{lvlSns}, now(), #{lvlPos}, #{lvlRef}, #{lvlDepth}, #{lvlFileName}, #{lvlFileSize}, #{lvlStatus}, #{lvlOriUid},
+            current_timestamp, coalesce(#{createdBy}, #{lvlUid}), current_timestamp, coalesce(#{updatedBy}, #{lvlUid})
         )
     </insert>
 
@@ -40,12 +42,17 @@
         set lvlTitle = #{lvlTitle},
             lvlContent = #{lvlContent},
             lvlName = #{lvlName},
-            lvlSns = #{lvlSns}
+            lvlSns = #{lvlSns},
+            updatedDate = current_timestamp,
+            updatedBy = coalesce(#{updatedBy}, #{lvlUid})
         where lvlNum = #{lvlNum}
     </update>
 
     <update id="updateStatus">
-        update levelUpBBS set lvlStatus = #{status} where lvlNum = #{lvlNum}
+        update levelUpBBS
+        set lvlStatus = #{status},
+            updatedDate = current_timestamp
+        where lvlNum = #{lvlNum}
     </update>
 
     <update id="updateReplyPositions">

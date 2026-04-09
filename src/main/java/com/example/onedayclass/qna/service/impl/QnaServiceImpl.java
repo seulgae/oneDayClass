@@ -6,7 +6,6 @@ import com.example.onedayclass.qna.dto.QnaDto;
 import com.example.onedayclass.qna.mapper.QnaMapper;
 import com.example.onedayclass.qna.service.QnaService;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -44,11 +43,22 @@ public class QnaServiceImpl implements QnaService {
     }
 
     @Override
+    public QnaDto getRootQuestion(int qRef) {
+        return qnaMapper.findRootByRef(qRef);
+    }
+
+    @Override
+    public List<QnaDto> getReplies(int qRef) {
+        return qnaMapper.findRepliesByRef(qRef);
+    }
+
+    @Override
     public boolean createQuestion(QnaDto qnaDto) {
         Integer nextRef = qnaMapper.findNextRef();
         qnaDto.setQRef(nextRef == null ? 1 : nextRef);
         qnaDto.setQPos(0);
         qnaDto.setQDepth(0);
+        qnaDto.setParentQNum(null);
         if (qnaDto.getQStatus() == null) {
             qnaDto.setQStatus(1);
         }
@@ -61,16 +71,40 @@ public class QnaServiceImpl implements QnaService {
     }
 
     @Override
-    public boolean deleteQuestion(int qRef) {
-        return qnaMapper.softDeleteThread(qRef) > 0;
+    public boolean deleteQuestion(int qNum) {
+        QnaDto question = qnaMapper.findById(qNum);
+        if (question == null) {
+            return false;
+        }
+        if (question.getQDepth() != null && question.getQDepth() == 0) {
+            return qnaMapper.softDeleteThread(question.getQRef()) > 0;
+        }
+        return qnaMapper.softDeleteOne(qNum) > 0;
     }
 
     @Override
-    @Transactional
     public boolean replyQuestion(QnaDto qnaDto) {
-        qnaMapper.updateReplyPositions(qnaDto.getQRef(), qnaDto.getQPos());
-        qnaDto.setQPos(qnaDto.getQPos() + 1);
-        qnaDto.setQDepth(qnaDto.getQDepth() + 1);
+        QnaDto parent = qnaMapper.findById(qnaDto.getParentQNum());
+        if (parent == null) {
+            return false;
+        }
+
+        QnaDto root = parent.getQDepth() != null && parent.getQDepth() == 0
+                ? parent
+                : qnaMapper.findRootByRef(parent.getQRef());
+        if (root == null) {
+            return false;
+        }
+
+        Integer maxPos = qnaMapper.findMaxPosByRef(root.getQRef());
+        qnaDto.setQRef(root.getQRef());
+        qnaDto.setQPos(maxPos == null ? 1 : maxPos + 1);
+        qnaDto.setQDepth(Math.min((parent.getQDepth() == null ? 0 : parent.getQDepth()) + 1, 2));
+        qnaDto.setQOriUid(parent.getQUid());
+        qnaDto.setCNum(root.getCNum());
+        if (qnaDto.getQStatus() == null) {
+            qnaDto.setQStatus(1);
+        }
         return qnaMapper.insert(qnaDto) > 0;
     }
 
