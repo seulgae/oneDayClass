@@ -41,6 +41,17 @@ public class ClassController {
         this.fileStorageService = fileStorageService;
     }
 
+    /**
+     * 클래스 목록과 추천 클래스를 조회한다.
+     *
+     * @param keyField 검색 기준 필드
+     * @param keyword 검색어
+     * @param onoff 온/오프라인 구분값
+     * @param page 현재 페이지 번호
+     * @param principal 로그인 사용자 정보
+     * @param model 목록 데이터와 검색 상태를 전달할 뷰 모델
+     * @return 클래스 목록 JSP 경로
+     */
     @GetMapping
     public String list(@RequestParam(required = false, defaultValue = "cTitle") String keyField,
                        @RequestParam(required = false) String keyword,
@@ -58,6 +69,14 @@ public class ClassController {
         return "class/list";
     }
 
+    /**
+     * 클래스 상세 화면과 관련 후기/QnA를 조회한다.
+     *
+     * @param cNum 조회할 클래스 번호
+     * @param principal 로그인 사용자 정보
+     * @param model 상세 데이터와 연관 데이터를 전달할 뷰 모델
+     * @return 클래스 상세 JSP 경로
+     */
     @GetMapping("/{cNum}")
     public String detail(@PathVariable int cNum,
                          @AuthenticationPrincipal MemberPrincipal principal,
@@ -69,6 +88,13 @@ public class ClassController {
         return "class/detail";
     }
 
+    /**
+     * 클래스 등록 화면의 기본값을 준비한다.
+     *
+     * @param loginMember 로그인 사용자 정보
+     * @param model 신규 클래스 DTO를 전달할 뷰 모델
+     * @return 클래스 등록/수정 JSP 경로
+     */
     @GetMapping("/new")
     public String createForm(@AuthenticationPrincipal(expression = "member") MemberDto loginMember, Model model) {
         ClassDto classDto = new ClassDto();
@@ -79,6 +105,17 @@ public class ClassController {
         return "class/form";
     }
 
+    /**
+     * 신규 클래스를 등록한다.
+     *
+     * @param classDto 등록할 클래스 데이터
+     * @param bindingResult 입력값 검증 결과
+     * @param thumbnailImage 썸네일 업로드 파일
+     * @param detailImage 상세 이미지 업로드 파일
+     * @param loginMember 로그인 사용자 정보
+     * @return 검증 실패 시 폼 화면, 성공 시 목록으로 리다이렉트
+     * @throws IOException 파일 저장 중 오류가 발생한 경우
+     */
     @PostMapping
     public String create(@Valid ClassDto classDto,
                          BindingResult bindingResult,
@@ -95,12 +132,31 @@ public class ClassController {
         return "redirect:/classes";
     }
 
+    /**
+     * 클래스 수정 화면을 조회한다.
+     *
+     * @param cNum 수정할 클래스 번호
+     * @param model 기존 클래스 정보를 전달할 뷰 모델
+     * @return 클래스 등록/수정 JSP 경로
+     */
     @GetMapping("/{cNum}/edit")
     public String editForm(@PathVariable int cNum, Model model) {
         model.addAttribute("classDto", classService.getClass(cNum));
         return "class/form";
     }
 
+    /**
+     * 기존 클래스를 수정한다.
+     *
+     * @param cNum 수정할 클래스 번호
+     * @param classDto 수정할 클래스 데이터
+     * @param bindingResult 입력값 검증 결과
+     * @param thumbnailImage 썸네일 업로드 파일
+     * @param detailImage 상세 이미지 업로드 파일
+     * @param loginMember 로그인 사용자 정보
+     * @return 검증 실패 시 폼 화면, 성공 시 상세 화면으로 리다이렉트
+     * @throws IOException 파일 저장 중 오류가 발생한 경우
+     */
     @PostMapping("/{cNum}/edit")
     public String edit(@PathVariable int cNum,
                        @Valid ClassDto classDto,
@@ -125,6 +181,14 @@ public class ClassController {
         return "redirect:/classes/" + cNum;
     }
 
+    /**
+     * 클래스 좋아요를 추가한다.
+     *
+     * @param cNum 추천할 클래스 번호
+     * @param loginMember 로그인 사용자 정보
+     * @param redirectAttributes 중복 추천 메시지를 전달할 리다이렉트 속성
+     * @return 클래스 상세 화면으로 리다이렉트
+     */
     @PostMapping("/{cNum}/like")
     public String like(@PathVariable int cNum,
                        @AuthenticationPrincipal(expression = "member") MemberDto loginMember,
@@ -135,12 +199,27 @@ public class ClassController {
         return "redirect:/classes/" + cNum;
     }
 
+    /**
+     * 클래스를 삭제한다.
+     *
+     * @param cNum 삭제할 클래스 번호
+     * @return 클래스 목록으로 리다이렉트
+     */
     @PostMapping("/{cNum}/delete")
     public String delete(@PathVariable int cNum) {
         classService.deleteClass(cNum);
         return "redirect:/classes";
     }
 
+    /**
+     * 업로드된 썸네일/상세 이미지를 저장하고 대상 DTO에 파일 정보를 반영한다.
+     *
+     * @param target 저장 결과를 반영할 대상 DTO
+     * @param source 기존 파일 정보를 복사할 원본 DTO
+     * @param thumbnailImage 새 썸네일 파일
+     * @param detailImage 새 상세 이미지 파일
+     * @throws IOException 파일 저장 또는 삭제 중 오류가 발생한 경우
+     */
     private void applyUploadedFiles(ClassDto target,
                                     ClassDto source,
                                     MultipartFile thumbnailImage,

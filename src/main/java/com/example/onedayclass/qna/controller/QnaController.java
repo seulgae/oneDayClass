@@ -27,6 +27,16 @@ public class QnaController {
         this.qnaService = qnaService;
     }
 
+    /**
+     * QnA 목록을 조회한다.
+     *
+     * @param keyField 검색 기준 필드
+     * @param keyword 검색어
+     * @param page 현재 페이지 번호
+     * @param principal 로그인 사용자 정보
+     * @param model 목록 데이터와 검색 상태를 전달할 뷰 모델
+     * @return QnA 목록 JSP 경로
+     */
     @GetMapping
     public String list(@RequestParam(required = false, defaultValue = "qTitle") String keyField,
                        @RequestParam(required = false) String keyword,
@@ -43,6 +53,13 @@ public class QnaController {
         return "qna/list";
     }
 
+    /**
+     * 원글 기준 QnA 상세와 답글 목록을 조회한다.
+     *
+     * @param qNum 조회할 글 번호
+     * @param model 원글과 답글 목록을 전달할 뷰 모델
+     * @return QnA 상세 JSP 경로
+     */
     @GetMapping("/{qNum}")
     public String detail(@PathVariable int qNum, Model model) {
         QnaDto question = qnaService.getQuestion(qNum);
@@ -59,6 +76,14 @@ public class QnaController {
         return "qna/detail";
     }
 
+    /**
+     * QnA 작성 화면의 기본값을 준비한다.
+     *
+     * @param cNum 연관 클래스 번호
+     * @param loginMember 로그인 사용자 정보
+     * @param model 신규 문의 DTO를 전달할 뷰 모델
+     * @return QnA 작성 JSP 경로
+     */
     @GetMapping("/new")
     public String form(@RequestParam(required = false) Integer cNum,
                        @AuthenticationPrincipal(expression = "member") MemberDto loginMember,
@@ -70,6 +95,14 @@ public class QnaController {
         return "qna/form";
     }
 
+    /**
+     * 새 문의를 등록한다.
+     *
+     * @param qnaDto 등록할 문의 데이터
+     * @param bindingResult 입력값 검증 결과
+     * @param loginMember 로그인 사용자 정보
+     * @return 검증 실패 시 작성 화면, 성공 시 목록으로 리다이렉트
+     */
     @PostMapping
     public String create(@Valid QnaDto qnaDto,
                          BindingResult bindingResult,
@@ -82,12 +115,29 @@ public class QnaController {
         return "redirect:/qna";
     }
 
+    /**
+     * 문의 답변 작성 화면을 조회한다.
+     *
+     * @param qNum 부모 문의 번호
+     * @param model 부모 문의를 전달할 뷰 모델
+     * @return QnA 답변 JSP 경로
+     */
     @GetMapping("/{qNum}/reply")
     public String replyForm(@PathVariable int qNum, Model model) {
         model.addAttribute("parent", qnaService.getQuestion(qNum));
         return "qna/reply";
     }
 
+    /**
+     * 문의에 대한 답변 또는 대댓글을 등록한다.
+     *
+     * @param qNum 부모 문의 번호
+     * @param qnaDto 등록할 답변 데이터
+     * @param bindingResult 입력값 검증 결과
+     * @param loginMember 로그인 사용자 정보
+     * @param model 검증 실패 시 부모 글을 전달할 뷰 모델
+     * @return 검증 실패 시 답변 화면, 성공 시 원글 상세로 리다이렉트
+     */
     @PostMapping("/{qNum}/reply")
     public String reply(@PathVariable int qNum,
                         @Valid QnaDto qnaDto,
@@ -111,6 +161,12 @@ public class QnaController {
         return "redirect:/qna/" + qNum;
     }
 
+    /**
+     * 문의 글을 삭제한다.
+     *
+     * @param qNum 삭제할 문의 번호
+     * @return QnA 목록으로 리다이렉트
+     */
     @PostMapping("/{qNum}/delete")
     public String delete(@PathVariable int qNum) {
         qnaService.deleteQuestion(qNum);

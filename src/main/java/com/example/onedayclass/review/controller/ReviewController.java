@@ -26,6 +26,16 @@ public class ReviewController {
         this.reviewService = reviewService;
     }
 
+    /**
+     * 후기 목록을 조회한다.
+     *
+     * @param keyField 검색 기준 필드
+     * @param keyword 검색어
+     * @param page 현재 페이지 번호
+     * @param principal 로그인 사용자 정보
+     * @param model 목록 데이터와 검색 상태를 전달할 뷰 모델
+     * @return 후기 목록 JSP 경로
+     */
     @GetMapping
     public String list(@RequestParam(required = false, defaultValue = "rTitle") String keyField,
                        @RequestParam(required = false) String keyword,
@@ -42,12 +52,27 @@ public class ReviewController {
         return "review/list";
     }
 
+    /**
+     * 후기 상세 화면을 조회한다.
+     *
+     * @param rNum 조회할 후기 번호
+     * @param model 상세 데이터를 전달할 뷰 모델
+     * @return 후기 상세 JSP 경로
+     */
     @GetMapping("/{rNum}")
     public String detail(@PathVariable int rNum, Model model) {
         model.addAttribute("review", reviewService.getReview(rNum, true));
         return "review/detail";
     }
 
+    /**
+     * 후기 작성 화면의 기본값을 준비한다.
+     *
+     * @param cNum 연관 클래스 번호
+     * @param loginMember 로그인 사용자 정보
+     * @param model 신규 후기 DTO를 전달할 뷰 모델
+     * @return 후기 작성 JSP 경로
+     */
     @GetMapping("/new")
     public String form(@RequestParam(required = false) Integer cNum,
                        @AuthenticationPrincipal(expression = "member") MemberDto loginMember,
@@ -59,6 +84,14 @@ public class ReviewController {
         return "review/form";
     }
 
+    /**
+     * 새 후기를 등록한다.
+     *
+     * @param reviewDto 등록할 후기 데이터
+     * @param bindingResult 입력값 검증 결과
+     * @param loginMember 로그인 사용자 정보
+     * @return 검증 실패 시 작성 화면, 성공 시 목록으로 리다이렉트
+     */
     @PostMapping
     public String create(@Valid ReviewDto reviewDto,
                          BindingResult bindingResult,
@@ -71,6 +104,14 @@ public class ReviewController {
         return "redirect:/reviews";
     }
 
+    /**
+     * 후기에 좋아요를 추가한다.
+     *
+     * @param rNum 추천할 후기 번호
+     * @param loginMember 로그인 사용자 정보
+     * @param redirectAttributes 중복 추천 메시지를 전달할 리다이렉트 속성
+     * @return 후기 상세 화면으로 리다이렉트
+     */
     @PostMapping("/{rNum}/like")
     public String like(@PathVariable int rNum,
                        @AuthenticationPrincipal(expression = "member") MemberDto loginMember,
@@ -81,6 +122,12 @@ public class ReviewController {
         return "redirect:/reviews/" + rNum;
     }
 
+    /**
+     * 후기를 삭제한다.
+     *
+     * @param rNum 삭제할 후기 번호
+     * @return 후기 목록으로 리다이렉트
+     */
     @PostMapping("/{rNum}/delete")
     public String delete(@PathVariable int rNum) {
         reviewService.deleteReview(rNum);

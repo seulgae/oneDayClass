@@ -27,6 +27,12 @@ public class AdminController {
         this.reviewService = reviewService;
     }
 
+    /**
+     * 관리자 대시보드 화면을 조회한다.
+     *
+     * @param model 승인 대기 데이터와 게시판 데이터를 전달할 뷰 모델
+     * @return 관리자 대시보드 JSP 경로
+     */
     @GetMapping
     public String dashboard(Model model) {
         model.addAttribute("pendingClasses", classService.getPendingClasses());
@@ -36,6 +42,12 @@ public class AdminController {
         return "admin/dashboard";
     }
 
+    /**
+     * 관리자 승인 대상 클래스를 승인 처리한다.
+     *
+     * @param cNum 승인할 클래스 번호
+     * @return 관리자 대시보드로 리다이렉트
+     */
     @PostMapping("/classes/{cNum}/approve")
     public String approveClass(@PathVariable int cNum) {
         classService.approveClass(cNum);

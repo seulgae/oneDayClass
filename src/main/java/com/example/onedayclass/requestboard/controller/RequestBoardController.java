@@ -27,6 +27,16 @@ public class RequestBoardController {
         this.requestBoardService = requestBoardService;
     }
 
+    /**
+     * 요청게시판 목록을 조회한다.
+     *
+     * @param keyField 검색 기준 필드
+     * @param keyword 검색어
+     * @param page 현재 페이지 번호
+     * @param principal 로그인 사용자 정보
+     * @param model 목록 데이터와 검색 상태를 전달할 뷰 모델
+     * @return 요청게시판 목록 JSP 경로
+     */
     @GetMapping
     public String list(@RequestParam(required = false, defaultValue = "reqTitle") String keyField,
                        @RequestParam(required = false) String keyword,
@@ -43,6 +53,13 @@ public class RequestBoardController {
         return "request/list";
     }
 
+    /**
+     * 원글 기준 요청게시판 상세와 답글 목록을 조회한다.
+     *
+     * @param reqNum 조회할 요청 번호
+     * @param model 원글과 답글 목록을 전달할 뷰 모델
+     * @return 요청게시판 상세 JSP 경로
+     */
     @GetMapping("/{reqNum}")
     public String detail(@PathVariable int reqNum, Model model) {
         RequestBoardDto requestItem = requestBoardService.getRequest(reqNum);
@@ -58,6 +75,13 @@ public class RequestBoardController {
         return "request/detail";
     }
 
+    /**
+     * 요청게시판 작성 화면의 기본값을 준비한다.
+     *
+     * @param loginMember 로그인 사용자 정보
+     * @param model 신규 요청 DTO를 전달할 뷰 모델
+     * @return 요청게시판 작성 JSP 경로
+     */
     @GetMapping("/new")
     public String form(@AuthenticationPrincipal(expression = "member") MemberDto loginMember, Model model) {
         RequestBoardDto requestBoardDto = new RequestBoardDto();
@@ -66,6 +90,14 @@ public class RequestBoardController {
         return "request/form";
     }
 
+    /**
+     * 새 요청글을 등록한다.
+     *
+     * @param requestBoardDto 등록할 요청 데이터
+     * @param bindingResult 입력값 검증 결과
+     * @param loginMember 로그인 사용자 정보
+     * @return 검증 실패 시 작성 화면, 성공 시 목록으로 리다이렉트
+     */
     @PostMapping
     public String create(@Valid RequestBoardDto requestBoardDto,
                          BindingResult bindingResult,
@@ -78,12 +110,29 @@ public class RequestBoardController {
         return "redirect:/requests";
     }
 
+    /**
+     * 요청글 답변 작성 화면을 조회한다.
+     *
+     * @param reqNum 부모 요청 번호
+     * @param model 부모 요청을 전달할 뷰 모델
+     * @return 요청게시판 답변 JSP 경로
+     */
     @GetMapping("/{reqNum}/reply")
     public String replyForm(@PathVariable int reqNum, Model model) {
         model.addAttribute("parent", requestBoardService.getRequest(reqNum));
         return "request/reply";
     }
 
+    /**
+     * 요청글에 대한 답변 또는 대댓글을 등록한다.
+     *
+     * @param reqNum 부모 요청 번호
+     * @param requestBoardDto 등록할 답변 데이터
+     * @param bindingResult 입력값 검증 결과
+     * @param loginMember 로그인 사용자 정보
+     * @param model 검증 실패 시 부모 글을 전달할 뷰 모델
+     * @return 검증 실패 시 답변 화면, 성공 시 원글 상세로 리다이렉트
+     */
     @PostMapping("/{reqNum}/reply")
     public String reply(@PathVariable int reqNum,
                         @Valid RequestBoardDto requestBoardDto,
@@ -107,6 +156,12 @@ public class RequestBoardController {
         return "redirect:/requests/" + reqNum;
     }
 
+    /**
+     * 요청글을 삭제한다.
+     *
+     * @param reqNum 삭제할 요청 번호
+     * @return 요청게시판 목록으로 리다이렉트
+     */
     @PostMapping("/{reqNum}/delete")
     public String delete(@PathVariable int reqNum) {
         requestBoardService.deleteRequest(reqNum);

@@ -22,6 +22,12 @@ public class HomeController {
         this.levelUpService = levelUpService;
     }
 
+    /**
+     * 홈 화면에 필요한 추천 클래스, 최근 후기, 등업 요청 데이터를 조회한다.
+     *
+     * @param model 홈 화면 구성 데이터를 전달할 뷰 모델
+     * @return 홈 JSP 경로
+     */
     @GetMapping("/")
     public String home(Model model) {
         model.addAttribute("featuredClasses", classService.getFeaturedClasses(null, null, "N", 12));
@@ -31,6 +37,14 @@ public class HomeController {
         return "home";
     }
 
+    /**
+     * 지정된 개수만큼 목록을 잘라 홈 화면에 노출한다.
+     *
+     * @param items 원본 목록
+     * @param size 유지할 최대 개수
+     * @return 최대 size개까지만 포함한 목록
+     * @param <T> 목록 요소 타입
+     */
     private <T> List<T> limit(List<T> items, int size) {
         return items.stream().limit(size).toList();
     }
