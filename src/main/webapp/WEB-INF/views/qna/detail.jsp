@@ -5,29 +5,29 @@
 <section class="panel detail">
     <div class="section-head">
         <h2>${question.QTitle}</h2>
-        <a class="btn secondary" href="/qna">紐⑸줉?쇰줈</a>
+        <a class="btn secondary" href="/qna">목록으로</a>
     </div>
-    <dl><dt>?묒꽦??/dt><dd>${question.QUid}</dd></dl>
-    <dl><dt>臾몄쓽踰덊샇</dt><dd>${question.QRef}</dd></dl>
-    <dl><dt>?묒꽦??/dt><dd>${fn:substring(question.QRegDate, 0, 10)}</dd></dl>
-    <dl><dt>?댁슜</dt><dd>${question.QContent}</dd></dl>
+    <dl><dt>작성자</dt><dd>${question.QUid}</dd></dl>
+    <dl><dt>문의번호</dt><dd>${question.QRef}</dd></dl>
+    <dl><dt>작성일</dt><dd>${fn:substring(question.QRegDate, 0, 10)}</dd></dl>
+    <dl><dt>내용</dt><dd>${question.QContent}</dd></dl>
     <div class="actions">
         <c:if test="${loginMember != null}">
-            <a class="btn secondary" href="/qna/${question.QNum}/reply">?볤? ?묒꽦</a>
+            <a class="btn secondary" href="/qna/${question.QNum}/reply">답변 작성</a>
         </c:if>
         <form method="post" action="/qna/${question.QNum}/delete" class="inline-form">
-            <button type="submit">臾몄쓽 ??젣</button>
+            <button type="submit">문의 삭제</button>
         </form>
     </div>
 </section>
 
 <section class="panel">
     <div class="section-head">
-        <h2>?볤?</h2>
-        <span class="muted">${replies.size()}媛?/span>
+        <h2>답변</h2>
+        <span class="muted">${replies.size()}개</span>
     </div>
     <c:if test="${empty replies}">
-        <p class="muted">?꾩쭅 ?깅줉???볤????놁뒿?덈떎.</p>
+        <p class="muted">아직 등록된 답변이 없습니다.</p>
     </c:if>
     <div class="qna-reply-list">
         <c:forEach var="reply" items="${replies}">
@@ -40,9 +40,9 @@
                 <p>${reply.QContent}</p>
                 <c:if test="${loginMember != null and reply.QDepth lt 2}">
                     <form method="post" action="/qna/${reply.QNum}/reply" class="qna-inline-reply-form">
-                        <input type="text" name="qTitle" placeholder="??볤? ?쒕ぉ" required minlength="4" maxlength="80" pattern="^.{4,80}$" title="?쒕ぉ? 4~80???대궡濡??낅젰??二쇱꽭??">
-                        <textarea name="qContent" placeholder="??볤? ?댁슜???낅젰?섏꽭??" rows="3" required minlength="10" maxlength="3000" title="??볤? ?댁슜? 10???댁긽 ?낅젰??二쇱꽭??"></textarea>
-                        <button type="submit">??볤? ?깅줉</button>
+                        <input type="text" name="qTitle" placeholder="답변 제목" required minlength="4" maxlength="80" pattern="^.{4,80}$" title="제목은 4~80자 이내로 입력해 주세요.">
+                        <textarea name="qContent" placeholder="답변 내용을 입력해 주세요." rows="3" required minlength="10" maxlength="3000" title="답변 내용은 10자 이상 입력해 주세요."></textarea>
+                        <button type="submit">답변 등록</button>
                     </form>
                 </c:if>
             </article>
@@ -52,11 +52,11 @@
 
 <c:if test="${loginMember != null}">
     <section class="form-panel">
-        <h2>?볤? ?묒꽦</h2>
+        <h2>답변 작성</h2>
         <form method="post" action="/qna/${question.QNum}/reply">
-            <input type="text" name="qTitle" placeholder="?볤? ?쒕ぉ" required minlength="4" maxlength="80" pattern="^.{4,80}$" title="?쒕ぉ? 4~80???대궡濡??낅젰??二쇱꽭??">
-            <textarea name="qContent" placeholder="?볤? ?댁슜???낅젰?섏꽭??" rows="5" required minlength="10" maxlength="3000" title="?볤? ?댁슜? 10???댁긽 ?낅젰??二쇱꽭??"></textarea>
-            <button type="submit">?볤? ?깅줉</button>
+            <input type="text" name="qTitle" placeholder="답변 제목" required minlength="4" maxlength="80" pattern="^.{4,80}$" title="제목은 4~80자 이내로 입력해 주세요.">
+            <textarea name="qContent" placeholder="답변 내용을 입력해 주세요." rows="5" required minlength="10" maxlength="3000" title="답변 내용은 10자 이상 입력해 주세요."></textarea>
+            <button type="submit">답변 등록</button>
         </form>
     </section>
 </c:if>

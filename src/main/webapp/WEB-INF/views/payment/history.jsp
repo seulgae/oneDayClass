@@ -4,15 +4,19 @@
 <%@ include file="../include/header.jsp" %>
 <section class="two-column">
     <article class="panel">
-        <h2>내 결제내역</h2>
+        <h2>내 결제 내역</h2>
         <c:forEach var="item" items="${studentPayments}">
-                <div class="list-link">${item.CTitle}<em>${fn:substring(item.payDate, 0, 10)} / ${item.CPrice}</em></div>
+            <a class="list-link" href="/payments/history/${item.PNum}">
+                ${item.CTitle}<em>${fn:substring(item.payDate, 0, 10)} / ${item.CPrice}원</em>
+            </a>
         </c:forEach>
     </article>
     <article class="panel">
-        <h2>판매내역</h2>
+        <h2>판매 내역</h2>
         <c:forEach var="item" items="${teacherPayments}">
-            <div class="list-link">${item.CTitle}<em>${item.UId} / ${item.REmail}</em></div>
+            <a class="list-link" href="/payments/history/${item.PNum}">
+                ${item.CTitle}<em>${item.UId} / ${item.REmail}</em>
+            </a>
         </c:forEach>
     </article>
 </section>

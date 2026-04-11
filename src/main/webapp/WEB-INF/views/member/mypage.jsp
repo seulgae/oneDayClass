@@ -9,6 +9,7 @@
     <dl><dt>이메일</dt><dd>${member.UEmail}</dd></dl>
     <dl><dt>주소</dt><dd>${member.UAddr1} ${member.UAddr2}</dd></dl>
     <div class="actions">
+        <a class="btn secondary" href="/levelups">등업 요청</a>
         <a class="btn secondary" href="/payments/history">결제내역</a>
         <form method="post" action="/members/delete" class="inline-form">
             <button type="submit">회원탈퇴</button>

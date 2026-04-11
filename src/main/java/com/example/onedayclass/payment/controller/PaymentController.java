@@ -69,4 +69,18 @@ public class PaymentController {
         model.addAttribute("teacherPayments", paymentService.getTeacherPayments(loginMember.getUId()));
         return "payment/history";
     }
+
+    @GetMapping("/history/{pNum}")
+    public String historyDetail(@PathVariable int pNum,
+                                @AuthenticationPrincipal(expression = "member") MemberDto loginMember,
+                                Model model) {
+        PaymentRequestDto paymentInfo = paymentService.getPaymentInfo(pNum, loginMember.getUId());
+        if (paymentInfo == null) {
+            return "redirect:/payments/history";
+        }
+
+        model.addAttribute("paymentInfo", paymentInfo);
+        model.addAttribute("paymentItems", paymentService.getPaymentItems(pNum, loginMember.getUId()));
+        return "payment/detail";
+    }
 }

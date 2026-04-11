@@ -3,7 +3,7 @@
 <section class="panel detail">
     <div class="section-head"><h2>${requestItem.lvlTitle}</h2><a class="btn secondary" href="/levelups">목록으로</a></div>
     <dl><dt>작성자</dt><dd>${requestItem.lvlUid}</dd></dl>
-    <dl><dt>브랜드명</dt><dd>${requestItem.lvlName}</dd></dl>
+    <dl><dt>활동명</dt><dd>${requestItem.lvlName}</dd></dl>
     <dl><dt>SNS</dt><dd>${requestItem.lvlSns}</dd></dl>
     <dl><dt>내용</dt><dd>${requestItem.lvlContent}</dd></dl>
     <div class="actions">

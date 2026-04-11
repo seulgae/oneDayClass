@@ -7,10 +7,10 @@
     <c:set var="toolbarAction" value="/requests" />
     <c:set var="toolbarScope" value="request" />
     <c:set var="toolbarButtonHref" value="/requests/new" />
-    <c:set var="toolbarButtonLabel" value="요청 남기기" />
+    <c:set var="toolbarButtonLabel" value="요청 올리기" />
     <%@ include file="../include/list-toolbar.jspf" %>
 
-    <p class="board-guide">필요한 기능이나 개선 아이디어가 있다면 편하게 남겨 주세요. 운영자가 확인 후 댓글 또는 대댓글로 답변드립니다.</p>
+    <p class="board-guide">필요한 기능이나 개선 아이디어가 있다면 편하게 올려 주세요. 운영자가 확인 후 답변 또는 반영 안내를 드립니다.</p>
 
     <table class="table board-table">
         <thead>

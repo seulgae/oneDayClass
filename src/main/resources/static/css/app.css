@@ -73,9 +73,11 @@ textarea {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 22px;
+    width: min(1440px, calc(100% - 32px));
+    gap: 16px;
     min-height: 84px;
     padding: 12px 0;
+    flex-wrap: nowrap;
 }
 
 .site-footer .inner {
@@ -91,6 +93,7 @@ textarea {
 .header-primary {
     display: grid;
     gap: 6px;
+    flex: 0 0 auto;
 }
 
 .brand-copy {
@@ -104,8 +107,10 @@ textarea {
     display: flex;
     align-items: center;
     justify-content: flex-end;
-    gap: 14px;
-    flex-wrap: wrap;
+    gap: 12px;
+    flex-wrap: nowrap;
+    flex: 1 1 auto;
+    min-width: 0;
 }
 
 .brand {
@@ -114,6 +119,7 @@ textarea {
     font-weight: 900;
     letter-spacing: -0.03em;
     color: var(--pink-deep);
+    white-space: nowrap;
 }
 
 .brand::after {
@@ -132,16 +138,23 @@ textarea {
 .auth {
     display: flex;
     align-items: center;
-    gap: 10px;
-    flex-wrap: wrap;
+    gap: 8px;
+    flex-wrap: nowrap;
+}
+
+.nav {
+    flex: 1 1 auto;
+    justify-content: flex-end;
+    min-width: 0;
 }
 
 .nav a,
 .auth a,
 .auth span {
     border-radius: 999px;
-    padding: 10px 15px;
+    padding: 9px 12px;
     font-size: 14px;
+    white-space: nowrap;
 }
 
 .nav a,
@@ -157,6 +170,10 @@ textarea {
 }
 
 .auth span {
+    display: inline-block;
+    max-width: 180px;
+    overflow: hidden;
+    text-overflow: ellipsis;
     background: rgba(255, 255, 255, 0.86);
     color: var(--text);
     border: 1px solid rgba(190, 112, 68, 0.12);
@@ -695,6 +712,11 @@ textarea {
     gap: 18px;
 }
 
+.checkout-panel {
+    display: grid;
+    gap: 18px;
+}
+
 .member-form-hero {
     display: grid;
     gap: 10px;
@@ -795,6 +817,10 @@ textarea {
     grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
 }
 
+.three-column-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
 .address-grid {
     grid-template-columns: 1fr;
     margin-top: 10px;
@@ -803,6 +829,39 @@ textarea {
 .field-block {
     display: grid;
     gap: 8px;
+}
+
+.checkout-summary-list {
+    display: grid;
+    gap: 12px;
+}
+
+.checkout-summary-item {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto auto;
+    gap: 12px;
+    align-items: center;
+    padding: 16px 18px;
+    border-radius: 18px;
+    border: 1px solid rgba(241, 138, 116, 0.16);
+    background: rgba(255, 251, 248, 0.96);
+}
+
+.checkout-summary-item strong {
+    font-size: 16px;
+    color: var(--text);
+}
+
+.checkout-summary-item span {
+    color: var(--muted);
+    white-space: nowrap;
+}
+
+.checkout-total-field input {
+    background: rgba(255, 241, 232, 0.98);
+    border-color: rgba(234, 107, 133, 0.26);
+    color: var(--pink-deep);
+    font-weight: 800;
 }
 
 .field-label {
@@ -1102,6 +1161,15 @@ textarea {
 
     .form-section {
         padding: 18px;
+    }
+
+    .three-column-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .checkout-summary-item {
+        grid-template-columns: 1fr;
+        align-items: start;
     }
 
     .slider-card {

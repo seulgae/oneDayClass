@@ -20,4 +20,8 @@ public interface PaymentService {
     List<PaymentHistoryDto> getStudentPayments(String uId);
 
     List<PaymentHistoryDto> getTeacherPayments(String uId);
+
+    PaymentRequestDto getPaymentInfo(int pNum, String uId);
+
+    List<PaymentHistoryDto> getPaymentItems(int pNum, String uId);
 }

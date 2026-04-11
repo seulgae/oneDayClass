@@ -9,7 +9,7 @@
             createdDate, createdBy, updatedDate, updatedBy
         ) values (
             #{uId}, #{rName}, #{rPhone}, #{rZip}, #{rAddr1}, #{rAddr2}, #{rEmail}, #{totalPrice}, #{totalDeli}, #{totalPay}, now(),
-            current_timestamp, coalesce(#{createdBy}, #{uId}), current_timestamp, coalesce(#{updatedBy}, #{uId})
+            current_timestamp, #{uId}, current_timestamp, #{uId}
         )
     </insert>
 
@@ -18,7 +18,7 @@
             uId, cNum, cUid, cTitle, pNum, pQty, payDate, createdDate, createdBy, updatedDate, updatedBy
         ) values (
             #{uId}, #{cNum}, #{cUid}, #{cTitle}, #{pNum}, #{pQty}, now(),
-            current_timestamp, coalesce(#{createdBy}, #{uId}), current_timestamp, coalesce(#{updatedBy}, #{uId})
+            current_timestamp, #{uId}, current_timestamp, #{uId}
         )
     </insert>
 
@@ -84,5 +84,52 @@
         join paymentInfo i on p.pNum = i.pNum
         where p.cUid = #{uId}
         order by p.pNum desc
+    </select>
+
+    <select id="findPaymentInfoByPNum" resultType="com.example.onedayclass.payment.dto.PaymentRequestDto">
+        select i.pNum,
+               i.uId,
+               i.rName,
+               i.rPhone,
+               i.rZip,
+               i.rAddr1,
+               i.rAddr2,
+               i.rEmail,
+               i.totalPrice,
+               i.totalDeli,
+               i.totalPay,
+               i.payDate
+        from paymentInfo i
+        where i.pNum = #{pNum}
+          and (
+                i.uId = #{uId}
+                or exists (
+                    select 1
+                    from payComplete p
+                    where p.pNum = i.pNum
+                      and p.cUid = #{uId}
+                )
+          )
+    </select>
+
+    <select id="findPaymentItemsByPNum" resultType="com.example.onedayclass.payment.dto.PaymentHistoryDto">
+        select p.pNum,
+               p.uId,
+               p.cNum,
+               p.cUid,
+               p.cTitle,
+               p.pQty,
+               p.payDate,
+               b.cCategory,
+               b.cPrice,
+               b.cDelivery
+        from payComplete p
+        join classBBS b on p.cNum = b.cNum
+        where p.pNum = #{pNum}
+          and (
+                p.uId = #{uId}
+                or p.cUid = #{uId}
+          )
+        order by p.pcNum desc
     </select>
 </mapper>

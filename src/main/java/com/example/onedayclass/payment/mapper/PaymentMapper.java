@@ -27,4 +27,8 @@ public interface PaymentMapper {
     List<PaymentHistoryDto> findStudentPayments(String uId);
 
     List<PaymentHistoryDto> findTeacherPayments(String uId);
+
+    PaymentRequestDto findPaymentInfoByPNum(@Param("pNum") int pNum, @Param("uId") String uId);
+
+    List<PaymentHistoryDto> findPaymentItemsByPNum(@Param("pNum") int pNum, @Param("uId") String uId);
 }

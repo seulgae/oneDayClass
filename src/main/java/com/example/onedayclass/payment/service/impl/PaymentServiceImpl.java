@@ -83,4 +83,14 @@ public class PaymentServiceImpl implements PaymentService {
     public List<PaymentHistoryDto> getTeacherPayments(String uId) {
         return paymentMapper.findTeacherPayments(uId);
     }
+
+    @Override
+    public PaymentRequestDto getPaymentInfo(int pNum, String uId) {
+        return paymentMapper.findPaymentInfoByPNum(pNum, uId);
+    }
+
+    @Override
+    public List<PaymentHistoryDto> getPaymentItems(int pNum, String uId) {
+        return paymentMapper.findPaymentItemsByPNum(pNum, uId);
+    }
 }

@@ -13,9 +13,9 @@ DELETE FROM memberList;
 INSERT INTO memberList (
     uId, uPw, uName, uPhone, uZip, uAddr1, uAddr2, uEmail, uLevel, sName, sSns, createdBy, updatedBy
 ) VALUES
-('admin', '1234', '관리자', '010-2000-0001', '06123', '서울특별시 강남구 테헤란로', '18층 운영팀', 'admin@onedayclass.local', '3', NULL, NULL, 'admin', 'admin'),
-('user1', '1234', '김하늘', '010-3100-1111', '04052', '서울특별시 마포구 월드컵북로', '101동 1203호', 'user1@onedayclass.local', '1', NULL, NULL, 'user1', 'user1'),
-('user2', '1234', '박서윤', '010-4200-2222', '04799', '서울특별시 성동구 연무장길', '스튜디오 온기', 'user2@onedayclass.local', '2', '온기 클래스랩', '@warm.classlab', 'user2', 'user2');
+('admin', '12341234', '관리자', '010-2000-0001', '06123', '서울특별시 강남구 테헤란로', '18층 운영팀', 'admin@onedayclass.local', '3', NULL, NULL, 'admin', 'admin'),
+('user1', '12341234', '김하늘', '010-3100-1111', '04052', '서울특별시 마포구 월드컵북로', '101동 1203호', 'user1@onedayclass.local', '1', NULL, NULL, 'user1', 'user1'),
+('user2', '12341234', '박서윤', '010-4200-2222', '04799', '서울특별시 성동구 연무장길', '스튜디오 온기', 'user2@onedayclass.local', '2', '온기 클래스랩', '@warm.classlab', 'user2', 'user2');
 
 INSERT INTO classBBS (
     cCode, cTeacher, cUid, cCategory, cTitle, cContent, cRegDate, cPrice, cDelivery,

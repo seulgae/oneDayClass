@@ -13,7 +13,6 @@
     <div class="inner">
         <div class="header-primary">
             <a class="brand" href="/">OnedayClass</a>
-            <p class="brand-copy">오늘 바로 예약하는 감각적인 원데이 클래스</p>
         </div>
         <div class="header-nav-wrap">
             <nav class="nav">
@@ -21,7 +20,6 @@
                 <a href="/reviews">후기</a>
                 <a href="/qna">QnA</a>
                 <a href="/payments/cart">장바구니</a>
-                <a href="/levelups">등업요청</a>
                 <a href="/notices">공지사항</a>
                 <a href="/requests">요청게시판</a>
                 <c:if test="${loginMember != null and loginMember.ULevel eq '3'}">
