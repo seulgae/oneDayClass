@@ -4,9 +4,11 @@ import com.example.onedayclass.member.dto.MemberDto;
 import com.example.onedayclass.qna.dto.QnaDto;
 import com.example.onedayclass.qna.service.QnaService;
 import com.example.onedayclass.security.MemberPrincipal;
+import jakarta.validation.Valid;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -69,7 +71,12 @@ public class QnaController {
     }
 
     @PostMapping
-    public String create(QnaDto qnaDto, @AuthenticationPrincipal(expression = "member") MemberDto loginMember) {
+    public String create(@Valid QnaDto qnaDto,
+                         BindingResult bindingResult,
+                         @AuthenticationPrincipal(expression = "member") MemberDto loginMember) {
+        if (bindingResult.hasErrors()) {
+            return "qna/form";
+        }
         qnaDto.setQUid(loginMember.getUId());
         qnaService.createQuestion(qnaDto);
         return "redirect:/qna";
@@ -83,9 +90,15 @@ public class QnaController {
 
     @PostMapping("/{qNum}/reply")
     public String reply(@PathVariable int qNum,
-                        QnaDto qnaDto,
-                        @AuthenticationPrincipal(expression = "member") MemberDto loginMember) {
+                        @Valid QnaDto qnaDto,
+                        BindingResult bindingResult,
+                        @AuthenticationPrincipal(expression = "member") MemberDto loginMember,
+                        Model model) {
         QnaDto parent = qnaService.getQuestion(qNum);
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("parent", parent);
+            return "qna/reply";
+        }
         qnaDto.setQUid(loginMember.getUId());
         qnaDto.setParentQNum(qNum);
         qnaDto.setQStatus(1);

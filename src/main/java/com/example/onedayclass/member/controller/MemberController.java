@@ -2,6 +2,7 @@ package com.example.onedayclass.member.controller;
 
 import com.example.onedayclass.member.dto.MemberDto;
 import com.example.onedayclass.member.service.MemberService;
+import jakarta.validation.Valid;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -37,7 +38,7 @@ public class MemberController {
     }
 
     @PostMapping("/join")
-    public String join(@ModelAttribute MemberDto memberDto, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
+    public String join(@Valid @ModelAttribute MemberDto memberDto, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
         if (bindingResult.hasErrors()) {
             return "member/join";
         }

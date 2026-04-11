@@ -4,9 +4,11 @@ import com.example.onedayclass.member.dto.MemberDto;
 import com.example.onedayclass.review.dto.ReviewDto;
 import com.example.onedayclass.review.service.ReviewService;
 import com.example.onedayclass.security.MemberPrincipal;
+import jakarta.validation.Valid;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -58,7 +60,12 @@ public class ReviewController {
     }
 
     @PostMapping
-    public String create(ReviewDto reviewDto, @AuthenticationPrincipal(expression = "member") MemberDto loginMember) {
+    public String create(@Valid ReviewDto reviewDto,
+                         BindingResult bindingResult,
+                         @AuthenticationPrincipal(expression = "member") MemberDto loginMember) {
+        if (bindingResult.hasErrors()) {
+            return "review/form";
+        }
         reviewDto.setRUid(loginMember.getUId());
         reviewService.createReview(reviewDto);
         return "redirect:/reviews";

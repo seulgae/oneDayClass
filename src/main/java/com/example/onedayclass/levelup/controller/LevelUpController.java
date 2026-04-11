@@ -4,9 +4,11 @@ import com.example.onedayclass.levelup.dto.LevelUpDto;
 import com.example.onedayclass.levelup.service.LevelUpService;
 import com.example.onedayclass.member.dto.MemberDto;
 import com.example.onedayclass.security.MemberPrincipal;
+import jakarta.validation.Valid;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -50,8 +52,12 @@ public class LevelUpController {
     }
 
     @PostMapping
-    public String create(LevelUpDto levelUpDto,
+    public String create(@Valid LevelUpDto levelUpDto,
+                         BindingResult bindingResult,
                          @AuthenticationPrincipal(expression = "member") MemberDto loginMember) {
+        if (bindingResult.hasErrors()) {
+            return "levelup/form";
+        }
         levelUpDto.setLvlUid(loginMember.getUId());
         levelUpService.createRequest(levelUpDto);
         return "redirect:/levelups";
@@ -65,9 +71,15 @@ public class LevelUpController {
 
     @PostMapping("/{lvlNum}/reply")
     public String reply(@PathVariable int lvlNum,
-                        LevelUpDto levelUpDto,
-                        @AuthenticationPrincipal(expression = "member") MemberDto loginMember) {
+                        @Valid LevelUpDto levelUpDto,
+                        BindingResult bindingResult,
+                        @AuthenticationPrincipal(expression = "member") MemberDto loginMember,
+                        Model model) {
         LevelUpDto parent = levelUpService.getRequest(lvlNum);
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("parent", parent);
+            return "levelup/reply";
+        }
         levelUpDto.setLvlUid(loginMember.getUId());
         levelUpDto.setLvlRef(parent.getLvlRef());
         levelUpDto.setLvlPos(parent.getLvlPos());

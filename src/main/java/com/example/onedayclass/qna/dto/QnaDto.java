@@ -1,15 +1,22 @@
 package com.example.onedayclass.qna.dto;
 
 import com.example.onedayclass.common.dto.BaseVo;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
+import lombok.Getter;
+import lombok.Setter;
 
-@Data
-@EqualsAndHashCode(callSuper = true)
+@Getter
+@Setter
 public class QnaDto extends BaseVo {
     private Integer qNum;
     private String qUid;
+    @NotBlank
+    @Size(min = 4, max = 80)
     private String qTitle;
+
+    @NotBlank
+    @Size(min = 10, max = 3000)
     private String qContent;
     private String qRegDate;
     private Integer qPos;

@@ -4,9 +4,11 @@ import com.example.onedayclass.member.dto.MemberDto;
 import com.example.onedayclass.requestboard.dto.RequestBoardDto;
 import com.example.onedayclass.requestboard.service.RequestBoardService;
 import com.example.onedayclass.security.MemberPrincipal;
+import jakarta.validation.Valid;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -65,8 +67,12 @@ public class RequestBoardController {
     }
 
     @PostMapping
-    public String create(RequestBoardDto requestBoardDto,
+    public String create(@Valid RequestBoardDto requestBoardDto,
+                         BindingResult bindingResult,
                          @AuthenticationPrincipal(expression = "member") MemberDto loginMember) {
+        if (bindingResult.hasErrors()) {
+            return "request/form";
+        }
         requestBoardDto.setReqUid(loginMember.getUId());
         requestBoardService.createRequest(requestBoardDto);
         return "redirect:/requests";
@@ -80,9 +86,15 @@ public class RequestBoardController {
 
     @PostMapping("/{reqNum}/reply")
     public String reply(@PathVariable int reqNum,
-                        RequestBoardDto requestBoardDto,
-                        @AuthenticationPrincipal(expression = "member") MemberDto loginMember) {
+                        @Valid RequestBoardDto requestBoardDto,
+                        BindingResult bindingResult,
+                        @AuthenticationPrincipal(expression = "member") MemberDto loginMember,
+                        Model model) {
         RequestBoardDto parent = requestBoardService.getRequest(reqNum);
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("parent", parent);
+            return "request/reply";
+        }
         requestBoardDto.setReqUid(loginMember.getUId());
         requestBoardDto.setParentReqNum(reqNum);
         requestBoardDto.setReqStatus(1);

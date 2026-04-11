@@ -3,9 +3,11 @@ package com.example.onedayclass.payment.controller;
 import com.example.onedayclass.member.dto.MemberDto;
 import com.example.onedayclass.payment.dto.PaymentRequestDto;
 import com.example.onedayclass.payment.service.PaymentService;
+import jakarta.validation.Valid;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -49,8 +51,14 @@ public class PaymentController {
     }
 
     @PostMapping("/checkout")
-    public String checkout(PaymentRequestDto paymentRequestDto,
-                           @AuthenticationPrincipal(expression = "member") MemberDto loginMember) {
+    public String checkout(@Valid PaymentRequestDto paymentRequestDto,
+                           BindingResult bindingResult,
+                           @AuthenticationPrincipal(expression = "member") MemberDto loginMember,
+                           Model model) {
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("cartItems", paymentService.getCartItems(loginMember.getUId()));
+            return "payment/checkout";
+        }
         paymentService.checkout(paymentRequestDto, loginMember.getUId());
         return "redirect:/payments/history";
     }

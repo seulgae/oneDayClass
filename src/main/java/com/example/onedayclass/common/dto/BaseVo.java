@@ -1,8 +1,10 @@
 package com.example.onedayclass.common.dto;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
-@Data
+@Getter
+@Setter
 public class BaseVo {
     private String createdDate;
     private String createdBy;

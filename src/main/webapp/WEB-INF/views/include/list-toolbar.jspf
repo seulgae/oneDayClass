@@ -5,46 +5,46 @@
         <h2>${toolbarTitle}</h2>
     </div>
     <form class="search-ribbon" method="get" action="${toolbarAction}">
-        <span class="search-ribbon-label">검색</span>
+        <span class="search-ribbon-label">寃??/span>
         <c:choose>
             <c:when test="${toolbarScope eq 'class'}">
                 <select name="keyField">
-                    <option value="cTitle" ${selectedKeyField eq 'cTitle' ? 'selected' : ''}>제목</option>
-                    <option value="cCategory" ${selectedKeyField eq 'cCategory' ? 'selected' : ''}>카테고리</option>
+                    <option value="cTitle" ${selectedKeyField eq 'cTitle' ? 'selected' : ''}>?쒕ぉ</option>
+                    <option value="cCategory" ${selectedKeyField eq 'cCategory' ? 'selected' : ''}>移댄뀒怨좊━</option>
                 </select>
-                <input type="text" name="keyword" value="${keyword}" placeholder="검색어를 입력하세요">
+                <input type="text" name="keyword" value="${keyword}" maxlength="50" placeholder="寃?됱뼱瑜??낅젰?섏꽭??">
                 <select name="onoff">
-                    <option value="" ${empty selectedOnOff ? 'selected' : ''}>전체</option>
-                    <option value="N" ${selectedOnOff eq 'N' ? 'selected' : ''}>오프라인</option>
-                    <option value="Y" ${selectedOnOff eq 'Y' ? 'selected' : ''}>온라인</option>
+                    <option value="" ${empty selectedOnOff ? 'selected' : ''}>?꾩껜</option>
+                    <option value="N" ${selectedOnOff eq 'N' ? 'selected' : ''}>?ㅽ봽?쇱씤</option>
+                    <option value="Y" ${selectedOnOff eq 'Y' ? 'selected' : ''}>?⑤씪??/option>
                 </select>
             </c:when>
             <c:when test="${toolbarScope eq 'qna'}">
                 <select name="keyField">
-                    <option value="qTitle" ${selectedKeyField eq 'qTitle' ? 'selected' : ''}>제목</option>
-                    <option value="qUid" ${selectedKeyField eq 'qUid' ? 'selected' : ''}>작성자</option>
-                    <option value="qContent" ${selectedKeyField eq 'qContent' ? 'selected' : ''}>내용</option>
+                    <option value="qTitle" ${selectedKeyField eq 'qTitle' ? 'selected' : ''}>?쒕ぉ</option>
+                    <option value="qUid" ${selectedKeyField eq 'qUid' ? 'selected' : ''}>?묒꽦??/option>
+                    <option value="qContent" ${selectedKeyField eq 'qContent' ? 'selected' : ''}>?댁슜</option>
                 </select>
-                <input type="text" name="keyword" value="${keyword}" placeholder="검색어를 입력하세요">
+                <input type="text" name="keyword" value="${keyword}" maxlength="50" placeholder="寃?됱뼱瑜??낅젰?섏꽭??">
             </c:when>
             <c:when test="${toolbarScope eq 'request'}">
                 <select name="keyField">
-                    <option value="reqTitle" ${selectedKeyField eq 'reqTitle' ? 'selected' : ''}>제목</option>
-                    <option value="reqUid" ${selectedKeyField eq 'reqUid' ? 'selected' : ''}>작성자</option>
-                    <option value="reqContent" ${selectedKeyField eq 'reqContent' ? 'selected' : ''}>내용</option>
+                    <option value="reqTitle" ${selectedKeyField eq 'reqTitle' ? 'selected' : ''}>?쒕ぉ</option>
+                    <option value="reqUid" ${selectedKeyField eq 'reqUid' ? 'selected' : ''}>?묒꽦??/option>
+                    <option value="reqContent" ${selectedKeyField eq 'reqContent' ? 'selected' : ''}>?댁슜</option>
                 </select>
-                <input type="text" name="keyword" value="${keyword}" placeholder="검색어를 입력하세요">
+                <input type="text" name="keyword" value="${keyword}" maxlength="50" placeholder="寃?됱뼱瑜??낅젰?섏꽭??">
             </c:when>
             <c:otherwise>
                 <select name="keyField">
-                    <option value="rTitle" ${selectedKeyField eq 'rTitle' ? 'selected' : ''}>제목</option>
-                    <option value="rUid" ${selectedKeyField eq 'rUid' ? 'selected' : ''}>작성자</option>
-                    <option value="rContent" ${selectedKeyField eq 'rContent' ? 'selected' : ''}>내용</option>
+                    <option value="rTitle" ${selectedKeyField eq 'rTitle' ? 'selected' : ''}>?쒕ぉ</option>
+                    <option value="rUid" ${selectedKeyField eq 'rUid' ? 'selected' : ''}>?묒꽦??/option>
+                    <option value="rContent" ${selectedKeyField eq 'rContent' ? 'selected' : ''}>?댁슜</option>
                 </select>
-                <input type="text" name="keyword" value="${keyword}" placeholder="검색어를 입력하세요">
+                <input type="text" name="keyword" value="${keyword}" maxlength="50" placeholder="寃?됱뼱瑜??낅젰?섏꽭??">
             </c:otherwise>
         </c:choose>
-        <button type="submit">검색</button>
+        <button type="submit">寃??/button>
     </form>
     <c:if test="${not empty toolbarButtonHref and not empty toolbarButtonLabel}">
         <a class="btn" href="${toolbarButtonHref}">${toolbarButtonLabel}</a>

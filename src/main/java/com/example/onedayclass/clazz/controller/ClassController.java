@@ -7,9 +7,11 @@ import com.example.onedayclass.member.dto.MemberDto;
 import com.example.onedayclass.qna.service.QnaService;
 import com.example.onedayclass.review.service.ReviewService;
 import com.example.onedayclass.security.MemberPrincipal;
+import jakarta.validation.Valid;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -78,10 +80,14 @@ public class ClassController {
     }
 
     @PostMapping
-    public String create(ClassDto classDto,
+    public String create(@Valid ClassDto classDto,
+                         BindingResult bindingResult,
                          @RequestParam(name = "thumbnailImage", required = false) MultipartFile thumbnailImage,
                          @RequestParam(name = "detailImage", required = false) MultipartFile detailImage,
                          @AuthenticationPrincipal(expression = "member") MemberDto loginMember) throws IOException {
+        if (bindingResult.hasErrors()) {
+            return "class/form";
+        }
         classDto.setCUid(loginMember.getUId());
         classDto.setCTeacher(loginMember.getSName() == null ? loginMember.getUName() : loginMember.getSName());
         applyUploadedFiles(classDto, null, thumbnailImage, detailImage);
@@ -97,11 +103,20 @@ public class ClassController {
 
     @PostMapping("/{cNum}/edit")
     public String edit(@PathVariable int cNum,
-                       ClassDto classDto,
+                       @Valid ClassDto classDto,
+                       BindingResult bindingResult,
                        @RequestParam(name = "thumbnailImage", required = false) MultipartFile thumbnailImage,
                        @RequestParam(name = "detailImage", required = false) MultipartFile detailImage,
                        @AuthenticationPrincipal(expression = "member") MemberDto loginMember) throws IOException {
         ClassDto currentClass = classService.getClass(cNum);
+        if (bindingResult.hasErrors()) {
+            classDto.setCNum(cNum);
+            classDto.setCThumbName(currentClass.getCThumbName());
+            classDto.setCThumbSize(currentClass.getCThumbSize());
+            classDto.setCFileName(currentClass.getCFileName());
+            classDto.setCFileSize(currentClass.getCFileSize());
+            return "class/form";
+        }
         classDto.setCNum(cNum);
         classDto.setCUid(loginMember.getUId());
         classDto.setCTeacher(loginMember.getSName() == null ? loginMember.getUName() : loginMember.getSName());

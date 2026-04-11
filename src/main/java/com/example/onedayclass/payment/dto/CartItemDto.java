@@ -1,11 +1,11 @@
 package com.example.onedayclass.payment.dto;
 
 import com.example.onedayclass.common.dto.BaseVo;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
 
-@Data
-@EqualsAndHashCode(callSuper = true)
+@Getter
+@Setter
 public class CartItemDto extends BaseVo {
     private String uId;
     private Integer cNum;
