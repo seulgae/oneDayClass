@@ -50,7 +50,7 @@ public class RequestBoardController {
         );
         model.addAttribute("selectedKeyField", keyField);
         model.addAttribute("keyword", keyword);
-        return "request/list";
+        return "request/requestBoardList";
     }
 
     /**
@@ -72,7 +72,7 @@ public class RequestBoardController {
         List<RequestBoardDto> replies = requestItem == null ? List.of() : requestBoardService.getReplies(requestItem.getReqRef());
         model.addAttribute("requestItem", requestItem);
         model.addAttribute("replies", replies);
-        return "request/detail";
+        return "request/requestBoardDetail";
     }
 
     /**
@@ -87,7 +87,7 @@ public class RequestBoardController {
         RequestBoardDto requestBoardDto = new RequestBoardDto();
         requestBoardDto.setReqUid(loginMember.getUId());
         model.addAttribute("requestBoardDto", requestBoardDto);
-        return "request/form";
+        return "request/requestBoardForm";
     }
 
     /**
@@ -103,7 +103,7 @@ public class RequestBoardController {
                          BindingResult bindingResult,
                          @AuthenticationPrincipal(expression = "member") MemberDto loginMember) {
         if (bindingResult.hasErrors()) {
-            return "request/form";
+            return "request/requestBoardForm";
         }
         requestBoardDto.setReqUid(loginMember.getUId());
         requestBoardService.createRequest(requestBoardDto);
@@ -120,7 +120,7 @@ public class RequestBoardController {
     @GetMapping("/{reqNum}/reply")
     public String replyForm(@PathVariable int reqNum, Model model) {
         model.addAttribute("parent", requestBoardService.getRequest(reqNum));
-        return "request/reply";
+        return "request/requestBoardReply";
     }
 
     /**
@@ -142,7 +142,7 @@ public class RequestBoardController {
         RequestBoardDto parent = requestBoardService.getRequest(reqNum);
         if (bindingResult.hasErrors()) {
             model.addAttribute("parent", parent);
-            return "request/reply";
+            return "request/requestBoardReply";
         }
         requestBoardDto.setReqUid(loginMember.getUId());
         requestBoardDto.setParentReqNum(reqNum);

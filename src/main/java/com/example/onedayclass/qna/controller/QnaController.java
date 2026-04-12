@@ -50,7 +50,7 @@ public class QnaController {
         );
         model.addAttribute("selectedKeyField", keyField);
         model.addAttribute("keyword", keyword);
-        return "qna/list";
+        return "qna/qnaList";
     }
 
     /**
@@ -73,7 +73,7 @@ public class QnaController {
         List<QnaDto> replies = question == null ? List.of() : qnaService.getReplies(question.getQRef());
         model.addAttribute("question", question);
         model.addAttribute("replies", replies);
-        return "qna/detail";
+        return "qna/qnaDetail";
     }
 
     /**
@@ -92,7 +92,7 @@ public class QnaController {
         qnaDto.setQUid(loginMember.getUId());
         qnaDto.setCNum(cNum);
         model.addAttribute("qnaDto", qnaDto);
-        return "qna/form";
+        return "qna/qnaForm";
     }
 
     /**
@@ -108,7 +108,7 @@ public class QnaController {
                          BindingResult bindingResult,
                          @AuthenticationPrincipal(expression = "member") MemberDto loginMember) {
         if (bindingResult.hasErrors()) {
-            return "qna/form";
+            return "qna/qnaForm";
         }
         qnaDto.setQUid(loginMember.getUId());
         qnaService.createQuestion(qnaDto);
@@ -125,7 +125,7 @@ public class QnaController {
     @GetMapping("/{qNum}/reply")
     public String replyForm(@PathVariable int qNum, Model model) {
         model.addAttribute("parent", qnaService.getQuestion(qNum));
-        return "qna/reply";
+        return "qna/qnaReply";
     }
 
     /**
@@ -147,7 +147,7 @@ public class QnaController {
         QnaDto parent = qnaService.getQuestion(qNum);
         if (bindingResult.hasErrors()) {
             model.addAttribute("parent", parent);
-            return "qna/reply";
+            return "qna/qnaReply";
         }
         qnaDto.setQUid(loginMember.getUId());
         qnaDto.setParentQNum(qNum);

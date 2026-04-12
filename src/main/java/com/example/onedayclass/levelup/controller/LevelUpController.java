@@ -41,7 +41,7 @@ public class LevelUpController {
         boolean admin = loginMember != null && "3".equals(loginMember.getULevel());
         model.addAttribute("requestPage",
                 levelUpService.getRequestsPage(loginMember == null ? null : loginMember.getUId(), admin, page, 10));
-        return "levelup/list";
+        return "levelup/levelUpList";
     }
 
     /**
@@ -54,7 +54,7 @@ public class LevelUpController {
     @GetMapping("/{lvlNum}")
     public String detail(@PathVariable int lvlNum, Model model) {
         model.addAttribute("requestItem", levelUpService.getRequest(lvlNum));
-        return "levelup/detail";
+        return "levelup/levelUpDetail";
     }
 
     /**
@@ -70,7 +70,7 @@ public class LevelUpController {
         levelUpDto.setLvlUid(loginMember.getUId());
         levelUpDto.setLvlName(loginMember.getUName());
         model.addAttribute("levelUpDto", levelUpDto);
-        return "levelup/form";
+        return "levelup/levelUpForm";
     }
 
     /**
@@ -86,7 +86,7 @@ public class LevelUpController {
                          BindingResult bindingResult,
                          @AuthenticationPrincipal(expression = "member") MemberDto loginMember) {
         if (bindingResult.hasErrors()) {
-            return "levelup/form";
+            return "levelup/levelUpForm";
         }
         levelUpDto.setLvlUid(loginMember.getUId());
         levelUpService.createRequest(levelUpDto);
@@ -103,7 +103,7 @@ public class LevelUpController {
     @GetMapping("/{lvlNum}/reply")
     public String replyForm(@PathVariable int lvlNum, Model model) {
         model.addAttribute("parent", levelUpService.getRequest(lvlNum));
-        return "levelup/reply";
+        return "levelup/levelUpReply";
     }
 
     /**
@@ -125,7 +125,7 @@ public class LevelUpController {
         LevelUpDto parent = levelUpService.getRequest(lvlNum);
         if (bindingResult.hasErrors()) {
             model.addAttribute("parent", parent);
-            return "levelup/reply";
+            return "levelup/levelUpReply";
         }
         levelUpDto.setLvlUid(loginMember.getUId());
         levelUpDto.setLvlRef(parent.getLvlRef());

@@ -33,7 +33,7 @@ public class MemberController {
      */
     @GetMapping("/login")
     public String loginForm() {
-        return "member/login";
+        return "member/memberLogin";
     }
 
     /**
@@ -45,7 +45,7 @@ public class MemberController {
     @GetMapping("/join")
     public String joinForm(Model model) {
         model.addAttribute("memberDto", new MemberDto());
-        return "member/join";
+        return "member/memberJoin";
     }
 
     /**
@@ -59,7 +59,7 @@ public class MemberController {
     @PostMapping("/join")
     public String join(@Valid @ModelAttribute MemberDto memberDto, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
         if (bindingResult.hasErrors()) {
-            return "member/join";
+            return "member/memberJoin";
         }
         if (memberService.checkId(memberDto.getUId())) {
             redirectAttributes.addFlashAttribute("message", "이미 사용 중인 아이디입니다.");
@@ -80,7 +80,7 @@ public class MemberController {
     @GetMapping("/mypage")
     public String mypage(@AuthenticationPrincipal(expression = "username") String username, Model model) {
         model.addAttribute("member", memberService.getMember(username));
-        return "member/mypage";
+        return "member/memberMypage";
     }
 
     /**
@@ -93,7 +93,7 @@ public class MemberController {
     @GetMapping("/edit")
     public String editForm(@AuthenticationPrincipal(expression = "username") String username, Model model) {
         model.addAttribute("memberDto", memberService.getMember(username));
-        return "member/edit";
+        return "member/memberEdit";
     }
 
     /**

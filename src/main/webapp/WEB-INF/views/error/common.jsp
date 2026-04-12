@@ -1,3 +1,4 @@
+﻿<%-- 공통 오류 안내 화면 --%>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ include file="../include/header.jsp" %>
 <section class="form-panel">
@@ -11,3 +12,4 @@
     </div>
 </section>
 <%@ include file="../include/footer.jsp" %>
+

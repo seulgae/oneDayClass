@@ -49,7 +49,7 @@ public class ReviewController {
         );
         model.addAttribute("selectedKeyField", keyField);
         model.addAttribute("keyword", keyword);
-        return "review/list";
+        return "review/reviewList";
     }
 
     /**
@@ -62,7 +62,7 @@ public class ReviewController {
     @GetMapping("/{rNum}")
     public String detail(@PathVariable int rNum, Model model) {
         model.addAttribute("review", reviewService.getReview(rNum, true));
-        return "review/detail";
+        return "review/reviewDetail";
     }
 
     /**
@@ -81,7 +81,7 @@ public class ReviewController {
         reviewDto.setRUid(loginMember.getUId());
         reviewDto.setCNum(cNum);
         model.addAttribute("reviewDto", reviewDto);
-        return "review/form";
+        return "review/reviewForm";
     }
 
     /**
@@ -97,7 +97,7 @@ public class ReviewController {
                          BindingResult bindingResult,
                          @AuthenticationPrincipal(expression = "member") MemberDto loginMember) {
         if (bindingResult.hasErrors()) {
-            return "review/form";
+            return "review/reviewForm";
         }
         reviewDto.setRUid(loginMember.getUId());
         reviewService.createReview(reviewDto);

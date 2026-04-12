@@ -34,7 +34,7 @@ public class PaymentController {
     public String cart(@AuthenticationPrincipal(expression = "member") MemberDto loginMember, Model model) {
         model.addAttribute("cartItems", paymentService.getCartItems(loginMember.getUId()));
         model.addAttribute("cartCount", paymentService.getCartCount(loginMember.getUId()));
-        return "payment/cart";
+        return "payment/paymentCart";
     }
 
     /**
@@ -75,7 +75,7 @@ public class PaymentController {
     @GetMapping("/checkout")
     public String checkoutForm(@AuthenticationPrincipal(expression = "member") MemberDto loginMember, Model model) {
         model.addAttribute("cartItems", paymentService.getCartItems(loginMember.getUId()));
-        return "payment/checkout";
+        return "payment/paymentCheckout";
     }
 
     /**
@@ -94,7 +94,7 @@ public class PaymentController {
                            Model model) {
         if (bindingResult.hasErrors()) {
             model.addAttribute("cartItems", paymentService.getCartItems(loginMember.getUId()));
-            return "payment/checkout";
+            return "payment/paymentCheckout";
         }
         paymentService.checkout(paymentRequestDto, loginMember.getUId());
         return "redirect:/payments/history";
@@ -111,7 +111,7 @@ public class PaymentController {
     public String history(@AuthenticationPrincipal(expression = "member") MemberDto loginMember, Model model) {
         model.addAttribute("studentPayments", paymentService.getStudentPayments(loginMember.getUId()));
         model.addAttribute("teacherPayments", paymentService.getTeacherPayments(loginMember.getUId()));
-        return "payment/history";
+        return "payment/paymentHistory";
     }
 
     /**
@@ -133,6 +133,6 @@ public class PaymentController {
 
         model.addAttribute("paymentInfo", paymentInfo);
         model.addAttribute("paymentItems", paymentService.getPaymentItems(pNum, loginMember.getUId()));
-        return "payment/detail";
+        return "payment/paymentDetail";
     }
 }

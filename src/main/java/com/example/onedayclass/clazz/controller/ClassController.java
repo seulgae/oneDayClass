@@ -66,7 +66,7 @@ public class ClassController {
         model.addAttribute("selectedKeyField", keyField);
         model.addAttribute("keyword", keyword);
         model.addAttribute("selectedOnOff", onoff);
-        return "class/list";
+        return "class/classList";
     }
 
     /**
@@ -85,7 +85,7 @@ public class ClassController {
         model.addAttribute("classItem", classService.getClass(cNum));
         model.addAttribute("reviews", reviewService.getClassReviews(cNum, loginMember == null ? null : loginMember.getUId()));
         model.addAttribute("questions", qnaService.getClassQuestions(cNum, "qTitle", null));
-        return "class/detail";
+        return "class/classDetail";
     }
 
     /**
@@ -102,7 +102,7 @@ public class ClassController {
         classDto.setCTeacher(loginMember.getSName() == null ? loginMember.getUName() : loginMember.getSName());
         classDto.setCOnoff("N");
         model.addAttribute("classDto", classDto);
-        return "class/form";
+        return "class/classForm";
     }
 
     /**
@@ -123,7 +123,7 @@ public class ClassController {
                          @RequestParam(name = "detailImage", required = false) MultipartFile detailImage,
                          @AuthenticationPrincipal(expression = "member") MemberDto loginMember) throws IOException {
         if (bindingResult.hasErrors()) {
-            return "class/form";
+            return "class/classForm";
         }
         classDto.setCUid(loginMember.getUId());
         classDto.setCTeacher(loginMember.getSName() == null ? loginMember.getUName() : loginMember.getSName());
@@ -142,7 +142,7 @@ public class ClassController {
     @GetMapping("/{cNum}/edit")
     public String editForm(@PathVariable int cNum, Model model) {
         model.addAttribute("classDto", classService.getClass(cNum));
-        return "class/form";
+        return "class/classForm";
     }
 
     /**
@@ -171,7 +171,7 @@ public class ClassController {
             classDto.setCThumbSize(currentClass.getCThumbSize());
             classDto.setCFileName(currentClass.getCFileName());
             classDto.setCFileSize(currentClass.getCFileSize());
-            return "class/form";
+            return "class/classForm";
         }
         classDto.setCNum(cNum);
         classDto.setCUid(loginMember.getUId());

@@ -28,7 +28,7 @@ public class NoticeController {
     @GetMapping
     public String list(@RequestParam(defaultValue = "1") int page, Model model) {
         model.addAttribute("noticePage", noticeService.getNoticesPage(page, 10));
-        return "notice/list";
+        return "notice/noticeList";
     }
 
     /**
@@ -41,6 +41,6 @@ public class NoticeController {
     @GetMapping("/{qNum}")
     public String detail(@PathVariable int qNum, Model model) {
         model.addAttribute("notice", noticeService.getNotice(qNum));
-        return "notice/detail";
+        return "notice/noticeDetail";
     }
 }
