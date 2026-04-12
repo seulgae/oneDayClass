@@ -1,4 +1,6 @@
 ﻿<%-- 결제 상세 화면 --%>
+<%--@elvariable id="paymentInfo" type="com.example.onedayclass.payment.dto.PaymentRequestDto"--%>
+<%--@elvariable id="paymentItems" type="java.util.List"--%>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <%@ taglib prefix="fn" uri="jakarta.tags.functions" %>
@@ -6,7 +8,7 @@
 <section class="panel detail">
     <div class="section-head">
         <h2>결제내역 상세</h2>
-        <a class="btn secondary" href="/payments/history">목록으로</a>
+        <a class="btn secondary" href="<c:url value='/payments/history' />">목록으로</a>
     </div>
     <dl><dt>주문번호</dt><dd>${paymentInfo.PNum}</dd></dl>
     <dl><dt>주문자</dt><dd>${paymentInfo.UId}</dd></dl>
@@ -48,5 +50,5 @@
         </tbody>
     </table>
 </section>
-<%@ include file="../include/footer.jsp" %>
+<%@ include file="../include/footer.jspf" %>
 

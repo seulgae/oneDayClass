@@ -1,13 +1,16 @@
 ﻿<%-- 요청 게시판 목록 화면 --%>
+<%--@elvariable id="requestPage" type="com.example.onedayclass.common.paging.PageResult"--%>
+<%--@elvariable id="selectedKeyField" type="java.lang.String"--%>
+<%--@elvariable id="keyword" type="java.lang.String"--%>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <%@ taglib prefix="fn" uri="jakarta.tags.functions" %>
 <%@ include file="../include/header.jsp" %>
 <section class="panel">
     <c:set var="toolbarTitle" value="요청게시판" />
-    <c:set var="toolbarAction" value="/requests" />
+    <c:url var="toolbarAction" value="/requests" />
     <c:set var="toolbarScope" value="request" />
-    <c:set var="toolbarButtonHref" value="/requests/new" />
+    <c:url var="toolbarButtonHref" value="/requests/new" />
     <c:set var="toolbarButtonLabel" value="요청 올리기" />
     <%@ include file="../include/list-toolbar.jspf" %>
 
@@ -27,7 +30,7 @@
         <c:forEach var="item" items="${requestPage.items}">
             <tr>
                 <td>${item.reqNum}</td>
-                <td><a href="/requests/${item.reqNum}">${item.reqTitle}</a></td>
+                <td><a href="<c:url value='/requests/${item.reqNum}' />">${item.reqTitle}</a></td>
                 <td>${item.reqUid}</td>
                 <td>
                     <c:choose>
@@ -43,15 +46,15 @@
 
     <div class="pagination">
         <c:if test="${requestPage.hasPrevious}">
-            <a href="/requests?page=${requestPage.startPage - 1}&keyField=${selectedKeyField}&keyword=${keyword}">이전</a>
+            <a href="<c:url value='/requests?page=${requestPage.startPage - 1}&keyField=${selectedKeyField}&keyword=${keyword}' />">이전</a>
         </c:if>
         <c:forEach begin="${requestPage.startPage}" end="${requestPage.endPage}" var="pageNum">
-            <a class="${pageNum == requestPage.currentPage ? 'active' : ''}" href="/requests?page=${pageNum}&keyField=${selectedKeyField}&keyword=${keyword}">${pageNum}</a>
+            <a class="${pageNum == requestPage.currentPage ? 'active' : ''}" href="<c:url value='/requests?page=${pageNum}&keyField=${selectedKeyField}&keyword=${keyword}' />">${pageNum}</a>
         </c:forEach>
         <c:if test="${requestPage.hasNext}">
-            <a href="/requests?page=${requestPage.endPage + 1}&keyField=${selectedKeyField}&keyword=${keyword}">다음</a>
+            <a href="<c:url value='/requests?page=${requestPage.endPage + 1}&keyField=${selectedKeyField}&keyword=${keyword}' />">다음</a>
         </c:if>
     </div>
 </section>
-<%@ include file="../include/footer.jsp" %>
+<%@ include file="../include/footer.jspf" %>
 

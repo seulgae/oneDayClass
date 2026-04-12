@@ -1,4 +1,6 @@
 ﻿<%-- 결제 내역 화면 --%>
+<%--@elvariable id="studentPayments" type="java.util.List"--%>
+<%--@elvariable id="teacherPayments" type="java.util.List"--%>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <%@ taglib prefix="fn" uri="jakarta.tags.functions" %>
@@ -7,7 +9,7 @@
     <article class="panel">
         <h2>내 결제 내역</h2>
         <c:forEach var="item" items="${studentPayments}">
-            <a class="list-link" href="/payments/history/${item.PNum}">
+            <a class="list-link" href="<c:url value='/payments/history/${item.PNum}' />">
                 ${item.CTitle}<em>${fn:substring(item.payDate, 0, 10)} / ${item.CPrice}원</em>
             </a>
         </c:forEach>
@@ -15,11 +17,11 @@
     <article class="panel">
         <h2>판매 내역</h2>
         <c:forEach var="item" items="${teacherPayments}">
-            <a class="list-link" href="/payments/history/${item.PNum}">
+            <a class="list-link" href="<c:url value='/payments/history/${item.PNum}' />">
                 ${item.CTitle}<em>${item.UId} / ${item.REmail}</em>
             </a>
         </c:forEach>
     </article>
 </section>
-<%@ include file="../include/footer.jsp" %>
+<%@ include file="../include/footer.jspf" %>
 

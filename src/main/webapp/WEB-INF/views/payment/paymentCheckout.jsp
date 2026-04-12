@@ -1,4 +1,5 @@
 ﻿<%-- 결제 화면 --%>
+<%--@elvariable id="cartItems" type="java.util.List"--%>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <%@ include file="../include/header.jsp" %>
@@ -14,7 +15,7 @@
         <h2>결제 정보 입력</h2>
         <p>배송 정보만 입력하면 장바구니 기준으로 결제 금액이 자동 계산됩니다.</p>
     </div>
-    <form method="post" action="/payments/checkout" id="checkoutForm">
+    <form method="post" action="<c:url value='/payments/checkout' />" id="checkoutForm">
         <section class="form-section">
             <div class="section-headline">
                 <div>
@@ -26,7 +27,7 @@
             <div class="field-grid two-column-grid">
                 <label class="field-block">
                     <span class="field-label">받는 분 이름 <span class="required-mark">*</span></span>
-                    <input type="text" name="rName" placeholder="예: 김태형" required minlength="2" maxlength="30" pattern="^[가-힣a-zA-Z\s]{2,30}$" title="이름은 2~30자 이내로 입력해 주세요.">
+                    <input type="text" name="rName" placeholder="예: 홍길동" required minlength="2" maxlength="30" pattern="^[가-힣a-zA-Z\s]{2,30}$" title="이름은 2~30자 이내로 입력해 주세요.">
                 </label>
                 <label class="field-block">
                     <span class="field-label">휴대폰 번호 <span class="required-mark">*</span></span>
@@ -51,7 +52,7 @@
                 </label>
                 <label class="field-block">
                     <span class="field-label">상세주소 <span class="required-mark">*</span></span>
-                    <input type="text" id="rAddr2" name="rAddr2" placeholder="예: 101동 601호" required minlength="2" maxlength="120" title="상세주소를 입력해 주세요.">
+                    <input type="text" id="rAddr2" name="rAddr2" placeholder="예: 101동 101호" required minlength="2" maxlength="120" title="상세주소를 입력해 주세요.">
                 </label>
             </div>
         </section>
@@ -169,5 +170,5 @@
         });
     })();
 </script>
-<%@ include file="../include/footer.jsp" %>
+<%@ include file="../include/footer.jspf" %>
 

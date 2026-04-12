@@ -1,4 +1,5 @@
 ﻿<%-- 회원 정보 수정 화면 --%>
+<%--@elvariable id="memberDto" type="com.example.onedayclass.member.dto.MemberDto"--%>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ include file="../include/header.jsp" %>
 <section class="form-panel member-form-panel">
@@ -6,7 +7,7 @@
         <h2>회원정보 수정</h2>
         <p>계정 정보와 연락처를 구분해서 정리했습니다. 필요한 안내만 펼쳐서 확인할 수 있습니다.</p>
     </div>
-    <form method="post" action="/members/edit" id="editForm" novalidate>
+    <form method="post" action="<c:url value='/members/edit' />" id="editForm" novalidate>
         <section class="form-section">
             <div class="section-headline">
                 <div>
@@ -130,5 +131,5 @@
 
     document.querySelectorAll('.guide-toggle').forEach(bindGuideToggle);
 </script>
-<%@ include file="../include/footer.jsp" %>
+<%@ include file="../include/footer.jspf" %>
 

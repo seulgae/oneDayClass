@@ -1,5 +1,9 @@
 ﻿<%-- 공통 오류 안내 화면 --%>
+<%--@elvariable id="errorTitle" type="java.lang.String"--%>
+<%--@elvariable id="errorMessage" type="java.lang.String"--%>
+<%--@elvariable id="backUrl" type="java.lang.String"--%>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <%@ include file="../include/header.jsp" %>
 <section class="form-panel">
     <div class="member-form-hero">
@@ -8,8 +12,8 @@
     </div>
     <div class="actions">
         <a class="btn secondary" href="${empty backUrl ? '/' : backUrl}">이전 화면으로</a>
-        <a class="btn" href="/">홈으로 이동</a>
+    <a class="btn" href="<c:url value='/' />">홈으로 이동</a>
     </div>
 </section>
-<%@ include file="../include/footer.jsp" %>
+<%@ include file="../include/footer.jspf" %>
 

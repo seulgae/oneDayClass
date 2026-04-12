@@ -1,13 +1,16 @@
 ﻿<%-- QnA 목록 화면 --%>
+<%--@elvariable id="questionPage" type="com.example.onedayclass.common.paging.PageResult"--%>
+<%--@elvariable id="selectedKeyField" type="java.lang.String"--%>
+<%--@elvariable id="keyword" type="java.lang.String"--%>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <%@ taglib prefix="fn" uri="jakarta.tags.functions" %>
 <%@ include file="../include/header.jsp" %>
 <section class="panel">
     <c:set var="toolbarTitle" value="문의 QnA" />
-    <c:set var="toolbarAction" value="/qna" />
+    <c:url var="toolbarAction" value="/qna" />
     <c:set var="toolbarScope" value="qna" />
-    <c:set var="toolbarButtonHref" value="/qna/new" />
+    <c:url var="toolbarButtonHref" value="/qna/new" />
     <c:set var="toolbarButtonLabel" value="문의하기" />
     <%@ include file="../include/list-toolbar.jspf" %>
 
@@ -25,7 +28,7 @@
         <c:forEach var="item" items="${questionPage.items}">
             <tr>
                 <td>${item.QNum}</td>
-                <td><a href="/qna/${item.QNum}">${item.QTitle}</a></td>
+                <td><a href="<c:url value='/qna/${item.QNum}' />">${item.QTitle}</a></td>
                 <td>${item.QUid}</td>
                 <td>
                     <c:choose>
@@ -42,15 +45,15 @@
 
     <div class="pagination">
         <c:if test="${questionPage.hasPrevious}">
-            <a href="/qna?page=${questionPage.startPage - 1}&keyField=${selectedKeyField}&keyword=${keyword}">이전</a>
+            <a href="<c:url value='/qna?page=${questionPage.startPage - 1}&keyField=${selectedKeyField}&keyword=${keyword}' />">이전</a>
         </c:if>
         <c:forEach begin="${questionPage.startPage}" end="${questionPage.endPage}" var="pageNum">
-            <a class="${pageNum == questionPage.currentPage ? 'active' : ''}" href="/qna?page=${pageNum}&keyField=${selectedKeyField}&keyword=${keyword}">${pageNum}</a>
+            <a class="${pageNum == questionPage.currentPage ? 'active' : ''}" href="<c:url value='/qna?page=${pageNum}&keyField=${selectedKeyField}&keyword=${keyword}' />">${pageNum}</a>
         </c:forEach>
         <c:if test="${questionPage.hasNext}">
-            <a href="/qna?page=${questionPage.endPage + 1}&keyField=${selectedKeyField}&keyword=${keyword}">다음</a>
+            <a href="<c:url value='/qna?page=${questionPage.endPage + 1}&keyField=${selectedKeyField}&keyword=${keyword}' />">다음</a>
         </c:if>
     </div>
 </section>
-<%@ include file="../include/footer.jsp" %>
+<%@ include file="../include/footer.jspf" %>
 

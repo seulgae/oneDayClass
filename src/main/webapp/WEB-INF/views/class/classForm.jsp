@@ -1,4 +1,6 @@
 ﻿<%-- 클래스 등록 및 수정 화면 --%>
+<%--@elvariable id="classDto" type="com.example.onedayclass.clazz.dto.ClassDto"--%>
+<%--@elvariable id="formAction" type="java.lang.String"--%>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <%@ include file="../include/header.jsp" %>
@@ -27,14 +29,14 @@
                 <label for="thumbnailImage">썸네일 이미지</label>
                 <input id="thumbnailImage" type="file" name="thumbnailImage" accept="image/*">
                 <c:if test="${not empty classDto.CThumbName}">
-                    <img class="form-preview" src="/uploads/classes/${classDto.CThumbName}" alt="썸네일 미리보기">
+                    <img class="form-preview" src="<c:url value='/uploads/classes/${classDto.CThumbName}' />" alt="썸네일 미리보기">
                 </c:if>
             </div>
             <div class="file-field">
                 <label for="detailImage">소개 이미지</label>
                 <input id="detailImage" type="file" name="detailImage" accept="image/*">
                 <c:if test="${not empty classDto.CFileName}">
-                    <img class="form-preview" src="/uploads/classes/${classDto.CFileName}" alt="소개 이미지 미리보기">
+                    <img class="form-preview" src="<c:url value='/uploads/classes/${classDto.CFileName}' />" alt="소개 이미지 미리보기">
                 </c:if>
             </div>
         </div>
@@ -42,5 +44,6 @@
         <button type="submit">저장</button>
     </form>
 </section>
-<%@ include file="../include/footer.jsp" %>
+<%@ include file="../include/footer.jspf" %>
+
 

@@ -6,7 +6,7 @@
         <h2>회원가입</h2>
         <p>원데이클래스 이용에 필요한 기본 정보부터 차근차근 입력해 주세요. 안내 보기를 누르면 입력 규칙을 바로 확인할 수 있습니다.</p>
     </div>
-    <form method="post" action="/members/join" id="joinForm" novalidate>
+    <form method="post" action="<c:url value='/members/join' />" id="joinForm" novalidate>
         <section class="form-section">
             <div class="section-headline">
                 <div>
@@ -193,5 +193,5 @@
     toggleTeacherFields();
     validatePasswordMatch('joinForm', 'joinPassword', 'joinPasswordConfirm', 'joinFormError');
 </script>
-<%@ include file="../include/footer.jsp" %>
+<%@ include file="../include/footer.jspf" %>
 

@@ -1,4 +1,7 @@
 ﻿<%-- QnA 상세 화면 --%>
+<%--@elvariable id="question" type="com.example.onedayclass.qna.dto.QnaDto"--%>
+<%--@elvariable id="replies" type="java.util.List"--%>
+<%--@elvariable id="loginMember" type="com.example.onedayclass.member.dto.MemberDto"--%>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <%@ taglib prefix="fn" uri="jakarta.tags.functions" %>
@@ -6,7 +9,7 @@
 <section class="panel detail">
     <div class="section-head">
         <h2>${question.QTitle}</h2>
-        <a class="btn secondary" href="/qna">목록으로</a>
+        <a class="btn secondary" href="<c:url value='/qna' />">목록으로</a>
     </div>
     <dl><dt>작성자</dt><dd>${question.QUid}</dd></dl>
     <dl><dt>문의번호</dt><dd>${question.QRef}</dd></dl>
@@ -14,9 +17,9 @@
     <dl><dt>내용</dt><dd>${question.QContent}</dd></dl>
     <div class="actions">
         <c:if test="${loginMember != null}">
-            <a class="btn secondary" href="/qna/${question.QNum}/reply">답변 작성</a>
+            <a class="btn secondary" href="<c:url value='/qna/${question.QNum}/reply' />">답변 작성</a>
         </c:if>
-        <form method="post" action="/qna/${question.QNum}/delete" class="inline-form">
+        <form method="post" action="<c:url value='/qna/${question.QNum}/delete' />" class="inline-form">
             <button type="submit">문의 삭제</button>
         </form>
     </div>
@@ -40,7 +43,7 @@
                 <h3>${reply.QTitle}</h3>
                 <p>${reply.QContent}</p>
                 <c:if test="${loginMember != null and reply.QDepth lt 2}">
-                    <form method="post" action="/qna/${reply.QNum}/reply" class="qna-inline-reply-form">
+                    <form method="post" action="<c:url value='/qna/${reply.QNum}/reply' />" class="qna-inline-reply-form">
                         <input type="text" name="qTitle" placeholder="답변 제목" required minlength="4" maxlength="80" pattern="^.{4,80}$" title="제목은 4~80자 이내로 입력해 주세요.">
                         <textarea name="qContent" placeholder="답변 내용을 입력해 주세요." rows="3" required minlength="10" maxlength="3000" title="답변 내용은 10자 이상 입력해 주세요."></textarea>
                         <button type="submit">답변 등록</button>
@@ -54,12 +57,12 @@
 <c:if test="${loginMember != null}">
     <section class="form-panel">
         <h2>답변 작성</h2>
-        <form method="post" action="/qna/${question.QNum}/reply">
+        <form method="post" action="<c:url value='/qna/${question.QNum}/reply' />">
             <input type="text" name="qTitle" placeholder="답변 제목" required minlength="4" maxlength="80" pattern="^.{4,80}$" title="제목은 4~80자 이내로 입력해 주세요.">
             <textarea name="qContent" placeholder="답변 내용을 입력해 주세요." rows="5" required minlength="10" maxlength="3000" title="답변 내용은 10자 이상 입력해 주세요."></textarea>
             <button type="submit">답변 등록</button>
         </form>
     </section>
 </c:if>
-<%@ include file="../include/footer.jsp" %>
+<%@ include file="../include/footer.jspf" %>
 

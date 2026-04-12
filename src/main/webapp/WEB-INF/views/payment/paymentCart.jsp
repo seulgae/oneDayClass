@@ -1,9 +1,10 @@
 ﻿<%-- 장바구니 화면 --%>
+<%--@elvariable id="cartItems" type="java.util.List"--%>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <%@ include file="../include/header.jsp" %>
 <section class="panel">
-    <div class="section-head"><h2>장바구니</h2><a class="btn" href="/payments/checkout">결제하기</a></div>
+    <div class="section-head"><h2>장바구니</h2><a class="btn" href="<c:url value='/payments/checkout' />">결제하기</a></div>
     <table class="table">
         <thead><tr><th>클래스</th><th>가격</th><th>배송비</th><th></th></tr></thead>
         <tbody>
@@ -13,7 +14,7 @@
                 <td>${item.CPrice}</td>
                 <td>${item.CDelivery}</td>
                 <td>
-                    <form method="post" action="/payments/cart/${item.CNum}/delete" class="inline-form">
+                    <form method="post" action="<c:url value='/payments/cart/${item.CNum}/delete' />" class="inline-form">
                         <button type="submit">삭제</button>
                     </form>
                 </td>
@@ -22,5 +23,5 @@
         </tbody>
     </table>
 </section>
-<%@ include file="../include/footer.jsp" %>
+<%@ include file="../include/footer.jspf" %>
 

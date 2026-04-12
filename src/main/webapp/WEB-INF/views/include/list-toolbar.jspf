@@ -1,50 +1,58 @@
 <%@ page pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
+<%--@elvariable id="toolbarTitle" type="java.lang.String"--%>
+<%--@elvariable id="toolbarAction" type="java.lang.String"--%>
+<%--@elvariable id="toolbarScope" type="java.lang.String"--%>
+<%--@elvariable id="toolbarButtonHref" type="java.lang.String"--%>
+<%--@elvariable id="toolbarButtonLabel" type="java.lang.String"--%>
+<%--@elvariable id="selectedKeyField" type="java.lang.String"--%>
+<%--@elvariable id="keyword" type="java.lang.String"--%>
+<%--@elvariable id="selectedOnOff" type="java.lang.String"--%>
 <div class="list-ribbon">
     <div class="list-ribbon-title">
         <h2>${toolbarTitle}</h2>
     </div>
     <form class="search-ribbon" method="get" action="${toolbarAction}">
-        <span class="search-ribbon-label">검색</span>
+        <span class="search-ribbon-label">&#xAC80;&#xC0C9;</span>
         <c:choose>
             <c:when test="${toolbarScope eq 'class'}">
                 <select name="keyField">
-                    <option value="cTitle" ${selectedKeyField eq 'cTitle' ? 'selected' : ''}>제목</option>
-                    <option value="cCategory" ${selectedKeyField eq 'cCategory' ? 'selected' : ''}>카테고리</option>
+                    <option value="cTitle" ${selectedKeyField eq 'cTitle' ? 'selected' : ''}>&#xC81C;&#xBAA9;</option>
+                    <option value="cCategory" ${selectedKeyField eq 'cCategory' ? 'selected' : ''}>&#xCE74;&#xD14C;&#xACE0;&#xB9AC;</option>
                 </select>
-                <input type="text" name="keyword" value="${keyword}" maxlength="50" placeholder="검색어를 입력해 주세요.">
+                <input type="text" name="keyword" value="${keyword}" maxlength="50" placeholder="&#xAC80;&#xC0C9;&#xC5B4;&#xB97C; &#xC785;&#xB825;&#xD574; &#xC8FC;&#xC138;&#xC694;.">
                 <select name="onoff">
-                    <option value="" ${empty selectedOnOff ? 'selected' : ''}>전체</option>
-                    <option value="N" ${selectedOnOff eq 'N' ? 'selected' : ''}>온라인</option>
-                    <option value="Y" ${selectedOnOff eq 'Y' ? 'selected' : ''}>오프라인</option>
+                    <option value="" ${empty selectedOnOff ? 'selected' : ''}>&#xC804;&#xCCB4;</option>
+                    <option value="N" ${selectedOnOff eq 'N' ? 'selected' : ''}>&#xC628;&#xB77C;&#xC778;</option>
+                    <option value="Y" ${selectedOnOff eq 'Y' ? 'selected' : ''}>&#xC624;&#xD504;&#xB77C;&#xC778;</option>
                 </select>
             </c:when>
             <c:when test="${toolbarScope eq 'qna'}">
                 <select name="keyField">
-                    <option value="qTitle" ${selectedKeyField eq 'qTitle' ? 'selected' : ''}>제목</option>
-                    <option value="qUid" ${selectedKeyField eq 'qUid' ? 'selected' : ''}>작성자</option>
-                    <option value="qContent" ${selectedKeyField eq 'qContent' ? 'selected' : ''}>내용</option>
+                    <option value="qTitle" ${selectedKeyField eq 'qTitle' ? 'selected' : ''}>&#xC81C;&#xBAA9;</option>
+                    <option value="qUid" ${selectedKeyField eq 'qUid' ? 'selected' : ''}>&#xC791;&#xC131;&#xC790;</option>
+                    <option value="qContent" ${selectedKeyField eq 'qContent' ? 'selected' : ''}>&#xB0B4;&#xC6A9;</option>
                 </select>
-                <input type="text" name="keyword" value="${keyword}" maxlength="50" placeholder="검색어를 입력해 주세요.">
+                <input type="text" name="keyword" value="${keyword}" maxlength="50" placeholder="&#xAC80;&#xC0C9;&#xC5B4;&#xB97C; &#xC785;&#xB825;&#xD574; &#xC8FC;&#xC138;&#xC694;.">
             </c:when>
             <c:when test="${toolbarScope eq 'request'}">
                 <select name="keyField">
-                    <option value="reqTitle" ${selectedKeyField eq 'reqTitle' ? 'selected' : ''}>제목</option>
-                    <option value="reqUid" ${selectedKeyField eq 'reqUid' ? 'selected' : ''}>작성자</option>
-                    <option value="reqContent" ${selectedKeyField eq 'reqContent' ? 'selected' : ''}>내용</option>
+                    <option value="reqTitle" ${selectedKeyField eq 'reqTitle' ? 'selected' : ''}>&#xC81C;&#xBAA9;</option>
+                    <option value="reqUid" ${selectedKeyField eq 'reqUid' ? 'selected' : ''}>&#xC791;&#xC131;&#xC790;</option>
+                    <option value="reqContent" ${selectedKeyField eq 'reqContent' ? 'selected' : ''}>&#xB0B4;&#xC6A9;</option>
                 </select>
-                <input type="text" name="keyword" value="${keyword}" maxlength="50" placeholder="검색어를 입력해 주세요.">
+                <input type="text" name="keyword" value="${keyword}" maxlength="50" placeholder="&#xAC80;&#xC0C9;&#xC5B4;&#xB97C; &#xC785;&#xB825;&#xD574; &#xC8FC;&#xC138;&#xC694;.">
             </c:when>
             <c:otherwise>
                 <select name="keyField">
-                    <option value="rTitle" ${selectedKeyField eq 'rTitle' ? 'selected' : ''}>제목</option>
-                    <option value="rUid" ${selectedKeyField eq 'rUid' ? 'selected' : ''}>작성자</option>
-                    <option value="rContent" ${selectedKeyField eq 'rContent' ? 'selected' : ''}>내용</option>
+                    <option value="rTitle" ${selectedKeyField eq 'rTitle' ? 'selected' : ''}>&#xC81C;&#xBAA9;</option>
+                    <option value="rUid" ${selectedKeyField eq 'rUid' ? 'selected' : ''}>&#xC791;&#xC131;&#xC790;</option>
+                    <option value="rContent" ${selectedKeyField eq 'rContent' ? 'selected' : ''}>&#xB0B4;&#xC6A9;</option>
                 </select>
-                <input type="text" name="keyword" value="${keyword}" maxlength="50" placeholder="검색어를 입력해 주세요.">
+                <input type="text" name="keyword" value="${keyword}" maxlength="50" placeholder="&#xAC80;&#xC0C9;&#xC5B4;&#xB97C; &#xC785;&#xB825;&#xD574; &#xC8FC;&#xC138;&#xC694;.">
             </c:otherwise>
         </c:choose>
-        <button type="submit">검색</button>
+        <button type="submit">&#xAC80;&#xC0C9;</button>
     </form>
     <c:if test="${not empty toolbarButtonHref and not empty toolbarButtonLabel}">
         <a class="btn" href="${toolbarButtonHref}">${toolbarButtonLabel}</a>

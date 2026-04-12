@@ -1,14 +1,17 @@
 ﻿<%-- 클래스 상세 화면 --%>
+<%--@elvariable id="classItem" type="com.example.onedayclass.clazz.dto.ClassDto"--%>
+<%--@elvariable id="reviews" type="java.util.List"--%>
+<%--@elvariable id="questions" type="java.util.List"--%>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <%@ include file="../include/header.jsp" %>
 <section class="panel detail">
     <div class="section-head">
         <h2>${classItem.CTitle}</h2>
-        <a class="btn secondary" href="/classes">목록으로</a>
+        <a class="btn secondary" href="<c:url value='/classes' />">목록으로</a>
     </div>
     <c:if test="${not empty classItem.CThumbName}">
-        <img class="detail-thumb" src="/uploads/classes/${classItem.CThumbName}" alt="${classItem.CTitle}">
+        <img class="detail-thumb" src="<c:url value='/uploads/classes/${classItem.CThumbName}' />" alt="${classItem.CTitle}">
     </c:if>
     <dl><dt>강사</dt><dd>${classItem.CTeacher}</dd></dl>
     <dl><dt>카테고리</dt><dd>${classItem.CCategory}</dd></dl>
@@ -18,18 +21,18 @@
     <dl><dt>소개</dt><dd>${classItem.CContent}</dd></dl>
     <c:if test="${not empty classItem.CFileName}">
         <div class="detail-image-wrap">
-            <img class="detail-image" src="/uploads/classes/${classItem.CFileName}" alt="${classItem.CTitle}">
+            <img class="detail-image" src="<c:url value='/uploads/classes/${classItem.CFileName}' />" alt="${classItem.CTitle}">
         </div>
     </c:if>
     <div class="actions">
-        <form method="post" action="/classes/${classItem.CNum}/like" class="inline-form">
+        <form method="post" action="<c:url value='/classes/${classItem.CNum}/like' />" class="inline-form">
             <button type="submit">좋아요</button>
         </form>
-        <form method="post" action="/payments/cart/${classItem.CNum}" class="inline-form">
+        <form method="post" action="<c:url value='/payments/cart/${classItem.CNum}' />" class="inline-form">
             <button type="submit">장바구니 담기</button>
         </form>
-        <a class="btn secondary" href="/reviews/new?cNum=${classItem.CNum}">후기 작성</a>
-        <a class="btn secondary" href="/qna/new?cNum=${classItem.CNum}">문의 작성</a>
+        <a class="btn secondary" href="<c:url value='/reviews/new?cNum=${classItem.CNum}' />">후기 작성</a>
+        <a class="btn secondary" href="<c:url value='/qna/new?cNum=${classItem.CNum}' />">문의 작성</a>
     </div>
 </section>
 
@@ -37,10 +40,10 @@
     <article class="panel">
         <div class="section-head">
             <h2>후기</h2>
-            <a href="/reviews">전체 후기</a>
+            <a href="<c:url value='/reviews' />">전체 후기</a>
         </div>
         <c:forEach var="review" items="${reviews}">
-            <a class="list-link" href="/reviews/${review.RNum}">
+            <a class="list-link" href="<c:url value='/reviews/${review.RNum}' />">
                 ${review.RTitle}<em>${review.RUid}</em>
             </a>
         </c:forEach>
@@ -48,14 +51,16 @@
     <article class="panel">
         <div class="section-head">
             <h2>문의</h2>
-            <a href="/qna">전체 문의</a>
+            <a href="<c:url value='/qna' />">전체 문의</a>
         </div>
         <c:forEach var="question" items="${questions}">
-            <a class="list-link" href="/qna/${question.QNum}">
+            <a class="list-link" href="<c:url value='/qna/${question.QNum}' />">
                 ${question.QTitle}<em>${question.QUid}</em>
             </a>
         </c:forEach>
     </article>
 </section>
-<%@ include file="../include/footer.jsp" %>
+<%@ include file="../include/footer.jspf" %>
+
+
 
