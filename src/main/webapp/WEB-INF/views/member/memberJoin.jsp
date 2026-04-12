@@ -1,4 +1,4 @@
-﻿<%-- 회원 가입 화면 --%>
+<%-- 회원 가입 화면 --%>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ include file="../include/header.jsp" %>
 <section class="form-panel member-form-panel">
@@ -6,6 +6,13 @@
         <h2>회원가입</h2>
         <p>원데이클래스 이용에 필요한 기본 정보부터 차근차근 입력해 주세요. 안내 보기를 누르면 입력 규칙을 바로 확인할 수 있습니다.</p>
     </div>
+    <c:if test="${not empty validationErrors}">
+        <div class="alert alert-error">
+            <c:forEach var="error" items="${validationErrors}">
+                <p>${error}</p>
+            </c:forEach>
+        </div>
+    </c:if>
     <form method="post" action="<c:url value='/members/join' />" id="joinForm" novalidate>
         <section class="form-section">
             <div class="section-headline">
@@ -25,11 +32,11 @@
             <div class="field-grid two-column-grid">
                 <label class="field-block">
                     <span class="field-label">아이디 <span class="required-mark">*</span></span>
-                    <input type="text" name="uId" required minlength="4" maxlength="20" pattern="^[a-zA-Z0-9]{4,20}$" title="아이디는 영문과 숫자 4~20자입니다." autocomplete="username">
+                    <input type="text" name="uId" value="${memberDto.UId}" required minlength="4" maxlength="20" pattern="^[a-zA-Z0-9]{4,20}$" title="아이디는 영문과 숫자 4~20자입니다." autocomplete="username">
                 </label>
                 <label class="field-block">
                     <span class="field-label">이름 <span class="required-mark">*</span></span>
-                    <input type="text" name="uName" required minlength="2" maxlength="20" pattern="^[가-힣a-zA-Z]{2,20}$" title="이름은 한글 또는 영문 2~20자입니다." autocomplete="name">
+                    <input type="text" name="uName" value="${memberDto.UName}" required minlength="2" maxlength="20" pattern="^[가-힣a-zA-Z]{2,20}$" title="이름은 한글 또는 영문 2~20자입니다." autocomplete="name">
                 </label>
                 <label class="field-block">
                     <span class="field-label">비밀번호 <span class="required-mark">*</span></span>
@@ -56,14 +63,14 @@
             </div>
             <div class="role-choice">
                 <label class="role-option">
-                    <input type="radio" name="uLevel" value="1" checked>
+                    <input type="radio" name="uLevel" value="1" ${empty memberDto.ULevel or memberDto.ULevel eq '1' ? 'checked' : ''}>
                     <span class="role-card">
                         <strong>수강생</strong>
                         <em>클래스 신청과 결제 중심</em>
                     </span>
                 </label>
                 <label class="role-option">
-                    <input type="radio" name="uLevel" value="2">
+                    <input type="radio" name="uLevel" value="2" ${memberDto.ULevel eq '2' ? 'checked' : ''}>
                     <span class="role-card">
                         <strong>선생님</strong>
                         <em>클래스 등록과 운영 가능</em>
@@ -73,11 +80,11 @@
             <div class="field-grid two-column-grid teacher-only is-hidden" id="teacherFields" hidden>
                 <label class="field-block">
                     <span class="field-label">강사 활동명</span>
-                    <input type="text" id="sName" name="sName" minlength="2" maxlength="50" pattern="^[가-힣a-zA-Z0-9\s.,()_-]{2,50}$" title="강사 활동명은 한글, 영문, 숫자와 일부 기호를 포함해 2~50자까지 입력할 수 있습니다." placeholder="예: 원데이 클래스 by 민지">
+                    <input type="text" id="sName" name="sName" value="${memberDto.SName}" minlength="2" maxlength="50" pattern="^[가-힣a-zA-Z0-9\s.,()_-]{2,50}$" title="강사 활동명은 한글, 영문, 숫자와 일부 기호를 포함해 2~50자까지 입력할 수 있습니다." placeholder="예: 원데이 클래스 by 민지">
                 </label>
                 <label class="field-block">
                     <span class="field-label">강사 SNS 주소</span>
-                    <input type="url" id="sSns" name="sSns" maxlength="255" placeholder="https://">
+                    <input type="url" id="sSns" name="sSns" value="${memberDto.SSns}" maxlength="255" placeholder="https://">
                 </label>
             </div>
         </section>
@@ -97,22 +104,22 @@
             <div class="field-grid two-column-grid">
                 <label class="field-block">
                     <span class="field-label">휴대폰 번호</span>
-                    <input type="text" name="uPhone" maxlength="13" pattern="^01[0-9]-?\d{3,4}-?\d{4}$" title="휴대폰 번호 형식이 올바르지 않습니다." placeholder="010-1234-5678" autocomplete="tel">
+                    <input type="text" name="uPhone" value="${memberDto.UPhone}" maxlength="13" pattern="^01[0-9]-?\d{3,4}-?\d{4}$" title="휴대폰 번호 형식이 올바르지 않습니다." placeholder="010-1234-5678" autocomplete="tel">
                 </label>
                 <label class="field-block">
                     <span class="field-label">이메일</span>
-                    <input type="email" name="uEmail" maxlength="100" placeholder="name@example.com" autocomplete="email">
+                    <input type="email" name="uEmail" value="${memberDto.UEmail}" maxlength="100" placeholder="name@example.com" autocomplete="email">
                 </label>
             </div>
             <div class="field-block">
                 <span class="field-label">주소</span>
                 <div class="zip-field">
-                    <input type="text" id="uZip" name="uZip" maxlength="10" placeholder="우편번호" readonly>
+                    <input type="text" id="uZip" name="uZip" value="${memberDto.UZip}" maxlength="10" placeholder="우편번호" readonly>
                     <button type="button" class="btn secondary" onclick="openPostcode('uZip', 'uAddr1', 'uAddr2')">주소찾기</button>
                 </div>
                 <div class="field-grid address-grid">
-                    <input type="text" id="uAddr1" name="uAddr1" maxlength="120" placeholder="기본주소" readonly>
-                    <input type="text" id="uAddr2" name="uAddr2" maxlength="120" placeholder="상세주소">
+                    <input type="text" id="uAddr1" name="uAddr1" value="${memberDto.UAddr1}" maxlength="120" placeholder="기본주소" readonly>
+                    <input type="text" id="uAddr2" name="uAddr2" value="${memberDto.UAddr2}" maxlength="120" placeholder="상세주소">
                 </div>
             </div>
         </section>
@@ -166,21 +173,32 @@
         var confirm = document.getElementById(confirmId);
         var errorBox = document.getElementById(errorId);
 
-        form.addEventListener('submit', function(event) {
+        function syncPasswordValidity() {
+            var hasConfirmValue = confirm.value.length > 0;
+            var isMatch = password.value === confirm.value;
+
+            confirm.setCustomValidity(hasConfirmValue && !isMatch
+                ? '비밀번호와 비밀번호 확인이 일치하지 않습니다.'
+                : '');
+
             errorBox.hidden = true;
             errorBox.textContent = '';
+        }
+
+        password.addEventListener('input', syncPasswordValidity);
+        confirm.addEventListener('input', syncPasswordValidity);
+
+        form.addEventListener('submit', function(event) {
+            syncPasswordValidity();
 
             if (!form.checkValidity()) {
                 event.preventDefault();
+                if (confirm.validationMessage) {
+                    errorBox.textContent = confirm.validationMessage;
+                    errorBox.hidden = false;
+                }
                 form.reportValidity();
                 return;
-            }
-
-            if (password.value !== confirm.value) {
-                event.preventDefault();
-                errorBox.textContent = '비밀번호와 비밀번호 확인이 일치하지 않습니다.';
-                errorBox.hidden = false;
-                confirm.focus();
             }
         });
     }
@@ -194,4 +212,3 @@
     validatePasswordMatch('joinForm', 'joinPassword', 'joinPasswordConfirm', 'joinFormError');
 </script>
 <%@ include file="../include/footer.jspf" %>
-

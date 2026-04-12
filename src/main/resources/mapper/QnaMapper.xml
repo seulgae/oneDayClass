@@ -75,7 +75,16 @@
             createdDate, createdBy, updatedDate, updatedBy
         ) values (
             #{qUid}, #{qTitle}, #{qContent}, now(), #{qPos}, #{qRef}, #{qDepth}, #{parentQNum}, #{qOriUid}, #{qFileName}, #{qFileSize}, #{qStatus}, #{cNum},
-            current_timestamp, coalesce(#{createdBy}, #{qUid}), current_timestamp, coalesce(#{updatedBy}, #{qUid})
+            current_timestamp,
+            <choose>
+                <when test="createdBy != null and createdBy != ''">#{createdBy}</when>
+                <otherwise>#{qUid}</otherwise>
+            </choose>,
+            current_timestamp,
+            <choose>
+                <when test="updatedBy != null and updatedBy != ''">#{updatedBy}</when>
+                <otherwise>#{qUid}</otherwise>
+            </choose>
         )
     </insert>
 
@@ -85,7 +94,10 @@
             qContent = #{qContent},
             qStatus = #{qStatus},
             updatedDate = current_timestamp,
-            updatedBy = coalesce(#{updatedBy}, #{qUid})
+            updatedBy = <choose>
+                <when test="updatedBy != null and updatedBy != ''">#{updatedBy}</when>
+                <otherwise>#{qUid}</otherwise>
+            </choose>
         where qNum = #{qNum}
     </update>
 

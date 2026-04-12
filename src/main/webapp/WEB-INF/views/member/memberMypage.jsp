@@ -13,7 +13,7 @@
     <div class="actions">
         <a class="btn secondary" href="<c:url value='/levelups' />">등업 요청</a>
         <a class="btn secondary" href="<c:url value='/payments/history' />">결제내역</a>
-        <form method="post" action="<c:url value='/members/delete' />" class="inline-form">
+        <form method="post" action="<c:url value='/members/delete' />" class="inline-form" onsubmit="return confirm('정말 탈퇴하시겠습니까?');">
             <button type="submit">회원탈퇴</button>
         </form>
     </div>

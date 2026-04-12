@@ -110,21 +110,32 @@
         var confirm = document.getElementById('editPasswordConfirm');
         var errorBox = document.getElementById('editFormError');
 
-        form.addEventListener('submit', function(event) {
+        function syncPasswordValidity() {
+            var hasConfirmValue = confirm.value.length > 0;
+            var isMatch = password.value === confirm.value;
+
+            confirm.setCustomValidity(hasConfirmValue && !isMatch
+                ? '비밀번호와 비밀번호 확인이 일치하지 않습니다.'
+                : '');
+
             errorBox.hidden = true;
             errorBox.textContent = '';
+        }
+
+        password.addEventListener('input', syncPasswordValidity);
+        confirm.addEventListener('input', syncPasswordValidity);
+
+        form.addEventListener('submit', function(event) {
+            syncPasswordValidity();
 
             if (!form.checkValidity()) {
                 event.preventDefault();
+                if (confirm.validationMessage) {
+                    errorBox.textContent = confirm.validationMessage;
+                    errorBox.hidden = false;
+                }
                 form.reportValidity();
                 return;
-            }
-
-            if (password.value !== confirm.value) {
-                event.preventDefault();
-                errorBox.textContent = '비밀번호와 비밀번호 확인이 일치하지 않습니다.';
-                errorBox.hidden = false;
-                confirm.focus();
             }
         });
     })();

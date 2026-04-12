@@ -33,7 +33,16 @@
             createdDate, createdBy, updatedDate, updatedBy
         ) values (
             #{lvlUid}, #{lvlTitle}, #{lvlContent}, #{lvlName}, #{lvlSns}, now(), #{lvlPos}, #{lvlRef}, #{lvlDepth}, #{lvlFileName}, #{lvlFileSize}, #{lvlStatus}, #{lvlOriUid},
-            current_timestamp, coalesce(#{createdBy}, #{lvlUid}), current_timestamp, coalesce(#{updatedBy}, #{lvlUid})
+            current_timestamp,
+            <choose>
+                <when test="createdBy != null and createdBy != ''">#{createdBy}</when>
+                <otherwise>#{lvlUid}</otherwise>
+            </choose>,
+            current_timestamp,
+            <choose>
+                <when test="updatedBy != null and updatedBy != ''">#{updatedBy}</when>
+                <otherwise>#{lvlUid}</otherwise>
+            </choose>
         )
     </insert>
 
@@ -44,7 +53,10 @@
             lvlName = #{lvlName},
             lvlSns = #{lvlSns},
             updatedDate = current_timestamp,
-            updatedBy = coalesce(#{updatedBy}, #{lvlUid})
+            updatedBy = <choose>
+                <when test="updatedBy != null and updatedBy != ''">#{updatedBy}</when>
+                <otherwise>#{lvlUid}</otherwise>
+            </choose>
         where lvlNum = #{lvlNum}
     </update>
 

@@ -49,7 +49,16 @@
         ) values (
             #{cCode}, #{cTeacher}, #{cUid}, #{cCategory}, #{cTitle}, #{cContent}, now(), #{cPrice}, #{cDelivery},
             #{cThumbName}, #{cThumbSize}, #{cFileName}, #{cFileSize}, #{cMaxStu}, #{cApplyStu}, #{cArea}, #{cOnoff}, #{cStatus}, #{cLikes},
-            current_timestamp, coalesce(#{createdBy}, #{cUid}), current_timestamp, coalesce(#{updatedBy}, #{cUid})
+            current_timestamp,
+            <choose>
+                <when test="createdBy != null and createdBy != ''">#{createdBy}</when>
+                <otherwise>#{cUid}</otherwise>
+            </choose>,
+            current_timestamp,
+            <choose>
+                <when test="updatedBy != null and updatedBy != ''">#{updatedBy}</when>
+                <otherwise>#{cUid}</otherwise>
+            </choose>
         )
     </insert>
 
@@ -69,7 +78,10 @@
             cArea = #{cArea},
             cOnoff = #{cOnoff},
             updatedDate = current_timestamp,
-            updatedBy = coalesce(#{updatedBy}, #{cUid})
+            updatedBy = <choose>
+                <when test="updatedBy != null and updatedBy != ''">#{updatedBy}</when>
+                <otherwise>#{cUid}</otherwise>
+            </choose>
         where cNum = #{cNum}
     </update>
 

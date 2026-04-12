@@ -46,7 +46,16 @@
             createdDate, createdBy, updatedDate, updatedBy
         ) values (
             #{reqUid}, #{reqTitle}, #{reqContent}, now(), #{reqPos}, #{reqRef}, #{reqDepth}, #{parentReqNum}, #{reqOriUid}, #{reqStatus},
-            current_timestamp, coalesce(#{createdBy}, #{reqUid}), current_timestamp, coalesce(#{updatedBy}, #{reqUid})
+            current_timestamp,
+            <choose>
+                <when test="createdBy != null and createdBy != ''">#{createdBy}</when>
+                <otherwise>#{reqUid}</otherwise>
+            </choose>,
+            current_timestamp,
+            <choose>
+                <when test="updatedBy != null and updatedBy != ''">#{updatedBy}</when>
+                <otherwise>#{reqUid}</otherwise>
+            </choose>
         )
     </insert>
 
@@ -56,7 +65,10 @@
             reqContent = #{reqContent},
             reqStatus = #{reqStatus},
             updatedDate = current_timestamp,
-            updatedBy = coalesce(#{updatedBy}, #{reqUid})
+            updatedBy = <choose>
+                <when test="updatedBy != null and updatedBy != ''">#{updatedBy}</when>
+                <otherwise>#{reqUid}</otherwise>
+            </choose>
         where reqNum = #{reqNum}
     </update>
 

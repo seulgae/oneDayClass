@@ -33,7 +33,16 @@
             createdDate, createdBy, updatedDate, updatedBy
         ) values (
             #{rUid}, #{rTitle}, #{rContent}, 0, 0, now(), #{rFileName}, #{rFileSize}, #{rStatus}, #{cNum},
-            current_timestamp, coalesce(#{createdBy}, #{rUid}), current_timestamp, coalesce(#{updatedBy}, #{rUid})
+            current_timestamp,
+            <choose>
+                <when test="createdBy != null and createdBy != ''">#{createdBy}</when>
+                <otherwise>#{rUid}</otherwise>
+            </choose>,
+            current_timestamp,
+            <choose>
+                <when test="updatedBy != null and updatedBy != ''">#{updatedBy}</when>
+                <otherwise>#{rUid}</otherwise>
+            </choose>
         )
     </insert>
 
@@ -42,7 +51,10 @@
         set rTitle = #{rTitle},
             rContent = #{rContent},
             updatedDate = current_timestamp,
-            updatedBy = coalesce(#{updatedBy}, #{rUid})
+            updatedBy = <choose>
+                <when test="updatedBy != null and updatedBy != ''">#{updatedBy}</when>
+                <otherwise>#{rUid}</otherwise>
+            </choose>
         where rNum = #{rNum}
     </update>
 

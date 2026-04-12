@@ -2,19 +2,23 @@ package com.example.onedayclass.member.controller;
 
 import com.example.onedayclass.member.dto.MemberDto;
 import com.example.onedayclass.member.service.MemberService;
-import jakarta.validation.Valid;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import java.util.List;
+import java.util.Objects;
 
 @Controller
 @RequestMapping("/members")
@@ -26,39 +30,31 @@ public class MemberController {
         this.memberService = memberService;
     }
 
-    /**
-     * 로그인 화면을 조회한다.
-     *
-     * @return 로그인 JSP 경로
-     */
     @GetMapping("/login")
     public String loginForm() {
         return "member/memberLogin";
     }
 
-    /**
-     * 회원가입 화면을 조회한다.
-     *
-     * @param model 신규 회원 DTO를 전달할 뷰 모델
-     * @return 회원가입 JSP 경로
-     */
     @GetMapping("/join")
     public String joinForm(Model model) {
         model.addAttribute("memberDto", new MemberDto());
         return "member/memberJoin";
     }
 
-    /**
-     * 회원가입을 처리한다.
-     *
-     * @param memberDto 가입할 회원 데이터
-     * @param bindingResult 입력값 검증 결과
-     * @param redirectAttributes 중복 아이디/성공 메시지를 전달할 리다이렉트 속성
-     * @return 검증 실패 시 가입 화면, 성공 시 로그인 화면으로 리다이렉트
-     */
     @PostMapping("/join")
-    public String join(@Valid @ModelAttribute MemberDto memberDto, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
+    public String join(@Valid @ModelAttribute MemberDto memberDto,
+                       BindingResult bindingResult,
+                       RedirectAttributes redirectAttributes,
+                       Model model) {
+        normalizeJoinFields(memberDto);
+        validateTeacherFields(memberDto, bindingResult);
+
         if (bindingResult.hasErrors()) {
+            List<String> validationErrors = bindingResult.getFieldErrors().stream()
+                    .map(this::toValidationMessage)
+                    .distinct()
+                    .toList();
+            model.addAttribute("validationErrors", validationErrors);
             return "member/memberJoin";
         }
         if (memberService.checkId(memberDto.getUId())) {
@@ -70,40 +66,18 @@ public class MemberController {
         return "redirect:/members/login";
     }
 
-    /**
-     * 로그인 사용자의 마이페이지를 조회한다.
-     *
-     * @param username 로그인 사용자 아이디
-     * @param model 회원 정보를 전달할 뷰 모델
-     * @return 마이페이지 JSP 경로
-     */
     @GetMapping("/mypage")
     public String mypage(@AuthenticationPrincipal(expression = "username") String username, Model model) {
         model.addAttribute("member", memberService.getMember(username));
         return "member/memberMypage";
     }
 
-    /**
-     * 회원정보 수정 화면을 조회한다.
-     *
-     * @param username 로그인 사용자 아이디
-     * @param model 기존 회원 정보를 전달할 뷰 모델
-     * @return 회원정보 수정 JSP 경로
-     */
     @GetMapping("/edit")
     public String editForm(@AuthenticationPrincipal(expression = "username") String username, Model model) {
         model.addAttribute("memberDto", memberService.getMember(username));
         return "member/memberEdit";
     }
 
-    /**
-     * 로그인 사용자의 회원정보를 수정한다.
-     *
-     * @param memberDto 수정할 회원 데이터
-     * @param username 로그인 사용자 아이디
-     * @param redirectAttributes 수정 완료 메시지를 전달할 리다이렉트 속성
-     * @return 마이페이지로 리다이렉트
-     */
     @PostMapping("/edit")
     public String edit(@ModelAttribute MemberDto memberDto,
                        @AuthenticationPrincipal(expression = "username") String username,
@@ -114,14 +88,6 @@ public class MemberController {
         return "redirect:/members/mypage";
     }
 
-    /**
-     * 로그인 사용자의 회원 계정을 삭제하고 로그아웃 처리한다.
-     *
-     * @param username 로그인 사용자 아이디
-     * @param request 현재 HTTP 요청
-     * @param response 현재 HTTP 응답
-     * @return 홈 화면으로 리다이렉트
-     */
     @PostMapping("/delete")
     public String delete(@AuthenticationPrincipal(expression = "username") String username,
                          HttpServletRequest request,
@@ -129,5 +95,32 @@ public class MemberController {
         memberService.delete(username);
         new SecurityContextLogoutHandler().logout(request, response, null);
         return "redirect:/";
+    }
+
+    private String toValidationMessage(FieldError fieldError) {
+        return switch (fieldError.getField()) {
+            case "uId" -> "아이디는 영문/숫자 4~20자로 입력해야 합니다.";
+            case "uPw" -> "비밀번호는 영문, 숫자, 특수문자를 포함한 8~20자여야 합니다.";
+            case "uName" -> "이름은 한글 또는 영문 2~20자로 입력해야 합니다.";
+            case "uPhone" -> "휴대폰 번호 형식이 올바르지 않습니다.";
+            case "uEmail" -> "이메일 형식이 올바르지 않습니다.";
+            case "uLevel" -> "회원 유형을 선택해야 합니다.";
+            case "sName" -> "강사 활동명은 한글/영문/숫자를 포함해 2~50자로 입력해야 합니다.";
+            default -> "입력값을 다시 확인해 주세요.";
+        };
+    }
+
+    private void normalizeJoinFields(MemberDto memberDto) {
+        if (!Objects.equals(memberDto.getULevel(), "2")) {
+            memberDto.setSName(null);
+            memberDto.setSSns(null);
+        }
+    }
+
+    private void validateTeacherFields(MemberDto memberDto, BindingResult bindingResult) {
+        if (Objects.equals(memberDto.getULevel(), "2")
+                && (memberDto.getSName() == null || memberDto.getSName().isBlank())) {
+            bindingResult.rejectValue("sName", "required", "강사 활동명을 입력해야 합니다.");
+        }
     }
 }
