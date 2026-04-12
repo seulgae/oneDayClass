@@ -9,20 +9,20 @@ import lombok.Setter;
 @Getter
 @Setter
 public class RequestBoardDto extends BaseVo {
-    private Integer reqNum;
-    private String reqUid;
+    private Integer reqNum; /* 요청글 번호 */
+    private String reqUid; /* 작성자 아이디 */
     @NotBlank
     @Size(min = 4, max = 80)
-    private String reqTitle;
+    private String reqTitle; /* 요청글 제목 */
 
     @NotBlank
     @Size(min = 10, max = 3000)
-    private String reqContent;
-    private String reqRegDate;
-    private Integer reqPos;
-    private Integer reqRef;
-    private Integer reqDepth;
-    private Integer parentReqNum;
-    private String reqOriUid;
-    private Integer reqStatus;
+    private String reqContent; /* 요청글 내용 */
+    private String reqRegDate; /* 등록일 */
+    private Integer reqPos; /* 답글 정렬 순서 */
+    private Integer reqRef; /* 원글 그룹 번호 */
+    private Integer reqDepth; /* 답글 깊이 */
+    private Integer parentReqNum; /* 부모 글 번호 */
+    private String reqOriUid; /* 원작성자 아이디 */
+    private Integer reqStatus; /* 상태값 */
 }
