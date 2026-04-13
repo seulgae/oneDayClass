@@ -1,10 +1,22 @@
+
+
+
 # oneDayClass
+
+## 리팩토링 이전 참고 자료
+
+이 프로젝트는 기존 레거시 원데이 클래스 프로젝트를 리팩토링한 결과물입니다.
+- 리팩토링 전 PPT: `https://github.com/seulgae/oneDayClass/blob/main/OnedayClass(ClassBBS).pdf`
+- 리팩토링 전 영상: `https://studio.youtube.com/video/kDs0r3Ea3LI/edit`
+- 리팩토링 전 소스파일 : `https://github.com/seulgae/oneDayClass/blob/main/Proj_OnedayClass.zip`
+- 리팩토링 전 개발 환경 구조: `JDK 11 / MySQL / JSP Model 1 레거시 구조`
+
+## 1. 프로젝트 개요
 
 `oneDayClass`는 원데이 클래스 플랫폼을 구현한 Spring Boot 3 기반 MVC 웹 애플리케이션입니다.
 JSP 화면, MyBatis 매퍼, Spring Security 인증/인가, H2 시드 데이터, 파일 업로드를 포함하며 클래스 탐색부터 결제, 리뷰, QnA, 요청 게시판, 등업 신청, 관리자 승인까지 한 흐름으로 구성되어 있습니다.
 
-## 1. 프로젝트 개요
-
+[환경구조]
 - Spring Boot 3.2.5 + JSP + MyBatis 기반 서버 렌더링 애플리케이션
 - 기본 실행 DB는 `H2 in-memory`
 - 시작 시 `schema.sql`, `data.sql` 자동 실행
