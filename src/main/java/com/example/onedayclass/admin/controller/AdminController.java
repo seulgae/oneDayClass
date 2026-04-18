@@ -37,8 +37,8 @@ public class AdminController {
     public String dashboard(Model model) {
         model.addAttribute("pendingClasses", classService.getPendingClasses());
         model.addAttribute("pendingLevelUps", levelUpService.getPendingRequests());
-        model.addAttribute("questions", qnaService.getQuestions("qTitle", null, "admin"));
-        model.addAttribute("reviews", reviewService.getReviews("rTitle", null, "admin"));
+        model.addAttribute("questions", qnaService.getQuestions("qTitle", null, "3"));
+        model.addAttribute("reviews", reviewService.getReviews("rTitle", null, "3"));
         return "admin/adminDashboard";
     }
 

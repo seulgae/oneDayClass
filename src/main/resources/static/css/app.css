@@ -1154,6 +1154,10 @@ textarea {
     background: rgba(255, 244, 241, 0.82);
 }
 
+.qna-inline-reply-form[hidden] {
+    display: none;
+}
+
 .reply-form-copy {
     margin: 0;
     color: var(--muted);

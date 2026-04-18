@@ -19,9 +19,11 @@
         <c:if test="${loginMember != null}">
             <button type="button" class="btn secondary reply-toggle" data-target="qnaMainReplyForm" data-label-default="답변 작성" data-label-active="작성 중" aria-expanded="false">답변 작성</button>
         </c:if>
-        <form method="post" action="<c:url value='/qna/${question.QNum}/delete' />" class="inline-form">
-            <button type="submit">문의 삭제</button>
-        </form>
+        <c:if test="${loginMember != null and (loginMember.UId eq question.QUid or loginMember.ULevel eq '3' or loginMember.ULevel eq '4')}">
+            <form method="post" action="<c:url value='/qna/${question.QNum}/delete' />" class="inline-form" onsubmit="return confirm('정말 삭제하시겠습니까?');">
+                <button type="submit">문의 삭제</button>
+            </form>
+        </c:if>
     </div>
 </section>
 
@@ -47,10 +49,19 @@
                     <h3>${reply.QTitle}</h3>
                     <p>${reply.QContent}</p>
                 </div>
-                <c:if test="${loginMember != null and reply.QDepth lt 2}">
+                <c:if test="${loginMember != null and (reply.QDepth lt 2 or loginMember.UId eq reply.QUid or loginMember.ULevel eq '3' or loginMember.ULevel eq '4')}">
                     <div class="qna-reply-actions">
-                        <button type="button" class="btn secondary reply-toggle" data-target="qnaReplyForm-${reply.QNum}" data-label-default="대댓글 작성" data-label-active="작성 중" aria-expanded="false">대댓글 작성</button>
+                        <c:if test="${reply.QDepth lt 2}">
+                            <button type="button" class="btn secondary reply-toggle" data-target="qnaReplyForm-${reply.QNum}" data-label-default="대댓글 작성" data-label-active="작성 중" aria-expanded="false">대댓글 작성</button>
+                        </c:if>
+                        <c:if test="${loginMember.UId eq reply.QUid or loginMember.ULevel eq '3' or loginMember.ULevel eq '4'}">
+                            <form method="post" action="<c:url value='/qna/${reply.QNum}/delete' />" class="inline-form" onsubmit="return confirm('정말 삭제하시겠습니까?');">
+                                <button type="submit" class="btn secondary">삭제</button>
+                            </form>
+                        </c:if>
                     </div>
+                </c:if>
+                <c:if test="${loginMember != null and reply.QDepth lt 2}">
                     <form method="post" action="<c:url value='/qna/${reply.QNum}/reply' />" class="qna-inline-reply-form" id="qnaReplyForm-${reply.QNum}" hidden>
                         <p class="reply-form-copy">짧게 상황을 이어 쓰면 질문 흐름을 따라가기 쉽습니다.</p>
                         <input type="text" name="qTitle" placeholder="대댓글 제목" required minlength="4" maxlength="80" pattern="^.{4,80}$" title="제목은 4~80자 이내로 입력해 주세요.">
@@ -138,4 +149,3 @@
     })();
 </script>
 <%@ include file="../include/footer.jspf" %>
-

@@ -10,8 +10,10 @@
     <c:set var="toolbarTitle" value="클래스" />
     <c:url var="toolbarAction" value="/classes" />
     <c:set var="toolbarScope" value="class" />
-    <c:url var="toolbarButtonHref" value="/classes/new" />
-    <c:set var="toolbarButtonLabel" value="클래스 등록" />
+    <c:if test="${loginMember != null and loginMember.ULevel eq '2'}">
+        <c:url var="toolbarButtonHref" value="/classes/new" />
+        <c:set var="toolbarButtonLabel" value="클래스 등록" />
+    </c:if>
     <%@ include file="../include/list-toolbar.jspf" %>
 
     <div class="card-grid">

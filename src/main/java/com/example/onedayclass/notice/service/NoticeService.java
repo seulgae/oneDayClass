@@ -11,4 +11,10 @@ public interface NoticeService {
     PageResult<QnaDto> getNoticesPage(int page, int pageSize);
 
     QnaDto getNotice(int qNum);
+
+    boolean createNotice(QnaDto noticeDto);
+
+    boolean updateNotice(QnaDto noticeDto);
+
+    boolean deleteNotice(int qNum);
 }

@@ -10,7 +10,14 @@
     <c:set var="toolbarTitle" value="사용자 후기" />
     <c:url var="toolbarAction" value="/reviews" />
     <c:set var="toolbarScope" value="review" />
-    <c:url var="toolbarButtonHref" value="/reviews/new" />
+    <c:choose>
+        <c:when test="${loginMember != null}">
+            <c:url var="toolbarButtonHref" value="/reviews/new" />
+        </c:when>
+        <c:otherwise>
+            <c:url var="toolbarButtonHref" value="/members/login" />
+        </c:otherwise>
+    </c:choose>
     <c:set var="toolbarButtonLabel" value="후기 작성" />
     <%@ include file="../include/list-toolbar.jspf" %>
 
@@ -19,6 +26,7 @@
         <tr>
             <th>번호</th>
             <th>제목</th>
+            <th>클래스</th>
             <th>작성자</th>
             <th>조회/추천</th>
             <th>작성일</th>
@@ -29,6 +37,14 @@
             <tr>
                 <td>${item.RNum}</td>
                 <td><a href="<c:url value='/reviews/${item.RNum}' />">${item.RTitle}</a></td>
+                <td>
+                    <c:choose>
+                        <c:when test="${not empty item.CTitle}">
+                            <a href="<c:url value='/classes/${item.CNum}' />">${item.CTitle}</a>
+                        </c:when>
+                        <c:otherwise>-</c:otherwise>
+                    </c:choose>
+                </td>
                 <td>${item.RUid}</td>
                 <td>조회 ${item.RCnt} / 좋아요 ${item.RLikes}</td>
                 <td>${fn:substring(item.RRegDate, 0, 10)}</td>

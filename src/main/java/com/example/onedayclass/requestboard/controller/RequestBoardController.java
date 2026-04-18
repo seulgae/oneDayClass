@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 
@@ -46,7 +47,7 @@ public class RequestBoardController {
         MemberDto loginMember = principal == null ? null : principal.getMember();
         model.addAttribute(
                 "requestPage",
-                requestBoardService.getRequestsPage(keyField, keyword, loginMember == null ? null : loginMember.getUId(), page, 10)
+                requestBoardService.getRequestsPage(keyField, keyword, loginMember == null ? null : loginMember.getULevel(), page, 10)
         );
         model.addAttribute("selectedKeyField", keyField);
         model.addAttribute("keyword", keyword);
@@ -163,8 +164,22 @@ public class RequestBoardController {
      * @return 요청게시판 목록으로 리다이렉트
      */
     @PostMapping("/{reqNum}/delete")
-    public String delete(@PathVariable int reqNum) {
+    public String delete(@PathVariable int reqNum,
+                         @AuthenticationPrincipal(expression = "member") MemberDto loginMember,
+                         RedirectAttributes redirectAttributes) {
+        RequestBoardDto target = requestBoardService.getRequest(reqNum);
+        if (target == null || loginMember == null
+                || (!loginMember.getUId().equals(target.getReqUid()) && !isBoardManager(loginMember))) {
+            redirectAttributes.addFlashAttribute("message", "작성자나 게시판 관리자만 삭제할 수 있습니다.");
+            return "redirect:/requests/" + reqNum;
+        }
+
         requestBoardService.deleteRequest(reqNum);
         return "redirect:/requests";
+    }
+
+    private boolean isBoardManager(MemberDto loginMember) {
+        return loginMember != null
+                && ("3".equals(loginMember.getULevel()) || "4".equals(loginMember.getULevel()));
     }
 }

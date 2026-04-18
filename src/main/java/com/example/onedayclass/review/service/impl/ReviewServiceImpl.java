@@ -21,13 +21,13 @@ public class ReviewServiceImpl implements ReviewService {
 
     @Override
     public List<ReviewDto> getReviews(String keyField, String keyword, String viewerId) {
-        return reviewMapper.findAll(keyword, normalizeField(keyField), "admin".equals(viewerId));
+        return reviewMapper.findAll(keyword, normalizeField(keyField), isBoardManager(viewerId));
     }
 
     @Override
     public PageResult<ReviewDto> getReviewsPage(String keyField, String keyword, String viewerId, int page, int pageSize) {
         return PagingUtils.slice(
-                reviewMapper.findAll(keyword, normalizeField(keyField), "admin".equals(viewerId)),
+                reviewMapper.findAll(keyword, normalizeField(keyField), isBoardManager(viewerId)),
                 page,
                 pageSize
         );
@@ -84,5 +84,9 @@ public class ReviewServiceImpl implements ReviewService {
             return keyField;
         }
         return "rTitle";
+    }
+
+    private boolean isBoardManager(String viewerLevel) {
+        return "3".equals(viewerLevel) || "4".equals(viewerLevel);
     }
 }

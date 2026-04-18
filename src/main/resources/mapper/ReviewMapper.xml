@@ -4,27 +4,40 @@
 <mapper namespace="com.example.onedayclass.review.mapper.ReviewMapper">
 
     <select id="findAll" resultType="com.example.onedayclass.review.dto.ReviewDto">
-        select * from reviewBBS
+        select reviewBBS.*, classBBS.cTitle
+        from reviewBBS
+        left join classBBS on reviewBBS.cNum = classBBS.cNum
         where 1 = 1
         <if test="!includeDeleted">
-            and rStatus = 2
+            and reviewBBS.rStatus = 2
         </if>
         <if test="keyword != null and keyword != ''">
             and ${keyField} like concat('%', #{keyword}, '%')
         </if>
-        order by rNum desc
+        order by reviewBBS.rNum desc
     </select>
 
     <select id="findByClass" parameterType="int" resultType="com.example.onedayclass.review.dto.ReviewDto">
-        select * from reviewBBS where cNum = #{cNum} and rStatus = 2 order by rNum desc
+        select reviewBBS.*, classBBS.cTitle
+        from reviewBBS
+        left join classBBS on reviewBBS.cNum = classBBS.cNum
+        where reviewBBS.cNum = #{cNum} and reviewBBS.rStatus = 2
+        order by reviewBBS.rNum desc
     </select>
 
     <select id="findRecent" parameterType="int" resultType="com.example.onedayclass.review.dto.ReviewDto">
-        select * from reviewBBS where rStatus = 2 order by rRegDate desc, rNum desc limit #{limit}
+        select reviewBBS.*, classBBS.cTitle
+        from reviewBBS
+        left join classBBS on reviewBBS.cNum = classBBS.cNum
+        where reviewBBS.rStatus = 2
+        order by reviewBBS.rRegDate desc, reviewBBS.rNum desc limit #{limit}
     </select>
 
     <select id="findById" parameterType="int" resultType="com.example.onedayclass.review.dto.ReviewDto">
-        select * from reviewBBS where rNum = #{rNum}
+        select reviewBBS.*, classBBS.cTitle
+        from reviewBBS
+        left join classBBS on reviewBBS.cNum = classBBS.cNum
+        where reviewBBS.rNum = #{rNum}
     </select>
 
     <insert id="insert" parameterType="com.example.onedayclass.review.dto.ReviewDto" useGeneratedKeys="true" keyProperty="rNum">

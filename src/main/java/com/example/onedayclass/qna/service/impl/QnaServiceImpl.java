@@ -20,13 +20,13 @@ public class QnaServiceImpl implements QnaService {
 
     @Override
     public List<QnaDto> getQuestions(String keyField, String keyword, String viewerId) {
-        return qnaMapper.findAll(keyword, normalizeField(keyField), "admin".equals(viewerId));
+        return qnaMapper.findAll(keyword, normalizeField(keyField), isBoardManager(viewerId));
     }
 
     @Override
     public PageResult<QnaDto> getQuestionsPage(String keyField, String keyword, String viewerId, int page, int pageSize) {
         return PagingUtils.slice(
-                qnaMapper.findAll(keyword, normalizeField(keyField), "admin".equals(viewerId)),
+                qnaMapper.findAll(keyword, normalizeField(keyField), isBoardManager(viewerId)),
                 page,
                 pageSize
         );
@@ -113,5 +113,9 @@ public class QnaServiceImpl implements QnaService {
             return keyField;
         }
         return "qTitle";
+    }
+
+    private boolean isBoardManager(String viewerLevel) {
+        return "3".equals(viewerLevel) || "4".equals(viewerLevel);
     }
 }

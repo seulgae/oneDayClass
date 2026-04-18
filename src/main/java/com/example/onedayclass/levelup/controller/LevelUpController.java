@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 @RequestMapping("/levelups")
@@ -38,7 +39,7 @@ public class LevelUpController {
                        @AuthenticationPrincipal MemberPrincipal principal,
                        Model model) {
         MemberDto loginMember = principal == null ? null : principal.getMember();
-        boolean admin = loginMember != null && "3".equals(loginMember.getULevel());
+        boolean admin = isBoardManager(loginMember);
         model.addAttribute("requestPage",
                 levelUpService.getRequestsPage(loginMember == null ? null : loginMember.getUId(), admin, page, 10));
         return "levelup/levelUpList";
@@ -121,8 +122,13 @@ public class LevelUpController {
                         @Valid LevelUpDto levelUpDto,
                         BindingResult bindingResult,
                         @AuthenticationPrincipal(expression = "member") MemberDto loginMember,
-                        Model model) {
+                        Model model,
+                        RedirectAttributes redirectAttributes) {
         LevelUpDto parent = levelUpService.getRequest(lvlNum);
+        if (!isBoardManager(loginMember)) {
+            redirectAttributes.addFlashAttribute("message", "게시판 관리자만 답변할 수 있습니다.");
+            return "redirect:/levelups/" + lvlNum;
+        }
         if (bindingResult.hasErrors()) {
             model.addAttribute("parent", parent);
             return "levelup/levelUpReply";
@@ -143,7 +149,13 @@ public class LevelUpController {
      * @return 관리자 화면으로 리다이렉트
      */
     @PostMapping("/{lvlNum}/approve")
-    public String approve(@PathVariable int lvlNum) {
+    public String approve(@PathVariable int lvlNum,
+                          @AuthenticationPrincipal(expression = "member") MemberDto loginMember,
+                          RedirectAttributes redirectAttributes) {
+        if (!isBoardManager(loginMember)) {
+            redirectAttributes.addFlashAttribute("message", "게시판 관리자만 승인할 수 있습니다.");
+            return "redirect:/levelups/" + lvlNum;
+        }
         levelUpService.approveRequest(lvlNum);
         return "redirect:/admin";
     }
@@ -155,8 +167,21 @@ public class LevelUpController {
      * @return 등업 요청 목록으로 리다이렉트
      */
     @PostMapping("/{lvlNum}/delete")
-    public String delete(@PathVariable int lvlNum) {
+    public String delete(@PathVariable int lvlNum,
+                         @AuthenticationPrincipal(expression = "member") MemberDto loginMember,
+                         RedirectAttributes redirectAttributes) {
+        LevelUpDto target = levelUpService.getRequest(lvlNum);
+        if (target == null || loginMember == null
+                || (!loginMember.getUId().equals(target.getLvlUid()) && !isBoardManager(loginMember))) {
+            redirectAttributes.addFlashAttribute("message", "작성자나 게시판 관리자만 삭제할 수 있습니다.");
+            return "redirect:/levelups/" + lvlNum;
+        }
         levelUpService.deleteRequest(lvlNum);
         return "redirect:/levelups";
+    }
+
+    private boolean isBoardManager(MemberDto loginMember) {
+        return loginMember != null
+                && ("3".equals(loginMember.getULevel()) || "4".equals(loginMember.getULevel()));
     }
 }

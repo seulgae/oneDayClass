@@ -24,14 +24,22 @@
                 <a href="<c:url value='/payments/cart' />">장바구니</a>
                 <a href="<c:url value='/notices' />">공지사항</a>
                 <a href="<c:url value='/requests' />">요청게시판</a>
-                <c:if test="${loginMember != null and loginMember.ULevel eq '3'}">
+                <c:if test="${loginMember != null and (loginMember.ULevel eq '3' or loginMember.ULevel eq '4')}">
                     <a href="<c:url value='/admin' />">관리자</a>
                 </c:if>
             </nav>
             <div class="auth">
                 <c:choose>
                     <c:when test="${loginMember != null}">
-                        <span>${loginMember.UName} (${loginMember.UId})</span>
+                        <span>
+                            <c:choose>
+                                <c:when test="${loginMember.ULevel eq '1'}">${loginMember.UName} 수강생님</c:when>
+                                <c:when test="${loginMember.ULevel eq '2'}">${loginMember.UName} 선생님</c:when>
+                                <c:when test="${loginMember.ULevel eq '3'}">${loginMember.UName} 관리자님</c:when>
+                                <c:when test="${loginMember.ULevel eq '4'}">${loginMember.UName} 운영자님</c:when>
+                                <c:otherwise>${loginMember.UName}님</c:otherwise>
+                            </c:choose>
+                        </span>
                         <a href="<c:url value='/members/mypage' />">마이페이지</a>
                         <a href="<c:url value='/members/logout' />">로그아웃</a>
                     </c:when>

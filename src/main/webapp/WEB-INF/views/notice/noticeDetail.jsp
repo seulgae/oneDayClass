@@ -11,6 +11,14 @@
     <dl><dt>작성자</dt><dd>${notice.QUid}</dd></dl>
     <dl><dt>작성일</dt><dd>${fn:substring(notice.QRegDate, 0, 10)}</dd></dl>
     <dl><dt>내용</dt><dd>${notice.QContent}</dd></dl>
+    <c:if test="${loginMember != null and (loginMember.ULevel eq '3' or loginMember.ULevel eq '4')}">
+        <div class="actions">
+            <a class="btn secondary" href="<c:url value='/notices/${notice.QNum}/edit' />">수정</a>
+            <form method="post" action="<c:url value='/notices/${notice.QNum}/delete' />" class="inline-form">
+                <button type="submit">삭제</button>
+            </form>
+        </div>
+    </c:if>
 </section>
 <%@ include file="../include/footer.jspf" %>
 

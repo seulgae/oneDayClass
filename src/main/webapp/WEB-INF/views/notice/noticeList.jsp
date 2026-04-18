@@ -7,6 +7,9 @@
 <section class="panel">
     <div class="section-head">
         <h2>공지사항</h2>
+        <c:if test="${loginMember != null and (loginMember.ULevel eq '3' or loginMember.ULevel eq '4')}">
+            <a class="btn" href="<c:url value='/notices/new' />">공지 작성</a>
+        </c:if>
     </div>
 
     <table class="table board-table">

@@ -1,5 +1,6 @@
 package com.example.onedayclass.review.controller;
 
+import com.example.onedayclass.clazz.service.ClassService;
 import com.example.onedayclass.member.dto.MemberDto;
 import com.example.onedayclass.review.dto.ReviewDto;
 import com.example.onedayclass.review.service.ReviewService;
@@ -21,9 +22,11 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 public class ReviewController {
 
     private final ReviewService reviewService;
+    private final ClassService classService;
 
-    public ReviewController(ReviewService reviewService) {
+    public ReviewController(ReviewService reviewService, ClassService classService) {
         this.reviewService = reviewService;
+        this.classService = classService;
     }
 
     /**
@@ -45,7 +48,7 @@ public class ReviewController {
         MemberDto loginMember = principal == null ? null : principal.getMember();
         model.addAttribute(
                 "reviewPage",
-                reviewService.getReviewsPage(keyField, keyword, loginMember == null ? null : loginMember.getUId(), page, 12)
+                reviewService.getReviewsPage(keyField, keyword, loginMember == null ? null : loginMember.getULevel(), page, 12)
         );
         model.addAttribute("selectedKeyField", keyField);
         model.addAttribute("keyword", keyword);
@@ -81,6 +84,7 @@ public class ReviewController {
         reviewDto.setRUid(loginMember.getUId());
         reviewDto.setCNum(cNum);
         model.addAttribute("reviewDto", reviewDto);
+        populateClassOptions(model);
         return "review/reviewForm";
     }
 
@@ -95,8 +99,13 @@ public class ReviewController {
     @PostMapping
     public String create(@Valid ReviewDto reviewDto,
                          BindingResult bindingResult,
-                         @AuthenticationPrincipal(expression = "member") MemberDto loginMember) {
-        if (bindingResult.hasErrors()) {
+                         @AuthenticationPrincipal(expression = "member") MemberDto loginMember,
+                         Model model) {
+        if (bindingResult.hasErrors() || reviewDto.getCNum() == null) {
+            if (reviewDto.getCNum() == null) {
+                model.addAttribute("message", "후기를 작성할 클래스를 선택해 주세요.");
+            }
+            populateClassOptions(model);
             return "review/reviewForm";
         }
         reviewDto.setRUid(loginMember.getUId());
@@ -129,8 +138,26 @@ public class ReviewController {
      * @return 후기 목록으로 리다이렉트
      */
     @PostMapping("/{rNum}/delete")
-    public String delete(@PathVariable int rNum) {
+    public String delete(@PathVariable int rNum,
+                         @AuthenticationPrincipal(expression = "member") MemberDto loginMember,
+                         RedirectAttributes redirectAttributes) {
+        ReviewDto review = reviewService.getReview(rNum, false);
+        if (review == null || loginMember == null
+                || (!loginMember.getUId().equals(review.getRUid()) && !isBoardManager(loginMember))) {
+            redirectAttributes.addFlashAttribute("message", "작성자나 게시판 관리자만 삭제할 수 있습니다.");
+            return "redirect:/reviews/" + rNum;
+        }
+
         reviewService.deleteReview(rNum);
         return "redirect:/reviews";
+    }
+
+    private boolean isBoardManager(MemberDto loginMember) {
+        return loginMember != null
+                && ("3".equals(loginMember.getULevel()) || "4".equals(loginMember.getULevel()));
+    }
+
+    private void populateClassOptions(Model model) {
+        model.addAttribute("classOptions", classService.getClasses("cTitle", null, null, false));
     }
 }

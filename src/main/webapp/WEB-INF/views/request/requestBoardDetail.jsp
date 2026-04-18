@@ -19,9 +19,11 @@
         <c:if test="${loginMember != null}">
             <button type="button" class="btn secondary reply-toggle" data-target="requestMainReplyForm" data-label-default="답변 작성" data-label-active="작성 중" aria-expanded="false">답변 작성</button>
         </c:if>
-        <form method="post" action="<c:url value='/requests/${requestItem.reqNum}/delete' />" class="inline-form">
-            <button type="submit">요청 삭제</button>
-        </form>
+        <c:if test="${loginMember != null and (loginMember.UId eq requestItem.reqUid or loginMember.ULevel eq '3' or loginMember.ULevel eq '4')}">
+            <form method="post" action="<c:url value='/requests/${requestItem.reqNum}/delete' />" class="inline-form">
+                <button type="submit">요청 삭제</button>
+            </form>
+        </c:if>
     </div>
 </section>
 
@@ -47,19 +49,28 @@
                     <h3>${reply.reqTitle}</h3>
                     <p>${reply.reqContent}</p>
                 </div>
-                <c:if test="${loginMember != null and reply.reqDepth lt 2}">
+                <c:if test="${loginMember != null and (reply.reqDepth lt 2 or loginMember.UId eq reply.reqUid or loginMember.ULevel eq '3' or loginMember.ULevel eq '4')}">
                     <div class="qna-reply-actions">
-                        <button type="button" class="btn secondary reply-toggle" data-target="requestReplyForm-${reply.reqNum}" data-label-default="대댓글 작성" data-label-active="작성 중" aria-expanded="false">대댓글 작성</button>
+                        <c:if test="${reply.reqDepth lt 2}">
+                            <button type="button" class="btn secondary reply-toggle" data-target="requestReplyForm-${reply.reqNum}" data-label-default="대댓글 작성" data-label-active="작성 중" aria-expanded="false">대댓글 작성</button>
+                        </c:if>
+                        <c:if test="${loginMember.UId eq reply.reqUid or loginMember.ULevel eq '3' or loginMember.ULevel eq '4'}">
+                            <form method="post" action="<c:url value='/requests/${reply.reqNum}/delete' />" class="inline-form">
+                                <button type="submit" class="btn secondary">삭제</button>
+                            </form>
+                        </c:if>
                     </div>
-                    <form method="post" action="<c:url value='/requests/${reply.reqNum}/reply' />" class="qna-inline-reply-form" id="requestReplyForm-${reply.reqNum}" hidden>
-                        <p class="reply-form-copy">같은 주제의 요청은 한 줄 요약과 함께 남기면 읽기 편합니다.</p>
-                        <input type="text" name="reqTitle" placeholder="대댓글 제목" required minlength="4" maxlength="80" pattern="^.{4,80}$" title="제목은 4~80자 이내로 입력해 주세요.">
-                        <textarea name="reqContent" placeholder="대댓글 내용을 입력해 주세요." rows="3" required minlength="10" maxlength="3000" title="답변 내용은 10자 이상 입력해 주세요."></textarea>
-                        <div class="qna-inline-reply-actions">
-                            <button type="submit">답변 등록</button>
-                            <button type="button" class="btn secondary reply-toggle-cancel" data-target="requestReplyForm-${reply.reqNum}">닫기</button>
-                        </div>
-                    </form>
+                    <c:if test="${reply.reqDepth lt 2}">
+                        <form method="post" action="<c:url value='/requests/${reply.reqNum}/reply' />" class="qna-inline-reply-form" id="requestReplyForm-${reply.reqNum}" hidden>
+                            <p class="reply-form-copy">같은 주제의 요청은 한 줄 요약과 함께 남기면 읽기 편합니다.</p>
+                            <input type="text" name="reqTitle" placeholder="대댓글 제목" required minlength="4" maxlength="80" pattern="^.{4,80}$" title="제목은 4~80자 이내로 입력해 주세요.">
+                            <textarea name="reqContent" placeholder="대댓글 내용을 입력해 주세요." rows="3" required minlength="10" maxlength="3000" title="답변 내용은 10자 이상 입력해 주세요."></textarea>
+                            <div class="qna-inline-reply-actions">
+                                <button type="submit">답변 등록</button>
+                                <button type="button" class="btn secondary reply-toggle-cancel" data-target="requestReplyForm-${reply.reqNum}">닫기</button>
+                            </div>
+                        </form>
+                    </c:if>
                 </c:if>
             </article>
         </c:forEach>

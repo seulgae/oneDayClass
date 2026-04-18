@@ -20,13 +20,13 @@ public class RequestBoardServiceImpl implements RequestBoardService {
 
     @Override
     public List<RequestBoardDto> getRequests(String keyField, String keyword, String viewerId) {
-        return requestBoardMapper.findAll(keyword, normalizeField(keyField), "admin".equals(viewerId));
+        return requestBoardMapper.findAll(keyword, normalizeField(keyField), isBoardManager(viewerId));
     }
 
     @Override
     public PageResult<RequestBoardDto> getRequestsPage(String keyField, String keyword, String viewerId, int page, int pageSize) {
         return PagingUtils.slice(
-                requestBoardMapper.findAll(keyword, normalizeField(keyField), "admin".equals(viewerId)),
+                requestBoardMapper.findAll(keyword, normalizeField(keyField), isBoardManager(viewerId)),
                 page,
                 pageSize
         );
@@ -107,5 +107,9 @@ public class RequestBoardServiceImpl implements RequestBoardService {
             return keyField;
         }
         return "reqTitle";
+    }
+
+    private boolean isBoardManager(String viewerLevel) {
+        return "3".equals(viewerLevel) || "4".equals(viewerLevel);
     }
 }

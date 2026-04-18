@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 
@@ -46,7 +47,7 @@ public class QnaController {
         MemberDto loginMember = principal == null ? null : principal.getMember();
         model.addAttribute(
                 "questionPage",
-                qnaService.getQuestionsPage(keyField, keyword, loginMember == null ? null : loginMember.getUId(), page, 10)
+                qnaService.getQuestionsPage(keyField, keyword, loginMember == null ? null : loginMember.getULevel(), page, 10)
         );
         model.addAttribute("selectedKeyField", keyField);
         model.addAttribute("keyword", keyword);
@@ -168,8 +169,28 @@ public class QnaController {
      * @return QnA 목록으로 리다이렉트
      */
     @PostMapping("/{qNum}/delete")
-    public String delete(@PathVariable int qNum) {
+    public String delete(@PathVariable int qNum,
+                         @AuthenticationPrincipal(expression = "member") MemberDto loginMember,
+                         RedirectAttributes redirectAttributes) {
+        QnaDto target = qnaService.getQuestion(qNum);
+        if (target == null || loginMember == null
+                || (!loginMember.getUId().equals(target.getQUid()) && !isBoardManager(loginMember))) {
+            redirectAttributes.addFlashAttribute("message", "작성자나 게시판 관리자만 삭제할 수 있습니다.");
+            return "redirect:/qna/" + qNum;
+        }
+
         qnaService.deleteQuestion(qNum);
+        if (target != null && target.getQDepth() != null && target.getQDepth() > 0) {
+            QnaDto root = qnaService.getRootQuestion(target.getQRef());
+            if (root != null) {
+                return "redirect:/qna/" + root.getQNum();
+            }
+        }
         return "redirect:/qna";
+    }
+
+    private boolean isBoardManager(MemberDto loginMember) {
+        return loginMember != null
+                && ("3".equals(loginMember.getULevel()) || "4".equals(loginMember.getULevel()));
     }
 }

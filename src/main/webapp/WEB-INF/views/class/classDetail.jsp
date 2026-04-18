@@ -31,7 +31,14 @@
         <form method="post" action="<c:url value='/payments/cart/${classItem.CNum}' />" class="inline-form">
             <button type="submit">장바구니 담기</button>
         </form>
-        <a class="btn secondary" href="<c:url value='/reviews/new?cNum=${classItem.CNum}' />">후기 작성</a>
+        <c:choose>
+            <c:when test="${loginMember != null}">
+                <a class="btn secondary" href="<c:url value='/reviews/new?cNum=${classItem.CNum}' />">후기 작성</a>
+            </c:when>
+            <c:otherwise>
+                <a class="btn secondary" href="<c:url value='/members/login' />">후기 작성</a>
+            </c:otherwise>
+        </c:choose>
         <a class="btn secondary" href="<c:url value='/qna/new?cNum=${classItem.CNum}' />">문의 작성</a>
     </div>
 </section>

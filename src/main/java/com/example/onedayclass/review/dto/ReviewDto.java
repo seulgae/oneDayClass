@@ -26,4 +26,5 @@ public class ReviewDto extends BaseVo {
     private Integer rFileSize; /* 첨부 파일 크기 */
     private Integer rStatus; /* 상태값 */
     private Integer cNum; /* 클래스 번호 */
+    private String cTitle; /* 연결된 클래스명 */
 }

@@ -35,6 +35,9 @@ public class MemberPrincipal implements UserDetails, Serializable {
         if ("3".equals(member.getULevel())) {
             authorities.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
         }
+        if ("4".equals(member.getULevel())) {
+            authorities.add(new SimpleGrantedAuthority("ROLE_OPERATOR"));
+        }
         return authorities;
     }
 
