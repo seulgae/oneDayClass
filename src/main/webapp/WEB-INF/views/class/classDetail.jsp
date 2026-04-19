@@ -25,12 +25,13 @@
         </div>
     </c:if>
     <div class="actions">
-        <form method="post" action="<c:url value='/classes/${classItem.CNum}/like' />" class="inline-form">
-            <button type="submit">좋아요</button>
-        </form>
-        <form method="post" action="<c:url value='/payments/cart/${classItem.CNum}' />" class="inline-form">
-            <button type="submit">장바구니 담기</button>
-        </form>
+        <c:if test="${loginMember != null and (loginMember.ULevel eq '1')}">
+            <form method="post" action="<c:url value='/classes/${classItem.CNum}/like' />" class="inline-form">
+                <button type="submit">좋아요</button>
+            </form>
+            <form method="post" action="<c:url value='/payments/cart/${classItem.CNum}' />" class="inline-form">
+                <button type="submit">장바구니 담기</button>
+            </form>
         <c:choose>
             <c:when test="${loginMember != null}">
                 <a class="btn secondary" href="<c:url value='/reviews/new?cNum=${classItem.CNum}' />">후기 작성</a>
@@ -39,7 +40,8 @@
                 <a class="btn secondary" href="<c:url value='/members/login' />">후기 작성</a>
             </c:otherwise>
         </c:choose>
-        <a class="btn secondary" href="<c:url value='/qna/new?cNum=${classItem.CNum}' />">문의 작성</a>
+            <a class="btn secondary" href="<c:url value='/qna/new?cNum=${classItem.CNum}' />">문의 작성</a>
+        </c:if>
     </div>
 </section>
 
