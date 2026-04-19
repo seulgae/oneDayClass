@@ -176,21 +176,25 @@ public class QnaController {
         if (target == null || loginMember == null
                 || (!loginMember.getUId().equals(target.getQUid()) && !isBoardManager(loginMember))) {
             redirectAttributes.addFlashAttribute("message", "작성자나 게시판 관리자만 삭제할 수 있습니다.");
-            return "redirect:/qna/" + qNum;
+            return "redirect:" + resolveDetailPath(qNum, target);
         }
 
         qnaService.deleteQuestion(qNum);
-        if (target != null && target.getQDepth() != null && target.getQDepth() > 0) {
-            QnaDto root = qnaService.getRootQuestion(target.getQRef());
-            if (root != null) {
-                return "redirect:/qna/" + root.getQNum();
-            }
-        }
-        return "redirect:/qna";
+        return "redirect:" + resolveDetailPath(qNum, target);
     }
 
     private boolean isBoardManager(MemberDto loginMember) {
         return loginMember != null
                 && ("3".equals(loginMember.getULevel()) || "4".equals(loginMember.getULevel()));
+    }
+
+    private String resolveDetailPath(int qNum, QnaDto target) {
+        if (target != null && target.getQDepth() != null && target.getQDepth() > 0) {
+            QnaDto root = qnaService.getRootQuestion(target.getQRef());
+            if (root != null) {
+                return "/qna/" + root.getQNum();
+            }
+        }
+        return "/qna/" + qNum;
     }
 }

@@ -171,15 +171,25 @@ public class RequestBoardController {
         if (target == null || loginMember == null
                 || (!loginMember.getUId().equals(target.getReqUid()) && !isBoardManager(loginMember))) {
             redirectAttributes.addFlashAttribute("message", "작성자나 게시판 관리자만 삭제할 수 있습니다.");
-            return "redirect:/requests/" + reqNum;
+            return "redirect:" + resolveDetailPath(reqNum, target);
         }
 
         requestBoardService.deleteRequest(reqNum);
-        return "redirect:/requests";
+        return "redirect:" + resolveDetailPath(reqNum, target);
     }
 
     private boolean isBoardManager(MemberDto loginMember) {
         return loginMember != null
                 && ("3".equals(loginMember.getULevel()) || "4".equals(loginMember.getULevel()));
+    }
+
+    private String resolveDetailPath(int reqNum, RequestBoardDto target) {
+        if (target != null && target.getReqDepth() != null && target.getReqDepth() > 0) {
+            RequestBoardDto root = requestBoardService.getRootRequest(target.getReqRef());
+            if (root != null) {
+                return "/requests/" + root.getReqNum();
+            }
+        }
+        return "/requests/" + reqNum;
     }
 }
