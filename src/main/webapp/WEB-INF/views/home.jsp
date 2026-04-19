@@ -48,10 +48,9 @@
     <div class="slider" data-slider data-interval="4000">
         <div class="slider-track">
             <c:forEach var="item" items="${featuredClasses}">
+                <c:set var="thumbImageName" value="${empty item.CThumbName ? 'default-class-thumb.svg' : item.CThumbName}" />
                 <a class="card slider-card" href="<c:url value='/classes/${item.CNum}' />">
-                    <c:if test="${not empty item.CThumbName}">
-                        <img class="card-thumb" src="<c:url value='/uploads/classes/${item.CThumbName}' />" alt="${item.CTitle}">
-                    </c:if>
+                    <img class="card-thumb" src="<c:url value='/uploads/classes/${thumbImageName}' />" alt="${item.CTitle}">
                     <strong>${item.CTitle}</strong>
                     <span>${item.CTeacher}</span>
                     <span>${item.CCategory} / ${item.CPrice}원</span>
@@ -68,10 +67,9 @@
     <div class="slider" data-slider data-interval="5000">
         <div class="slider-track">
             <c:forEach var="item" items="${offlineClasses}">
+                <c:set var="thumbImageName" value="${empty item.CThumbName ? 'default-class-thumb.svg' : item.CThumbName}" />
                 <a class="card slider-card" href="<c:url value='/classes/${item.CNum}' />">
-                    <c:if test="${not empty item.CThumbName}">
-                        <img class="card-thumb" src="<c:url value='/uploads/classes/${item.CThumbName}' />" alt="${item.CTitle}">
-                    </c:if>
+                    <img class="card-thumb" src="<c:url value='/uploads/classes/${thumbImageName}' />" alt="${item.CTitle}">
                     <strong>${item.CTitle}</strong>
                     <span>${item.CTeacher}</span>
                     <span>${item.CArea}</span>

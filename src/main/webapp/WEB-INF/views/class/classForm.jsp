@@ -6,6 +6,8 @@
 <%@ include file="../include/header.jsp" %>
 <section class="form-panel">
     <h2>클래스 등록</h2>
+    <c:set var="thumbImageName" value="${empty classDto.CThumbName ? 'default-class-thumb.svg' : classDto.CThumbName}" />
+    <c:set var="detailImageName" value="${empty classDto.CFileName ? 'default-class-detail.svg' : classDto.CFileName}" />
     <c:url var="formAction" value="/classes" />
     <c:if test="${classDto.CNum != null}">
         <c:url var="formAction" value="/classes/${classDto.CNum}/edit" />
@@ -28,16 +30,12 @@
             <div class="file-field">
                 <label for="thumbnailImage">썸네일 이미지</label>
                 <input id="thumbnailImage" type="file" name="thumbnailImage" accept="image/*">
-                <c:if test="${not empty classDto.CThumbName}">
-                    <img class="form-preview" src="<c:url value='/uploads/classes/${classDto.CThumbName}' />" alt="썸네일 미리보기">
-                </c:if>
+                <img class="form-preview" src="<c:url value='/uploads/classes/${thumbImageName}' />" alt="썸네일 미리보기">
             </div>
             <div class="file-field">
                 <label for="detailImage">소개 이미지</label>
                 <input id="detailImage" type="file" name="detailImage" accept="image/*">
-                <c:if test="${not empty classDto.CFileName}">
-                    <img class="form-preview" src="<c:url value='/uploads/classes/${classDto.CFileName}' />" alt="소개 이미지 미리보기">
-                </c:if>
+                <img class="form-preview" src="<c:url value='/uploads/classes/${detailImageName}' />" alt="소개 이미지 미리보기">
             </div>
         </div>
         <textarea name="cContent" placeholder="클래스 소개" required minlength="20" maxlength="3000" title="클래스 소개는 20자 이상 입력해 주세요.">${classDto.CContent}</textarea>

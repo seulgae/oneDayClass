@@ -26,6 +26,9 @@ import java.io.IOException;
 @RequestMapping("/classes")
 public class ClassController {
 
+    private static final String DEFAULT_THUMBNAIL_IMAGE = "default-class-thumb.svg";
+    private static final String DEFAULT_DETAIL_IMAGE = "default-class-detail.svg";
+
     private final ClassService classService;
     private final ReviewService reviewService;
     private final QnaService qnaService;
@@ -101,6 +104,7 @@ public class ClassController {
         classDto.setCUid(loginMember.getUId());
         classDto.setCTeacher(loginMember.getSName() == null ? loginMember.getUName() : loginMember.getSName());
         classDto.setCOnoff("N");
+        applyDefaultImages(classDto);
         model.addAttribute("classDto", classDto);
         return "class/classForm";
     }
@@ -141,7 +145,9 @@ public class ClassController {
      */
     @GetMapping("/{cNum}/edit")
     public String editForm(@PathVariable int cNum, Model model) {
-        model.addAttribute("classDto", classService.getClass(cNum));
+        ClassDto classDto = classService.getClass(cNum);
+        applyDefaultImages(classDto);
+        model.addAttribute("classDto", classDto);
         return "class/classForm";
     }
 
@@ -232,7 +238,7 @@ public class ClassController {
         }
 
         if (thumbnailImage != null && !thumbnailImage.isEmpty()) {
-            if (source != null) {
+            if (source != null && isStoredUpload(source.getCThumbName())) {
                 fileStorageService.delete("classes", source.getCThumbName());
             }
             target.setCThumbName(fileStorageService.store(thumbnailImage, "classes"));
@@ -240,11 +246,34 @@ public class ClassController {
         }
 
         if (detailImage != null && !detailImage.isEmpty()) {
-            if (source != null) {
+            if (source != null && isStoredUpload(source.getCFileName())) {
                 fileStorageService.delete("classes", source.getCFileName());
             }
             target.setCFileName(fileStorageService.store(detailImage, "classes"));
             target.setCFileSize((int) detailImage.getSize());
         }
+
+        applyDefaultImages(target);
+    }
+
+    private void applyDefaultImages(ClassDto classDto) {
+        if (classDto == null) {
+            return;
+        }
+        if (classDto.getCThumbName() == null || classDto.getCThumbName().isBlank()) {
+            classDto.setCThumbName(DEFAULT_THUMBNAIL_IMAGE);
+            classDto.setCThumbSize(0);
+        }
+        if (classDto.getCFileName() == null || classDto.getCFileName().isBlank()) {
+            classDto.setCFileName(DEFAULT_DETAIL_IMAGE);
+            classDto.setCFileSize(0);
+        }
+    }
+
+    private boolean isStoredUpload(String fileName) {
+        return fileName != null
+                && !fileName.isBlank()
+                && !DEFAULT_THUMBNAIL_IMAGE.equals(fileName)
+                && !DEFAULT_DETAIL_IMAGE.equals(fileName);
     }
 }

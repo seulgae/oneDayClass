@@ -6,24 +6,22 @@
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <%@ include file="../include/header.jsp" %>
 <section class="panel detail">
+    <c:set var="thumbImageName" value="${empty classItem.CThumbName ? 'default-class-thumb.svg' : classItem.CThumbName}" />
+    <c:set var="detailImageName" value="${empty classItem.CFileName ? 'default-class-detail.svg' : classItem.CFileName}" />
     <div class="section-head">
         <h2>${classItem.CTitle}</h2>
         <a class="btn secondary" href="<c:url value='/classes' />">목록으로</a>
     </div>
-    <c:if test="${not empty classItem.CThumbName}">
-        <img class="detail-thumb" src="<c:url value='/uploads/classes/${classItem.CThumbName}' />" alt="${classItem.CTitle}">
-    </c:if>
+    <img class="detail-thumb" src="<c:url value='/uploads/classes/${thumbImageName}' />" alt="${classItem.CTitle}">
     <dl><dt>강사</dt><dd>${classItem.CTeacher}</dd></dl>
     <dl><dt>카테고리</dt><dd>${classItem.CCategory}</dd></dl>
     <dl><dt>가격</dt><dd>${classItem.CPrice}원 / 배송비 ${classItem.CDelivery}원</dd></dl>
     <dl><dt>진행방식</dt><dd>${classItem.COnoff} / ${classItem.CArea}</dd></dl>
     <dl><dt>신청현황</dt><dd>${classItem.CApplyStu} / ${classItem.CMaxStu}</dd></dl>
     <dl><dt>소개</dt><dd>${classItem.CContent}</dd></dl>
-    <c:if test="${not empty classItem.CFileName}">
-        <div class="detail-image-wrap">
-            <img class="detail-image" src="<c:url value='/uploads/classes/${classItem.CFileName}' />" alt="${classItem.CTitle}">
-        </div>
-    </c:if>
+    <div class="detail-image-wrap">
+        <img class="detail-image" src="<c:url value='/uploads/classes/${detailImageName}' />" alt="${classItem.CTitle}">
+    </div>
     <div class="actions">
         <c:if test="${loginMember != null and (loginMember.ULevel eq '1')}">
             <form method="post" action="<c:url value='/classes/${classItem.CNum}/like' />" class="inline-form">

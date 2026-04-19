@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800" role="img" aria-labelledby="title desc">
+  <title id="title">No image thumbnail</title>
+  <desc id="desc">Placeholder thumbnail shown when no image is uploaded.</desc>
+  <rect width="1200" height="800" fill="#f3f4f6"/>
+  <rect x="90" y="90" width="1020" height="620" rx="28" fill="#e5e7eb" stroke="#cbd5e1" stroke-width="6"/>
+  <rect x="430" y="220" width="340" height="220" rx="24" fill="none" stroke="#94a3b8" stroke-width="12"/>
+  <circle cx="520" cy="290" r="28" fill="#94a3b8"/>
+  <path d="M470 400l90-90 80 70 80-100 80 120" fill="none" stroke="#94a3b8" stroke-width="16" stroke-linecap="round" stroke-linejoin="round"/>
+  <text x="600" y="520" text-anchor="middle" font-family="Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="56" font-weight="700" fill="#475569">이미지 없음</text>
+  <text x="600" y="585" text-anchor="middle" font-family="Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="28" fill="#64748b">썸네일 미등록</text>
+</svg>

@@ -18,10 +18,9 @@
 
     <div class="card-grid">
         <c:forEach var="item" items="${classPage.items}">
+            <c:set var="thumbImageName" value="${empty item.CThumbName ? 'default-class-thumb.svg' : item.CThumbName}" />
             <a class="card" href="<c:url value='/classes/${item.CNum}' />">
-                <c:if test="${not empty item.CThumbName}">
-                    <img class="card-thumb" src="<c:url value='/uploads/classes/${item.CThumbName}' />" alt="${item.CTitle}">
-                </c:if>
+                <img class="card-thumb" src="<c:url value='/uploads/classes/${thumbImageName}' />" alt="${item.CTitle}">
                 <strong>${item.CTitle}</strong>
                 <span>${item.CTeacher}</span>
                 <span>${item.CCategory} / ${item.CPrice}원 / 좋아요 ${item.CLikes}</span>
