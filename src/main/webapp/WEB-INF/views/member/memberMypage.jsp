@@ -11,7 +11,9 @@
     <dl><dt>이메일</dt><dd>${member.UEmail}</dd></dl>
     <dl><dt>주소</dt><dd>${member.UAddr1} ${member.UAddr2}</dd></dl>
     <div class="actions">
-        <a class="btn secondary" href="<c:url value='/levelups' />">등업 요청</a>
+        <c:if test="${loginMember != null and (loginMember.ULevel eq '1')}">
+            <a class="btn secondary" href="<c:url value='/levelups' />">등업 요청</a>
+        </c:if>
         <a class="btn secondary" href="<c:url value='/payments/history' />">결제내역</a>
         <form method="post" action="<c:url value='/members/delete' />" class="inline-form" onsubmit="return confirm('정말 탈퇴하시겠습니까?');">
             <button type="submit">회원탈퇴</button>

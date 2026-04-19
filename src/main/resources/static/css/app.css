@@ -1171,6 +1171,68 @@ textarea {
     flex-wrap: wrap;
 }
 
+.admin-hero {
+    margin-bottom: 30px;
+}
+
+.admin-mini-stats {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.admin-stats-grid .card {
+    min-height: 150px;
+}
+
+.admin-stat-card strong {
+    font-size: 22px;
+}
+
+.admin-board-panel {
+    display: grid;
+    gap: 18px;
+}
+
+.admin-search-bar {
+    grid-template-columns: auto 180px minmax(0, 1fr) auto auto;
+}
+
+.admin-board-table td {
+    line-height: 1.6;
+}
+
+.board-badge,
+.status-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 32px;
+    padding: 0 12px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 0.04em;
+}
+
+.board-badge {
+    background: rgba(216, 111, 99, 0.12);
+    color: var(--pink-deep);
+}
+
+.status-badge.is-ok {
+    background: rgba(104, 180, 122, 0.16);
+    color: #2f7a43;
+}
+
+.status-badge.is-warn {
+    background: rgba(243, 166, 90, 0.18);
+    color: #9b5a15;
+}
+
+.status-badge.is-danger {
+    background: rgba(225, 72, 99, 0.14);
+    color: #b12b44;
+}
+
 .site-footer {
     margin-top: auto;
     width: 100%;
@@ -1268,6 +1330,10 @@ textarea {
     }
 
     .search-bar {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .admin-search-bar {
         grid-template-columns: 1fr 1fr;
     }
 

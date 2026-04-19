@@ -21,7 +21,9 @@
                 <a href="<c:url value='/classes' />">클래스</a>
                 <a href="<c:url value='/reviews' />">후기</a>
                 <a href="<c:url value='/qna' />">QnA</a>
+                <c:if test="${loginMember != null and (loginMember.ULevel eq '1')}">
                 <a href="<c:url value='/payments/cart' />">장바구니</a>
+                </c:if>
                 <a href="<c:url value='/notices' />">공지사항</a>
                 <a href="<c:url value='/requests' />">요청게시판</a>
                 <c:if test="${loginMember != null and (loginMember.ULevel eq '3' or loginMember.ULevel eq '4')}">
