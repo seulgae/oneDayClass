@@ -8,6 +8,7 @@ import com.example.onedayclass.qna.service.QnaService;
 import com.example.onedayclass.review.service.ReviewService;
 import com.example.onedayclass.security.MemberPrincipal;
 import jakarta.validation.Valid;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -21,6 +22,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.IOException;
+import java.util.Objects;
 
 @Controller
 @RequestMapping("/classes")
@@ -63,7 +65,10 @@ public class ClassController {
                        @AuthenticationPrincipal MemberPrincipal principal,
                        Model model) {
         MemberDto loginMember = principal == null ? null : principal.getMember();
-        boolean includeHidden = loginMember != null && ("2".equals(loginMember.getULevel()) || "3".equals(loginMember.getULevel()));
+        boolean includeHidden = loginMember != null
+                && ("2".equals(loginMember.getULevel())
+                || "3".equals(loginMember.getULevel())
+                || "4".equals(loginMember.getULevel()));
         model.addAttribute("classPage", classService.getClassesPage(keyField, keyword, onoff, includeHidden, page, 12));
         model.addAttribute("featured", classService.getFeaturedClasses(keyField, keyword, onoff, 4));
         model.addAttribute("selectedKeyField", keyField);
@@ -85,7 +90,9 @@ public class ClassController {
                          @AuthenticationPrincipal MemberPrincipal principal,
                          Model model) {
         MemberDto loginMember = principal == null ? null : principal.getMember();
-        model.addAttribute("classItem", classService.getClass(cNum));
+        ClassDto classItem = classService.getClass(cNum);
+        model.addAttribute("classItem", classItem);
+        model.addAttribute("canManageClass", canManageClass(classItem, loginMember));
         model.addAttribute("reviews", reviewService.getClassReviews(cNum, loginMember == null ? null : loginMember.getUId()));
         model.addAttribute("questions", qnaService.getClassQuestions(cNum, "qTitle", null));
         return "class/classDetail";
@@ -144,8 +151,11 @@ public class ClassController {
      * @return 클래스 등록/수정 JSP 경로
      */
     @GetMapping("/{cNum}/edit")
-    public String editForm(@PathVariable int cNum, Model model) {
+    public String editForm(@PathVariable int cNum,
+                           @AuthenticationPrincipal(expression = "member") MemberDto loginMember,
+                           Model model) {
         ClassDto classDto = classService.getClass(cNum);
+        ensureCanManageClass(classDto, loginMember);
         applyDefaultImages(classDto);
         model.addAttribute("classDto", classDto);
         return "class/classForm";
@@ -171,8 +181,10 @@ public class ClassController {
                        @RequestParam(name = "detailImage", required = false) MultipartFile detailImage,
                        @AuthenticationPrincipal(expression = "member") MemberDto loginMember) throws IOException {
         ClassDto currentClass = classService.getClass(cNum);
+        ensureCanManageClass(currentClass, loginMember);
         if (bindingResult.hasErrors()) {
             classDto.setCNum(cNum);
+            classDto.setCUid(currentClass.getCUid());
             classDto.setCThumbName(currentClass.getCThumbName());
             classDto.setCThumbSize(currentClass.getCThumbSize());
             classDto.setCFileName(currentClass.getCFileName());
@@ -180,8 +192,7 @@ public class ClassController {
             return "class/classForm";
         }
         classDto.setCNum(cNum);
-        classDto.setCUid(loginMember.getUId());
-        classDto.setCTeacher(loginMember.getSName() == null ? loginMember.getUName() : loginMember.getSName());
+        classDto.setCUid(currentClass.getCUid());
         applyUploadedFiles(classDto, currentClass, thumbnailImage, detailImage);
         classService.updateClass(classDto);
         return "redirect:/classes/" + cNum;
@@ -212,9 +223,28 @@ public class ClassController {
      * @return 클래스 목록으로 리다이렉트
      */
     @PostMapping("/{cNum}/delete")
-    public String delete(@PathVariable int cNum) {
+    public String delete(@PathVariable int cNum,
+                         @AuthenticationPrincipal(expression = "member") MemberDto loginMember) {
+        ensureCanManageClass(classService.getClass(cNum), loginMember);
         classService.deleteClass(cNum);
         return "redirect:/classes";
+    }
+
+    private void ensureCanManageClass(ClassDto classDto, MemberDto loginMember) {
+        if (!canManageClass(classDto, loginMember)) {
+            throw new AccessDeniedException("Class management is allowed only for the author, admin, or operator.");
+        }
+    }
+
+    private boolean canManageClass(ClassDto classDto, MemberDto loginMember) {
+        if (classDto == null || loginMember == null) {
+            return false;
+        }
+        return Objects.equals(classDto.getCUid(), loginMember.getUId()) || isAdminOrOperator(loginMember);
+    }
+
+    private boolean isAdminOrOperator(MemberDto member) {
+        return "3".equals(member.getULevel()) || "4".equals(member.getULevel());
     }
 
     /**

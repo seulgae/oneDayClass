@@ -1,4 +1,4 @@
-﻿<%-- 클래스 상세 화면 --%>
+<%-- 클래스 상세 화면 --%>
 <%--@elvariable id="classItem" type="com.example.onedayclass.clazz.dto.ClassDto"--%>
 <%--@elvariable id="reviews" type="java.util.List"--%>
 <%--@elvariable id="questions" type="java.util.List"--%>
@@ -10,7 +10,15 @@
     <c:set var="detailImageName" value="${empty classItem.CFileName ? 'default-class-detail.svg' : classItem.CFileName}" />
     <div class="section-head">
         <h2>${classItem.CTitle}</h2>
-        <a class="btn secondary" href="<c:url value='/classes' />">목록으로</a>
+        <div class="actions">
+            <a class="btn secondary" href="<c:url value='/classes' />">목록으로</a>
+            <c:if test="${canManageClass}">
+                <a class="btn secondary" href="<c:url value='/classes/${classItem.CNum}/edit' />">수정</a>
+                <form method="post" action="<c:url value='/classes/${classItem.CNum}/delete' />" class="inline-form" onsubmit="return confirm('이 클래스를 삭제하시겠습니까?');">
+                    <button type="submit" class="danger">삭제</button>
+                </form>
+            </c:if>
+        </div>
     </div>
     <img class="detail-thumb" src="<c:url value='/uploads/classes/${thumbImageName}' />" alt="${classItem.CTitle}">
     <dl><dt>강사</dt><dd>${classItem.CTeacher}</dd></dl>

@@ -671,6 +671,14 @@ button:hover {
     box-shadow: none;
 }
 
+.btn.danger,
+button.danger {
+    background: #fff5f6;
+    color: #b12b44;
+    border: 1px solid rgba(225, 72, 99, 0.22);
+    box-shadow: none;
+}
+
 input,
 select,
 textarea {

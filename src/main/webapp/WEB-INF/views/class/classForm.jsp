@@ -1,11 +1,11 @@
-﻿<%-- 클래스 등록 및 수정 화면 --%>
+<%-- 클래스 등록 및 수정 화면 --%>
 <%--@elvariable id="classDto" type="com.example.onedayclass.clazz.dto.ClassDto"--%>
 <%--@elvariable id="formAction" type="java.lang.String"--%>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <%@ include file="../include/header.jsp" %>
 <section class="form-panel">
-    <h2>클래스 등록</h2>
+    <h2>${classDto.CNum != null ? '클래스 수정' : '클래스 등록'}</h2>
     <c:set var="thumbImageName" value="${empty classDto.CThumbName ? 'default-class-thumb.svg' : classDto.CThumbName}" />
     <c:set var="detailImageName" value="${empty classDto.CFileName ? 'default-class-detail.svg' : classDto.CFileName}" />
     <c:url var="formAction" value="/classes" />
