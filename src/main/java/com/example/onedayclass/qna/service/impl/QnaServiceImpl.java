@@ -59,6 +59,7 @@ public class QnaServiceImpl implements QnaService {
         qnaDto.setQPos(0);
         qnaDto.setQDepth(0);
         qnaDto.setParentQNum(null);
+        qnaDto.setQOriUid(qnaDto.getQUid());
         if (qnaDto.getQStatus() == null) {
             qnaDto.setQStatus(1);
         }
@@ -102,6 +103,7 @@ public class QnaServiceImpl implements QnaService {
         qnaDto.setQDepth(Math.min((parent.getQDepth() == null ? 0 : parent.getQDepth()) + 1, 2));
         qnaDto.setQOriUid(parent.getQUid());
         qnaDto.setCNum(root.getCNum());
+        qnaDto.setQCategory(root.getQCategory());
         if (qnaDto.getQStatus() == null) {
             qnaDto.setQStatus(1);
         }
@@ -109,10 +111,16 @@ public class QnaServiceImpl implements QnaService {
     }
 
     private String normalizeField(String keyField) {
-        if ("qUid".equals(keyField) || "qContent".equals(keyField)) {
-            return keyField;
+        if (keyField == null) {
+            return "qnaBBS.qTitle";
         }
-        return "qTitle";
+        return switch (keyField) {
+            case "qUid" -> "qnaBBS.qUid";
+            case "qContent" -> "qnaBBS.qContent";
+            case "qCategory" -> "qnaBBS.qCategory";
+            case "cTitle" -> "classBBS.cTitle";
+            default -> "qnaBBS.qTitle";
+        };
     }
 
     private boolean isBoardManager(String viewerLevel) {

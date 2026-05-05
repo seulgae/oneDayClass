@@ -18,7 +18,9 @@
         <thead>
         <tr>
             <th>번호</th>
+            <th>분류</th>
             <th>제목</th>
+            <th>클래스</th>
             <th>작성자</th>
             <th>상태</th>
             <th>작성일</th>
@@ -28,7 +30,16 @@
         <c:forEach var="item" items="${questionPage.items}">
             <tr>
                 <td>${item.QNum}</td>
+                <td>${empty item.QCategory ? '기타' : item.QCategory}</td>
                 <td><a href="<c:url value='/qna/${item.QNum}' />">${item.QTitle}</a></td>
+                <td>
+                    <c:choose>
+                        <c:when test="${not empty item.CTitle}">
+                            <a href="<c:url value='/classes/${item.CNum}' />">${item.CTitle}</a>
+                        </c:when>
+                        <c:otherwise>-</c:otherwise>
+                    </c:choose>
+                </td>
                 <td>${item.QUid}</td>
                 <td>
                     <c:choose>

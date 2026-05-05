@@ -70,7 +70,7 @@
         </div>
         <c:forEach var="question" items="${questions}">
             <a class="list-link" href="<c:url value='/qna/${question.QNum}' />">
-                ${question.QTitle}<em>${question.QUid}</em>
+                ${question.QTitle}<em>${empty question.QCategory ? '기타' : question.QCategory} / ${question.QUid}</em>
             </a>
         </c:forEach>
     </article>

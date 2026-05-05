@@ -4,7 +4,9 @@
 <mapper namespace="com.example.onedayclass.qna.mapper.QnaMapper">
 
     <select id="findAll" resultType="com.example.onedayclass.qna.dto.QnaDto">
-        select * from qnaBBS
+        select qnaBBS.*, classBBS.cTitle
+        from qnaBBS
+        left join classBBS on qnaBBS.cNum = classBBS.cNum
         where 1 = 1
           and qDepth = 0
           and qTitle not like '[공지]%'
@@ -18,8 +20,10 @@
     </select>
 
     <select id="findByClass" resultType="com.example.onedayclass.qna.dto.QnaDto">
-        select * from qnaBBS
-        where cNum = #{cNum}
+        select qnaBBS.*, classBBS.cTitle
+        from qnaBBS
+        left join classBBS on qnaBBS.cNum = classBBS.cNum
+        where qnaBBS.cNum = #{cNum}
           and qDepth = 0
           and qTitle not like '[공지]%'
           and qStatus &lt; 3
@@ -38,7 +42,10 @@
     </select>
 
     <select id="findById" parameterType="int" resultType="com.example.onedayclass.qna.dto.QnaDto">
-        select * from qnaBBS where qNum = #{qNum}
+        select qnaBBS.*, classBBS.cTitle
+        from qnaBBS
+        left join classBBS on qnaBBS.cNum = classBBS.cNum
+        where qNum = #{qNum}
     </select>
 
     <select id="findNoticeById" parameterType="int" resultType="com.example.onedayclass.qna.dto.QnaDto">
@@ -50,11 +57,16 @@
     </select>
 
     <select id="findRootByRef" parameterType="int" resultType="com.example.onedayclass.qna.dto.QnaDto">
-        select * from qnaBBS where qRef = #{qRef} and qDepth = 0
+        select qnaBBS.*, classBBS.cTitle
+        from qnaBBS
+        left join classBBS on qnaBBS.cNum = classBBS.cNum
+        where qRef = #{qRef} and qDepth = 0
     </select>
 
     <select id="findRepliesByRef" parameterType="int" resultType="com.example.onedayclass.qna.dto.QnaDto">
-        select * from qnaBBS
+        select qnaBBS.*, classBBS.cTitle
+        from qnaBBS
+        left join classBBS on qnaBBS.cNum = classBBS.cNum
         where qRef = #{qRef}
           and qDepth &gt; 0
           and qStatus &lt; 3
@@ -71,10 +83,10 @@
 
     <insert id="insert" parameterType="com.example.onedayclass.qna.dto.QnaDto" useGeneratedKeys="true" keyProperty="qNum">
         insert into qnaBBS (
-            qUid, qTitle, qContent, qRegDate, qPos, qRef, qDepth, parentQNum, qOriUid, qFileName, qFileSize, qStatus, cNum,
+            qUid, qTitle, qContent, qRegDate, qPos, qRef, qDepth, parentQNum, qOriUid, qFileName, qFileSize, qStatus, qCategory, cNum,
             createdDate, createdBy, updatedDate, updatedBy
         ) values (
-            #{qUid}, #{qTitle}, #{qContent}, now(), #{qPos}, #{qRef}, #{qDepth}, #{parentQNum}, #{qOriUid}, #{qFileName}, #{qFileSize}, #{qStatus}, #{cNum},
+            #{qUid}, #{qTitle}, #{qContent}, now(), #{qPos}, #{qRef}, #{qDepth}, #{parentQNum}, #{qOriUid}, #{qFileName}, #{qFileSize}, #{qStatus}, #{qCategory}, #{cNum},
             current_timestamp,
             <choose>
                 <when test="createdBy != null and createdBy != ''">#{createdBy}</when>
@@ -93,6 +105,8 @@
         set qTitle = #{qTitle},
             qContent = #{qContent},
             qStatus = #{qStatus},
+            qCategory = #{qCategory},
+            cNum = #{cNum},
             updatedDate = current_timestamp,
             updatedBy = <choose>
                 <when test="updatedBy != null and updatedBy != ''">#{updatedBy}</when>

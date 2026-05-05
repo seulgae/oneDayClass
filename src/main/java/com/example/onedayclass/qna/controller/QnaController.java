@@ -1,5 +1,7 @@
 package com.example.onedayclass.qna.controller;
 
+import com.example.onedayclass.clazz.dto.ClassDto;
+import com.example.onedayclass.clazz.service.ClassService;
 import com.example.onedayclass.member.dto.MemberDto;
 import com.example.onedayclass.qna.dto.QnaDto;
 import com.example.onedayclass.qna.service.QnaService;
@@ -22,10 +24,14 @@ import java.util.List;
 @RequestMapping("/qna")
 public class QnaController {
 
-    private final QnaService qnaService;
+    private static final List<String> QNA_CATEGORIES = List.of("배송 관련", "비용 관련", "수강생 관련", "일정 관련", "클래스 관련", "기타");
 
-    public QnaController(QnaService qnaService) {
+    private final QnaService qnaService;
+    private final ClassService classService;
+
+    public QnaController(QnaService qnaService, ClassService classService) {
         this.qnaService = qnaService;
+        this.classService = classService;
     }
 
     /**
@@ -92,7 +98,9 @@ public class QnaController {
         QnaDto qnaDto = new QnaDto();
         qnaDto.setQUid(loginMember.getUId());
         qnaDto.setCNum(cNum);
+        qnaDto.setQCategory("기타");
         model.addAttribute("qnaDto", qnaDto);
+        populateQuestionFormOptions(model);
         return "qna/qnaForm";
     }
 
@@ -107,8 +115,18 @@ public class QnaController {
     @PostMapping
     public String create(@Valid QnaDto qnaDto,
                          BindingResult bindingResult,
-                         @AuthenticationPrincipal(expression = "member") MemberDto loginMember) {
-        if (bindingResult.hasErrors()) {
+                         @AuthenticationPrincipal(expression = "member") MemberDto loginMember,
+                         Model model) {
+        boolean selectableClass = isSelectableClass(qnaDto.getCNum());
+        boolean supportedCategory = isSupportedCategory(qnaDto.getQCategory());
+
+        if (bindingResult.hasErrors() || !selectableClass || !supportedCategory) {
+            if (!selectableClass) {
+                model.addAttribute("message", "문의할 클래스를 선택해 주세요.");
+            } else if (!supportedCategory) {
+                model.addAttribute("message", "문의 분류를 선택해 주세요.");
+            }
+            populateQuestionFormOptions(model);
             return "qna/qnaForm";
         }
         qnaDto.setQUid(loginMember.getUId());
@@ -186,6 +204,23 @@ public class QnaController {
     private boolean isBoardManager(MemberDto loginMember) {
         return loginMember != null
                 && ("3".equals(loginMember.getULevel()) || "4".equals(loginMember.getULevel()));
+    }
+
+    private boolean isSupportedCategory(String category) {
+        return category != null && QNA_CATEGORIES.contains(category);
+    }
+
+    private boolean isSelectableClass(Integer cNum) {
+        if (cNum == null) {
+            return false;
+        }
+        ClassDto classDto = classService.getClass(cNum);
+        return classDto != null && classDto.getCStatus() != null && classDto.getCStatus() < 3;
+    }
+
+    private void populateQuestionFormOptions(Model model) {
+        model.addAttribute("classOptions", classService.getClasses("cTitle", null, null, false));
+        model.addAttribute("qnaCategories", QNA_CATEGORIES);
     }
 
     private String resolveDetailPath(int qNum, QnaDto target) {

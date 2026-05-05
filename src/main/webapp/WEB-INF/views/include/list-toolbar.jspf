@@ -31,6 +31,8 @@
                 <select name="keyField">
                     <option value="qTitle" ${selectedKeyField eq 'qTitle' ? 'selected' : ''}>&#xC81C;&#xBAA9;</option>
                     <option value="qUid" ${selectedKeyField eq 'qUid' ? 'selected' : ''}>&#xC791;&#xC131;&#xC790;</option>
+                    <option value="qCategory" ${selectedKeyField eq 'qCategory' ? 'selected' : ''}>분류</option>
+                    <option value="cTitle" ${selectedKeyField eq 'cTitle' ? 'selected' : ''}>클래스</option>
                     <option value="qContent" ${selectedKeyField eq 'qContent' ? 'selected' : ''}>&#xB0B4;&#xC6A9;</option>
                 </select>
                 <input type="text" name="keyword" value="${keyword}" maxlength="50" placeholder="&#xAC80;&#xC0C9;&#xC5B4;&#xB97C; &#xC785;&#xB825;&#xD574; &#xC8FC;&#xC138;&#xC694;.">

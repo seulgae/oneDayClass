@@ -27,5 +27,7 @@ public class QnaDto extends BaseVo {
     private String qFileName; /* 첨부 파일명 */
     private Integer qFileSize; /* 첨부 파일 크기 */
     private Integer qStatus; /* 상태값 */
+    private String qCategory; /* 문의 분류 */
     private Integer cNum; /* 클래스 번호 */
+    private String cTitle; /* 연결된 클래스명 */
 }

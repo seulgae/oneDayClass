@@ -61,59 +61,59 @@ DATEADD('DAY', -4, CURRENT_TIMESTAMP), 56000, 0, 'class-thumb-09.svg', 2048, 'cl
 DATEADD('DAY', -3, CURRENT_TIMESTAMP), 47000, 0, 'class-thumb-10.svg', 2048, 'class-detail-10.svg', 4096, 14, 12, '서울 서촌', 'N', 2, 37, 'user2', 'user2');
 
 INSERT INTO qnaBBS (
-    qUid, qTitle, qContent, qRegDate, qPos, qRef, qDepth, parentQNum, qOriUid, qFileName, qFileSize, qStatus, cNum,
+    qUid, qTitle, qContent, qRegDate, qPos, qRef, qDepth, parentQNum, qOriUid, qFileName, qFileSize, qStatus, qCategory, cNum,
     createdBy, updatedBy
 ) VALUES
 ('admin', '[공지] 4월 신규 클래스 오픈 일정 안내',
 '4월 셋째 주부터 성수, 연남, 북촌 스튜디오에서 신규 원데이 클래스가 순차적으로 오픈됩니다.
 상세 일정은 각 클래스 상세 페이지에서 확인해 주세요.',
-DATEADD('DAY', -10, CURRENT_TIMESTAMP), 0, 9001, 0, NULL, 'admin', NULL, NULL, 1, NULL, 'admin', 'admin'),
+DATEADD('DAY', -10, CURRENT_TIMESTAMP), 0, 9001, 0, NULL, 'admin', NULL, NULL, 1, '공지', NULL, 'admin', 'admin'),
 ('admin', '[공지] 클래스 취소 및 환불 기준 안내',
 '수업 3일 전까지는 전액 환불, 수업 1일 전까지는 50% 환불이 가능합니다.
 당일 취소와 무단 불참은 재료 준비 특성상 환불이 어렵습니다.',
-DATEADD('DAY', -9, CURRENT_TIMESTAMP), 0, 9002, 0, NULL, 'admin', NULL, NULL, 1, NULL, 'admin', 'admin'),
+DATEADD('DAY', -9, CURRENT_TIMESTAMP), 0, 9002, 0, NULL, 'admin', NULL, NULL, 1, '공지', NULL, 'admin', 'admin'),
 ('admin', '[공지] 온라인 클래스 배송 일정 공지',
 '온라인 클래스 재료 키트는 결제 완료 후 영업일 기준 1~2일 내 발송됩니다.
 도서산간 지역은 1~2일 추가 소요될 수 있습니다.',
-DATEADD('DAY', -8, CURRENT_TIMESTAMP), 0, 9003, 0, NULL, 'admin', NULL, NULL, 1, NULL, 'admin', 'admin'),
+DATEADD('DAY', -8, CURRENT_TIMESTAMP), 0, 9003, 0, NULL, 'admin', NULL, NULL, 1, '공지', NULL, 'admin', 'admin'),
 ('admin', '[공지] 플라워 클래스 예약 안내',
 '플라워 클래스는 계절 꽃 수급 상황에 따라 샘플 이미지와 일부 구성이 달라질 수 있습니다.
 특정 컬러 요청은 사전 문의로 남겨 주세요.',
-DATEADD('DAY', -7, CURRENT_TIMESTAMP), 0, 9004, 0, NULL, 'admin', NULL, NULL, 1, NULL, 'admin', 'admin'),
+DATEADD('DAY', -7, CURRENT_TIMESTAMP), 0, 9004, 0, NULL, 'admin', NULL, NULL, 1, '공지', NULL, 'admin', 'admin'),
 ('admin', '[공지] 주말 클래스 입실 시간 안내',
 '주말 수업은 시작 10분 전부터 입실 가능합니다.
 스튜디오별 주차 지원 여부는 상세 페이지를 참고해 주세요.',
-DATEADD('DAY', -6, CURRENT_TIMESTAMP), 0, 9005, 0, NULL, 'admin', NULL, NULL, 1, NULL, 'admin', 'admin'),
+DATEADD('DAY', -6, CURRENT_TIMESTAMP), 0, 9005, 0, NULL, 'admin', NULL, NULL, 1, '공지', NULL, 'admin', 'admin'),
 ('admin', '[공지] 강사 지원서 검토 일정 안내',
 '강사 입점 요청서는 접수 순서대로 검토되며 평균 3~5영업일이 소요됩니다.
 수업 제안서와 포트폴리오를 구체적으로 작성해 주시면 검토가 빨라집니다.',
-DATEADD('DAY', -5, CURRENT_TIMESTAMP), 0, 9006, 0, NULL, 'admin', NULL, NULL, 1, NULL, 'admin', 'admin'),
+DATEADD('DAY', -5, CURRENT_TIMESTAMP), 0, 9006, 0, NULL, 'admin', NULL, NULL, 1, '공지', NULL, 'admin', 'admin'),
 ('admin', '[공지] 후기 작성 이벤트 안내',
 '4월 한 달간 수강 후기를 작성해 주신 분께 다음 결제에 사용할 수 있는 포인트를 드립니다.
 사진이 포함된 후기는 메인 추천 후기로 노출될 수 있습니다.',
-DATEADD('DAY', -4, CURRENT_TIMESTAMP), 0, 9007, 0, NULL, 'admin', NULL, NULL, 1, NULL, 'admin', 'admin'),
+DATEADD('DAY', -4, CURRENT_TIMESTAMP), 0, 9007, 0, NULL, 'admin', NULL, NULL, 1, '공지', NULL, 'admin', 'admin'),
 ('admin', '[공지] 동반 입장 가능 여부 안내',
 '일부 클래스는 공간과 재료 문제로 동반 입장이 제한됩니다.
 동반 가능 여부는 각 클래스 상세 설명을 확인해 주세요.',
-DATEADD('DAY', -3, CURRENT_TIMESTAMP), 0, 9008, 0, NULL, 'admin', NULL, NULL, 1, NULL, 'admin', 'admin'),
+DATEADD('DAY', -3, CURRENT_TIMESTAMP), 0, 9008, 0, NULL, 'admin', NULL, NULL, 1, '공지', NULL, 'admin', 'admin'),
 ('admin', '[공지] 기업 출강 문의 접수',
 '기업 워크숍, 브랜드 행사, 팀 빌딩 클래스는 별도 출강 형태로 운영합니다.
 희망 인원과 예산, 주제를 문의 게시판에 남겨 주세요.',
-DATEADD('DAY', -2, CURRENT_TIMESTAMP), 0, 9009, 0, NULL, 'admin', NULL, NULL, 1, NULL, 'admin', 'admin'),
+DATEADD('DAY', -2, CURRENT_TIMESTAMP), 0, 9009, 0, NULL, 'admin', NULL, NULL, 1, '공지', NULL, 'admin', 'admin'),
 ('admin', '[공지] 5월 연휴 운영 안내',
 '5월 연휴 기간에도 일부 인기 클래스는 정상 운영됩니다.
 배송 마감 일정은 별도 공지를 참고해 주세요.',
-DATEADD('DAY', -1, CURRENT_TIMESTAMP), 0, 9010, 0, NULL, 'admin', NULL, NULL, 1, NULL, 'admin', 'admin'),
+DATEADD('DAY', -1, CURRENT_TIMESTAMP), 0, 9010, 0, NULL, 'admin', NULL, NULL, 1, '공지', NULL, 'admin', 'admin'),
 ('user1', '성수 파스타 클래스 재료 준비가 필요한가요?',
 '앞치마나 필기 도구를 개인적으로 챙겨 가야 하는지 궁금합니다. 재료는 모두 제공되나요?',
-DATEADD('DAY', -2, CURRENT_TIMESTAMP), 0, 9101, 0, NULL, 'user1', NULL, NULL, 1, 1, 'user1', 'user1'),
+DATEADD('DAY', -2, CURRENT_TIMESTAMP), 0, 9101, 0, NULL, 'user1', NULL, NULL, 1, '수강생 관련', 1, 'user1', 'user1'),
 ('user2', '파스타 클래스는 재료와 앞치마를 모두 제공합니다.',
 '필기 도구는 선택사항이고, 수업에 필요한 재료와 앞치마는 현장에서 모두 준비해 드립니다.
 편한 복장으로만 와 주시면 됩니다.',
-DATEADD('DAY', -1, CURRENT_TIMESTAMP), 1, 9101, 1, 11, 'user1', NULL, NULL, 1, 1, 'user2', 'user2'),
+DATEADD('DAY', -1, CURRENT_TIMESTAMP), 1, 9101, 1, 11, 'user1', NULL, NULL, 1, '수강생 관련', 1, 'user2', 'user2'),
 ('user1', '답변 감사합니다. 혹시 포장 용기도 제공될까요?',
 '집에 가져가서 가족과 같이 먹고 싶은데 포장 가능한지 궁금합니다.',
-DATEADD('HOUR', -12, CURRENT_TIMESTAMP), 2, 9101, 2, 12, 'user2', NULL, NULL, 1, 1, 'user1', 'user1');
+DATEADD('HOUR', -12, CURRENT_TIMESTAMP), 2, 9101, 2, 12, 'user2', NULL, NULL, 1, '수강생 관련', 1, 'user1', 'user1');
 
 INSERT INTO reviewBBS (
     rUid, rTitle, rContent, rCnt, rLikes, rRegDate, rFileName, rFileSize, rStatus, cNum, createdBy, updatedBy

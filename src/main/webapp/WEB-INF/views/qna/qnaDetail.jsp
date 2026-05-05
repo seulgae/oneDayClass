@@ -1,4 +1,4 @@
-﻿<%-- QnA 상세 화면 --%>
+<%-- QnA 상세 화면 --%>
 <%--@elvariable id="question" type="com.example.onedayclass.qna.dto.QnaDto"--%>
 <%--@elvariable id="replies" type="java.util.List"--%>
 <%--@elvariable id="loginMember" type="com.example.onedayclass.member.dto.MemberDto"--%>
@@ -13,6 +13,18 @@
     </div>
     <dl><dt>작성자</dt><dd>${question.QUid}</dd></dl>
     <dl><dt>문의번호</dt><dd>${question.QRef}</dd></dl>
+    <dl><dt>분류</dt><dd>${empty question.QCategory ? '기타' : question.QCategory}</dd></dl>
+    <dl>
+        <dt>클래스</dt>
+        <dd>
+            <c:choose>
+                <c:when test="${not empty question.CTitle}">
+                    <a href="<c:url value='/classes/${question.CNum}' />">${question.CTitle}</a>
+                </c:when>
+                <c:otherwise>-</c:otherwise>
+            </c:choose>
+        </dd>
+    </dl>
     <dl><dt>작성일</dt><dd>${fn:substring(question.QRegDate, 0, 10)}</dd></dl>
     <dl><dt>내용</dt><dd>${question.QContent}</dd></dl>
     <div class="actions">

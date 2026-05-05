@@ -40,6 +40,7 @@ public class NoticeServiceImpl implements NoticeService {
         noticeDto.setQDepth(0);
         noticeDto.setQPos(0);
         noticeDto.setQStatus(1);
+        noticeDto.setQCategory("공지");
         noticeDto.setCNum(null);
         noticeDto.setParentQNum(null);
         noticeDto.setQOriUid(noticeDto.getQUid());
@@ -56,6 +57,7 @@ public class NoticeServiceImpl implements NoticeService {
         source.setQTitle(normalizeTitle(noticeDto.getQTitle()));
         source.setQContent(noticeDto.getQContent());
         source.setQStatus(1);
+        source.setQCategory("공지");
         source.setQUid(source.getQUid());
         source.setUpdatedBy(noticeDto.getUpdatedBy());
         return qnaMapper.update(source) > 0;
