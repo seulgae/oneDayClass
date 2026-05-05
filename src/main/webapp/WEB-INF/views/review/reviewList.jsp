@@ -12,13 +12,13 @@
     <c:set var="toolbarScope" value="review" />
     <c:choose>
         <c:when test="${loginMember != null}">
-            <c:url var="toolbarButtonHref" value="/reviews/new" />
+            <c:url var="toolbarButtonHref" value="/classes" />
         </c:when>
         <c:otherwise>
             <c:url var="toolbarButtonHref" value="/members/login" />
         </c:otherwise>
     </c:choose>
-    <c:set var="toolbarButtonLabel" value="후기 작성" />
+    <c:set var="toolbarButtonLabel" value="후기 작성할 클래스 찾기" />
     <%@ include file="../include/list-toolbar.jspf" %>
 
     <table class="table board-table">

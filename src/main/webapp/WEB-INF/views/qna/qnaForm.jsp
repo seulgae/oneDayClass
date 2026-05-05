@@ -1,6 +1,5 @@
 <%-- QnA 작성 화면 --%>
 <%--@elvariable id="qnaDto" type="com.example.onedayclass.qna.dto.QnaDto"--%>
-<%--@elvariable id="classOptions" type="java.util.List"--%>
 <%--@elvariable id="qnaCategories" type="java.util.List"--%>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
@@ -11,15 +10,11 @@
         <c:if test="${not empty message}">
             <p class="form-error">${message}</p>
         </c:if>
-        <label>
-            클래스 선택
-            <select name="cNum" required>
-                <option value="">문의할 클래스를 선택해 주세요.</option>
-                <c:forEach var="classItem" items="${classOptions}">
-                    <option value="${classItem.CNum}" ${qnaDto.CNum eq classItem.CNum ? 'selected' : ''}>${classItem.CTitle}</option>
-                </c:forEach>
-            </select>
-        </label>
+        <input type="hidden" name="cNum" value="${qnaDto.CNum}">
+        <dl>
+            <dt>대상 클래스</dt>
+            <dd><a href="<c:url value='/classes/${qnaDto.CNum}' />">${qnaDto.CTitle}</a></dd>
+        </dl>
         <label>
             문의 분류
             <select name="qCategory" required>

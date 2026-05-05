@@ -94,13 +94,20 @@ public class QnaController {
     @GetMapping("/new")
     public String form(@RequestParam(required = false) Integer cNum,
                        @AuthenticationPrincipal(expression = "member") MemberDto loginMember,
+                       RedirectAttributes redirectAttributes,
                        Model model) {
+        ClassDto targetClass = cNum == null ? null : classService.getClass(cNum);
+        if (targetClass == null || targetClass.getCStatus() == null || targetClass.getCStatus() >= 3) {
+            redirectAttributes.addFlashAttribute("message", "문의 작성은 클래스 상세 페이지의 [문의 작성] 버튼으로 이동해 주세요.");
+            return "redirect:/classes";
+        }
         QnaDto qnaDto = new QnaDto();
         qnaDto.setQUid(loginMember.getUId());
         qnaDto.setCNum(cNum);
+        qnaDto.setCTitle(targetClass.getCTitle());
         qnaDto.setQCategory("기타");
         model.addAttribute("qnaDto", qnaDto);
-        populateQuestionFormOptions(model);
+        model.addAttribute("qnaCategories", QNA_CATEGORIES);
         return "qna/qnaForm";
     }
 
@@ -116,17 +123,25 @@ public class QnaController {
     public String create(@Valid QnaDto qnaDto,
                          BindingResult bindingResult,
                          @AuthenticationPrincipal(expression = "member") MemberDto loginMember,
+                         RedirectAttributes redirectAttributes,
                          Model model) {
-        boolean selectableClass = isSelectableClass(qnaDto.getCNum());
+        if (qnaDto.getCNum() == null) {
+            redirectAttributes.addFlashAttribute("message", "문의 작성은 클래스 상세 페이지의 [문의 작성] 버튼으로 이동해 주세요.");
+            return "redirect:/classes";
+        }
+        ClassDto targetClass = classService.getClass(qnaDto.getCNum());
+        if (targetClass == null || targetClass.getCStatus() == null || targetClass.getCStatus() >= 3) {
+            redirectAttributes.addFlashAttribute("message", "선택한 클래스를 찾을 수 없습니다.");
+            return "redirect:/classes";
+        }
         boolean supportedCategory = isSupportedCategory(qnaDto.getQCategory());
-
-        if (bindingResult.hasErrors() || !selectableClass || !supportedCategory) {
-            if (!selectableClass) {
-                model.addAttribute("message", "문의할 클래스를 선택해 주세요.");
-            } else if (!supportedCategory) {
+        if (bindingResult.hasErrors() || !supportedCategory) {
+            if (!supportedCategory) {
                 model.addAttribute("message", "문의 분류를 선택해 주세요.");
             }
-            populateQuestionFormOptions(model);
+            qnaDto.setCTitle(targetClass.getCTitle());
+            model.addAttribute("qnaDto", qnaDto);
+            model.addAttribute("qnaCategories", QNA_CATEGORIES);
             return "qna/qnaForm";
         }
         qnaDto.setQUid(loginMember.getUId());
@@ -208,19 +223,6 @@ public class QnaController {
 
     private boolean isSupportedCategory(String category) {
         return category != null && QNA_CATEGORIES.contains(category);
-    }
-
-    private boolean isSelectableClass(Integer cNum) {
-        if (cNum == null) {
-            return false;
-        }
-        ClassDto classDto = classService.getClass(cNum);
-        return classDto != null && classDto.getCStatus() != null && classDto.getCStatus() < 3;
-    }
-
-    private void populateQuestionFormOptions(Model model) {
-        model.addAttribute("classOptions", classService.getClasses("cTitle", null, null, false));
-        model.addAttribute("qnaCategories", QNA_CATEGORIES);
     }
 
     private String resolveDetailPath(int qNum, QnaDto target) {

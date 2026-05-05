@@ -1,5 +1,6 @@
 package com.example.onedayclass.review.controller;
 
+import com.example.onedayclass.clazz.dto.ClassDto;
 import com.example.onedayclass.clazz.service.ClassService;
 import com.example.onedayclass.member.dto.MemberDto;
 import com.example.onedayclass.review.dto.ReviewDto;
@@ -79,12 +80,18 @@ public class ReviewController {
     @GetMapping("/new")
     public String form(@RequestParam(required = false) Integer cNum,
                        @AuthenticationPrincipal(expression = "member") MemberDto loginMember,
+                       RedirectAttributes redirectAttributes,
                        Model model) {
+        ClassDto targetClass = cNum == null ? null : classService.getClass(cNum);
+        if (targetClass == null) {
+            redirectAttributes.addFlashAttribute("message", "후기 작성은 클래스 상세 페이지의 [후기 작성] 버튼으로 이동해 주세요.");
+            return "redirect:/classes";
+        }
         ReviewDto reviewDto = new ReviewDto();
         reviewDto.setRUid(loginMember.getUId());
         reviewDto.setCNum(cNum);
+        reviewDto.setCTitle(targetClass.getCTitle());
         model.addAttribute("reviewDto", reviewDto);
-        populateClassOptions(model);
         return "review/reviewForm";
     }
 
@@ -100,12 +107,20 @@ public class ReviewController {
     public String create(@Valid ReviewDto reviewDto,
                          BindingResult bindingResult,
                          @AuthenticationPrincipal(expression = "member") MemberDto loginMember,
+                         RedirectAttributes redirectAttributes,
                          Model model) {
-        if (bindingResult.hasErrors() || reviewDto.getCNum() == null) {
-            if (reviewDto.getCNum() == null) {
-                model.addAttribute("message", "후기를 작성할 클래스를 선택해 주세요.");
-            }
-            populateClassOptions(model);
+        if (reviewDto.getCNum() == null) {
+            redirectAttributes.addFlashAttribute("message", "후기 작성은 클래스 상세 페이지의 [후기 작성] 버튼으로 이동해 주세요.");
+            return "redirect:/classes";
+        }
+        ClassDto targetClass = classService.getClass(reviewDto.getCNum());
+        if (targetClass == null) {
+            redirectAttributes.addFlashAttribute("message", "선택한 클래스를 찾을 수 없습니다.");
+            return "redirect:/classes";
+        }
+        if (bindingResult.hasErrors()) {
+            reviewDto.setCTitle(targetClass.getCTitle());
+            model.addAttribute("reviewDto", reviewDto);
             return "review/reviewForm";
         }
         reviewDto.setRUid(loginMember.getUId());
@@ -155,9 +170,5 @@ public class ReviewController {
     private boolean isBoardManager(MemberDto loginMember) {
         return loginMember != null
                 && ("3".equals(loginMember.getULevel()) || "4".equals(loginMember.getULevel()));
-    }
-
-    private void populateClassOptions(Model model) {
-        model.addAttribute("classOptions", classService.getClasses("cTitle", null, null, false));
     }
 }

@@ -10,8 +10,8 @@
     <c:set var="toolbarTitle" value="문의 QnA" />
     <c:url var="toolbarAction" value="/qna" />
     <c:set var="toolbarScope" value="qna" />
-    <c:url var="toolbarButtonHref" value="/qna/new" />
-    <c:set var="toolbarButtonLabel" value="문의하기" />
+    <c:url var="toolbarButtonHref" value="/classes" />
+    <c:set var="toolbarButtonLabel" value="문의할 클래스 찾기" />
     <%@ include file="../include/list-toolbar.jspf" %>
 
     <table class="table board-table">
@@ -20,7 +20,6 @@
             <th>번호</th>
             <th>분류</th>
             <th>제목</th>
-            <th>클래스</th>
             <th>작성자</th>
             <th>상태</th>
             <th>작성일</th>
@@ -32,14 +31,6 @@
                 <td>${item.QNum}</td>
                 <td>${empty item.QCategory ? '기타' : item.QCategory}</td>
                 <td><a href="<c:url value='/qna/${item.QNum}' />">${item.QTitle}</a></td>
-                <td>
-                    <c:choose>
-                        <c:when test="${not empty item.CTitle}">
-                            <a href="<c:url value='/classes/${item.CNum}' />">${item.CTitle}</a>
-                        </c:when>
-                        <c:otherwise>-</c:otherwise>
-                    </c:choose>
-                </td>
                 <td>${item.QUid}</td>
                 <td>
                     <c:choose>
