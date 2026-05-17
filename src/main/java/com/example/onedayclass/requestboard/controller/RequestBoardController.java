@@ -175,6 +175,9 @@ public class RequestBoardController {
         }
 
         requestBoardService.deleteRequest(reqNum);
+        if (target.getReqDepth() != null && target.getReqDepth() == 0) {
+            return "redirect:/requests";
+        }
         return "redirect:" + resolveDetailPath(reqNum, target);
     }
 
