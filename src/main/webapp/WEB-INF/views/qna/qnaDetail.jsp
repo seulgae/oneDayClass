@@ -8,14 +8,17 @@
 <%@ include file="../include/header.jsp" %>
 <section class="panel detail">
     <div class="section-head">
-        <h2>${question.QTitle}</h2>
-        <a class="btn secondary" href="<c:url value='/qna' />">목록으로</a>
+        <div>
+            <span class="badge badge-indigo" style="margin-bottom:8px;"><i class="ri-question-answer-line"></i> ${empty question.QCategory ? '기타 문의' : question.QCategory}</span>
+            <h2>${question.QTitle}</h2>
+        </div>
+        <a class="btn secondary" href="<c:url value='/qna' />"><i class="ri-list-check"></i> 목록으로</a>
     </div>
-    <dl><dt>작성자</dt><dd>${question.QUid}</dd></dl>
-    <dl><dt>문의번호</dt><dd>${question.QRef}</dd></dl>
-    <dl><dt>분류</dt><dd>${empty question.QCategory ? '기타' : question.QCategory}</dd></dl>
+    <dl><dt><i class="ri-user-line"></i> 작성자</dt><dd>${question.QUid}</dd></dl>
+    <dl><dt><i class="ri-hashtag"></i> 문의번호</dt><dd>#${question.QRef}</dd></dl>
+    <dl><dt><i class="ri-price-tag-3-line"></i> 분류</dt><dd>${empty question.QCategory ? '기타' : question.QCategory}</dd></dl>
     <dl>
-        <dt>클래스</dt>
+        <dt><i class="ri-book-open-line"></i> 대상 클래스</dt>
         <dd>
             <c:choose>
                 <c:when test="${not empty question.CTitle}">
@@ -25,15 +28,15 @@
             </c:choose>
         </dd>
     </dl>
-    <dl><dt>작성일</dt><dd>${fn:substring(question.QRegDate, 0, 10)}</dd></dl>
-    <dl><dt>내용</dt><dd>${question.QContent}</dd></dl>
-    <div class="actions">
+    <dl><dt><i class="ri-calendar-line"></i> 작성일</dt><dd>${fn:substring(question.QRegDate, 0, 10)}</dd></dl>
+    <dl><dt><i class="ri-file-text-line"></i> 문의 내용</dt><dd><div class="content-body-box">${question.QContent}</div></dd></dl>
+    <div class="actions" style="margin-top:8px;">
         <c:if test="${loginMember != null}">
             <button type="button" class="btn secondary reply-toggle" data-target="qnaMainReplyForm" data-label-default="답변 작성" data-label-active="작성 중" aria-expanded="false">답변 작성</button>
         </c:if>
         <c:if test="${loginMember != null and (loginMember.UId eq question.QUid or loginMember.ULevel eq '3' or loginMember.ULevel eq '4')}">
             <form method="post" action="<c:url value='/qna/${question.QNum}/delete' />" class="inline-form" onsubmit="return confirm('정말 삭제하시겠습니까?');">
-                <button type="submit">문의 삭제</button>
+                <button type="submit" class="danger"><i class="ri-delete-bin-line"></i> 문의 삭제</button>
             </form>
         </c:if>
     </div>
@@ -41,8 +44,8 @@
 
 <section class="panel">
     <div class="section-head">
-        <h2>답변</h2>
-        <span class="muted">${replies.size()}개</span>
+        <h2><i class="ri-chat-3-line"></i> 답변 스레드</h2>
+        <span class="badge badge-indigo">${replies.size()}개</span>
     </div>
     <c:if test="${empty replies}">
         <p class="muted">아직 등록된 답변이 없습니다.</p>

@@ -1,0 +1,323 @@
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ taglib prefix="c" uri="jakarta.tags.core" %>
+<c:if test="${loginMember == null}">
+<div class="auth-modal-backdrop" id="authModalBackdrop" aria-hidden="true" hidden>
+    <div class="auth-modal" role="dialog" aria-modal="true" aria-labelledby="authModalTitle">
+        <div class="auth-modal-header">
+            <div class="auth-modal-tabs" role="tablist">
+                <button type="button" class="auth-tab is-active" data-auth-tab="login" role="tab" aria-selected="true">
+                    <i class="ri-login-box-line"></i> 로그인
+                </button>
+                <button type="button" class="auth-tab" data-auth-tab="join" role="tab" aria-selected="false">
+                    <i class="ri-user-add-line"></i> 회원가입
+                </button>
+            </div>
+            <button type="button" class="auth-modal-close" data-auth-close aria-label="팝업 닫기">
+                <i class="ri-close-line"></i>
+            </button>
+        </div>
+
+        <div class="auth-modal-body">
+            <!-- 1. 로그인 패널 -->
+            <div class="auth-pane is-active" id="authPaneLogin" data-auth-pane="login">
+                <div class="auth-pane-hero">
+                    <span class="brand-logo-mark"><i class="ri-sparkling-2-fill"></i></span>
+                    <div>
+                        <h3 id="authModalTitle">OnedayClass 로그인</h3>
+                        <p>계정에 로그인하고 취향에 맞는 클래스를 바로 신청하세요.</p>
+                    </div>
+                </div>
+
+                <c:if test="${param.error ne null}">
+                    <div class="flash" style="margin-bottom:16px;">
+                        <i class="ri-error-warning-line"></i>
+                        <span>아이디 또는 비밀번호가 올바르지 않습니다.</span>
+                    </div>
+                </c:if>
+
+                <form method="post" action="<c:url value='/members/login' />" class="auth-modal-form">
+                    <label class="field-block">
+                        <span class="field-label">아이디</span>
+                        <input type="text" id="modalLoginId" name="uId" placeholder="아이디 입력 (영문/숫자 4~20자)" required minlength="4" maxlength="20" pattern="^[a-zA-Z0-9]{4,20}$" title="아이디는 영문과 숫자 4~20자입니다." autocomplete="username">
+                    </label>
+                    <label class="field-block">
+                        <span class="field-label">비밀번호</span>
+                        <input type="password" name="uPw" placeholder="비밀번호 입력" required minlength="8" maxlength="20" title="비밀번호를 입력해 주세요." autocomplete="current-password">
+                    </label>
+                    <button type="submit" class="member-submit" style="width:100%; margin-top:4px;">
+                        <i class="ri-login-box-line"></i> 로그인하기
+                    </button>
+                </form>
+
+                <div class="auth-modal-switch">
+                    <span>아직 OnedayClass 회원이 아니신가요?</span>
+                    <button type="button" class="auth-switch-link" data-auth-open="join">회원가입으로 전환 <i class="ri-arrow-right-s-line"></i></button>
+                </div>
+            </div>
+
+            <!-- 2. 회원가입 패널 -->
+            <div class="auth-pane" id="authPaneJoin" data-auth-pane="join" hidden>
+                <div class="auth-pane-hero">
+                    <span class="brand-logo-mark" style="background:linear-gradient(135deg, var(--indigo) 0%, #6366F1 100%);"><i class="ri-user-smile-line"></i></span>
+                    <div>
+                        <h3>간편 회원가입</h3>
+                        <p>수강생 또는 강사로 가입하고 원데이 클래스를 시작해 보세요.</p>
+                    </div>
+                </div>
+
+                <form method="post" action="<c:url value='/members/join' />" id="modalJoinForm" class="auth-modal-form" novalidate>
+                    <div class="field-grid two-column-grid">
+                        <label class="field-block">
+                            <span class="field-label">아이디 <span class="required-mark">*</span></span>
+                            <input type="text" id="modalJoinId" name="uId" placeholder="영문/숫자 4~20자" required minlength="4" maxlength="20" pattern="^[a-zA-Z0-9]{4,20}$" title="아이디는 영문과 숫자 4~20자입니다." autocomplete="username">
+                        </label>
+                        <label class="field-block">
+                            <span class="field-label">이름 <span class="required-mark">*</span></span>
+                            <input type="text" name="uName" placeholder="한글/영문 2~20자" required minlength="2" maxlength="20" pattern="^[가-힣a-zA-Z]{2,20}$" title="이름은 한글 또는 영문 2~20자입니다." autocomplete="name">
+                        </label>
+                        <label class="field-block">
+                            <span class="field-label">비밀번호 <span class="required-mark">*</span></span>
+                            <input type="password" id="modalJoinPassword" name="uPw" placeholder="영문+숫자+특수문자 8~20자" required minlength="8" maxlength="20" pattern="^(?=.*[A-Za-z])(?=.*[0-9])(?=.*[!@#$%^&*()_+\-={}\[\]:;,.?/]).{8,20}$" title="비밀번호는 영문, 숫자, 특수문자를 포함한 8~20자입니다." autocomplete="new-password">
+                        </label>
+                        <label class="field-block">
+                            <span class="field-label">비밀번호 확인 <span class="required-mark">*</span></span>
+                            <input type="password" id="modalJoinPasswordConfirm" placeholder="비밀번호 재입력" required minlength="8" maxlength="20" autocomplete="new-password">
+                        </label>
+                    </div>
+
+                    <div class="field-block">
+                        <span class="field-label">회원 유형 선택 <span class="required-mark">*</span></span>
+                        <div class="role-choice">
+                            <label class="role-option">
+                                <input type="radio" name="uLevel" value="1" checked>
+                                <span class="role-card" style="padding:14px 16px;">
+                                    <strong style="font-size:15px;"><i class="ri-user-heart-line" style="color:var(--primary);"></i> 수강생</strong>
+                                    <em style="font-size:12.5px;">클래스 수강 및 결제 중심</em>
+                                </span>
+                            </label>
+                            <label class="role-option">
+                                <input type="radio" name="uLevel" value="2">
+                                <span class="role-card" style="padding:14px 16px;">
+                                    <strong style="font-size:15px;"><i class="ri-Presentation-line" style="color:var(--indigo);"></i> 선생님 (강사)</strong>
+                                    <em style="font-size:12.5px;">클래스 개설 및 운영 가능</em>
+                                </span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="field-grid two-column-grid teacher-only is-hidden" id="modalTeacherFields" hidden>
+                        <label class="field-block">
+                            <span class="field-label">강사 활동명 <span class="required-mark">*</span></span>
+                            <input type="text" id="modalSName" name="sName" minlength="2" maxlength="50" pattern="^[가-힣a-zA-Z0-9\s.,()_-]{2,50}$" placeholder="예: 원데이 클래스 by 민지">
+                        </label>
+                        <label class="field-block">
+                            <span class="field-label">강사 SNS 주소</span>
+                            <input type="url" id="modalSSns" name="sSns" maxlength="255" placeholder="https://">
+                        </label>
+                    </div>
+
+                    <div class="field-grid two-column-grid">
+                        <label class="field-block">
+                            <span class="field-label">휴대폰 번호</span>
+                            <input type="text" id="modalJoinPhone" name="uPhone" maxlength="13" pattern="^01[0-9]-?\d{3,4}-?\d{4}$" placeholder="010-1234-5678" autocomplete="tel">
+                        </label>
+                        <label class="field-block">
+                            <span class="field-label">이메일</span>
+                            <input type="email" name="uEmail" maxlength="100" placeholder="name@example.com" autocomplete="email">
+                        </label>
+                    </div>
+
+                    <div class="field-block">
+                        <span class="field-label">주소</span>
+                        <div class="zip-field">
+                            <input type="text" id="modalUZip" name="uZip" maxlength="10" placeholder="우편번호" readonly>
+                            <button type="button" class="btn secondary" onclick="openModalPostcode('modalUZip', 'modalUAddr1', 'modalUAddr2')"><i class="ri-map-pin-search-line"></i> 주소찾기</button>
+                        </div>
+                        <div class="field-grid address-grid">
+                            <input type="text" id="modalUAddr1" name="uAddr1" maxlength="120" placeholder="기본주소" readonly>
+                            <input type="text" id="modalUAddr2" name="uAddr2" maxlength="120" placeholder="상세주소 입력">
+                        </div>
+                    </div>
+
+                    <p class="form-error" id="modalJoinFormError" hidden></p>
+                    <button type="submit" class="member-submit" style="width:100%;">
+                        <i class="ri-check-line"></i> 가입 완료하기
+                    </button>
+                </form>
+
+                <div class="auth-modal-switch">
+                    <span>이미 계정이 있으신가요?</span>
+                    <button type="button" class="auth-switch-link" data-auth-open="login">로그인으로 전환 <i class="ri-arrow-right-s-line"></i></button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+<script>
+    function openModalPostcode(zipId, addr1Id, addr2Id) {
+        new daum.Postcode({
+            oncomplete: function(data) {
+                document.getElementById(zipId).value = data.zonecode;
+                document.getElementById(addr1Id).value = data.roadAddress || data.jibunAddress;
+                document.getElementById(addr2Id).focus();
+            }
+        }).open();
+    }
+
+    (function() {
+        var backdrop = document.getElementById('authModalBackdrop');
+        if (!backdrop) {
+            return;
+        }
+
+        var tabs = backdrop.querySelectorAll('[data-auth-tab]');
+        var panes = backdrop.querySelectorAll('[data-auth-pane]');
+
+        function switchAuthTab(mode) {
+            tabs.forEach(function(tab) {
+                var active = tab.getAttribute('data-auth-tab') === mode;
+                tab.classList.toggle('is-active', active);
+                tab.setAttribute('aria-selected', active ? 'true' : 'false');
+            });
+            panes.forEach(function(pane) {
+                var active = pane.getAttribute('data-auth-pane') === mode;
+                pane.classList.toggle('is-active', active);
+                pane.hidden = !active;
+            });
+
+            setTimeout(function() {
+                var targetInput = mode === 'join'
+                    ? document.getElementById('modalJoinId')
+                    : document.getElementById('modalLoginId');
+                if (targetInput) {
+                    targetInput.focus();
+                }
+            }, 60);
+        }
+
+        function openAuthModal(mode) {
+            backdrop.hidden = false;
+            backdrop.setAttribute('aria-hidden', 'false');
+            document.body.classList.add('is-modal-open');
+            switchAuthTab(mode || 'login');
+        }
+
+        function closeAuthModal() {
+            backdrop.hidden = true;
+            backdrop.setAttribute('aria-hidden', 'true');
+            document.body.classList.remove('is-modal-open');
+        }
+
+        window.openAuthModal = openAuthModal;
+        window.closeAuthModal = closeAuthModal;
+
+        document.addEventListener('click', function(event) {
+            var trigger = event.target.closest('[data-auth-open]');
+            if (trigger) {
+                event.preventDefault();
+                openAuthModal(trigger.getAttribute('data-auth-open'));
+                return;
+            }
+
+            var tabBtn = event.target.closest('[data-auth-tab]');
+            if (tabBtn) {
+                switchAuthTab(tabBtn.getAttribute('data-auth-tab'));
+                return;
+            }
+
+            if (event.target.closest('[data-auth-close]') || event.target === backdrop) {
+                closeAuthModal();
+            }
+        });
+
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape' && !backdrop.hidden) {
+                closeAuthModal();
+            }
+        });
+
+        // 강사 선택 시 추가 필드 토글
+        var modalForm = document.getElementById('modalJoinForm');
+        if (modalForm) {
+            var roleRadios = modalForm.querySelectorAll('input[name="uLevel"]');
+            var teacherFields = document.getElementById('modalTeacherFields');
+            var sName = document.getElementById('modalSName');
+            var sSns = document.getElementById('modalSSns');
+
+            function syncModalTeacherFields() {
+                var checked = modalForm.querySelector('input[name="uLevel"]:checked');
+                var isTeacher = checked && checked.value === '2';
+                teacherFields.hidden = !isTeacher;
+                teacherFields.classList.toggle('is-hidden', !isTeacher);
+                sName.toggleAttribute('required', isTeacher);
+                if (!isTeacher) {
+                    sName.value = '';
+                    sSns.value = '';
+                }
+            }
+
+            roleRadios.forEach(function(radio) {
+                radio.addEventListener('change', syncModalTeacherFields);
+            });
+            syncModalTeacherFields();
+
+            // 비밀번호 확인 검증
+            var pw = document.getElementById('modalJoinPassword');
+            var pwConfirm = document.getElementById('modalJoinPasswordConfirm');
+            var errBox = document.getElementById('modalJoinFormError');
+
+            function checkPwMatch() {
+                var mismatch = pwConfirm.value.length > 0 && pw.value !== pwConfirm.value;
+                pwConfirm.setCustomValidity(mismatch ? '비밀번호와 비밀번호 확인이 일치하지 않습니다.' : '');
+                errBox.hidden = true;
+                errBox.textContent = '';
+            }
+
+            pw.addEventListener('input', checkPwMatch);
+            pwConfirm.addEventListener('input', checkPwMatch);
+
+            modalForm.addEventListener('submit', function(e) {
+                checkPwMatch();
+                if (!modalForm.checkValidity()) {
+                    e.preventDefault();
+                    if (pwConfirm.validationMessage) {
+                        errBox.textContent = pwConfirm.validationMessage;
+                        errBox.hidden = false;
+                    }
+                    modalForm.reportValidity();
+                }
+            });
+
+            // 휴대폰 번호 자동 하이픈
+            var phoneInput = document.getElementById('modalJoinPhone');
+            if (phoneInput) {
+                phoneInput.addEventListener('input', function() {
+                    var digits = phoneInput.value.replace(/\D/g, '').slice(0, 11);
+                    if (digits.length >= 11) {
+                        phoneInput.value = digits.slice(0, 3) + '-' + digits.slice(3, 7) + '-' + digits.slice(7);
+                    } else if (digits.length >= 8) {
+                        phoneInput.value = digits.slice(0, 3) + '-' + digits.slice(3, 6) + '-' + digits.slice(6);
+                    } else if (digits.length >= 4) {
+                        phoneInput.value = digits.slice(0, 3) + '-' + digits.slice(3);
+                    } else {
+                        phoneInput.value = digits;
+                    }
+                });
+            }
+        }
+
+        // URL 파라미터 (?auth=login, ?auth=join, ?error) 감지 시 자동 모달 오픈 (단독 로그인/회원가입 페이지가 아닐 때)
+        var path = window.location.pathname;
+        var isStandaloneAuthPage = path.indexOf('/members/login') !== -1 || path.indexOf('/members/join') !== -1;
+        if (!isStandaloneAuthPage) {
+            var params = new URLSearchParams(window.location.search);
+            if (params.get('auth') === 'join') {
+                openAuthModal('join');
+            } else if (params.get('auth') === 'login' || params.has('error')) {
+                openAuthModal('login');
+            }
+        }
+    })();
+</script>
+</c:if>

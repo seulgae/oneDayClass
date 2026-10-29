@@ -88,6 +88,6 @@ public class SecurityConfig {
 
     @Bean
     public AuthenticationFailureHandler authenticationFailureHandler() {
-        return (request, response, exception) -> response.sendRedirect("/members/login?error");
+        return (request, response, exception) -> response.sendRedirect("/?auth=login&error=1");
     }
 }

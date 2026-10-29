@@ -59,11 +59,11 @@ public class MemberController {
         }
         if (memberService.checkId(memberDto.getUId())) {
             redirectAttributes.addFlashAttribute("message", "이미 사용 중인 아이디입니다.");
-            return "redirect:/members/join";
+            return "redirect:/?auth=join";
         }
         memberService.register(memberDto);
-        redirectAttributes.addFlashAttribute("message", "회원가입이 완료되었습니다.");
-        return "redirect:/members/login";
+        redirectAttributes.addFlashAttribute("message", "회원가입이 완료되었습니다. 로그인해 주세요.");
+        return "redirect:/?auth=login";
     }
 
     @GetMapping("/mypage")

@@ -6,28 +6,31 @@
 <%@ include file="../include/header.jsp" %>
 <section class="panel">
     <div class="section-head">
-        <h2>공지사항</h2>
+        <div>
+            <h2><i class="ri-megaphone-line"></i> 공지사항</h2>
+            <p class="section-subtitle">플랫폼 운영 안내와 새로운 소식을 확인하세요.</p>
+        </div>
         <c:if test="${loginMember != null and (loginMember.ULevel eq '3' or loginMember.ULevel eq '4')}">
-            <a class="btn" href="<c:url value='/notices/new' />">공지 작성</a>
+            <a class="btn" href="<c:url value='/notices/new' />"><i class="ri-add-circle-line"></i> 공지 작성</a>
         </c:if>
     </div>
 
     <table class="table board-table">
         <thead>
         <tr>
-            <th>번호</th>
+            <th style="width:90px;">번호</th>
             <th>제목</th>
-            <th>작성자</th>
-            <th>작성일</th>
+            <th style="width:140px;">작성자</th>
+            <th style="width:130px;">작성일</th>
         </tr>
         </thead>
         <tbody>
         <c:forEach var="item" items="${noticePage.items}">
             <tr>
-                <td>${item.QNum}</td>
+                <td><span class="badge badge-primary">공지 #${item.QNum}</span></td>
                 <td><a href="<c:url value='/notices/${item.QNum}' />">${item.QTitle}</a></td>
                 <td>${item.QUid}</td>
-                <td>${fn:substring(item.QRegDate, 0, 10)}</td>
+                <td class="muted">${fn:substring(item.QRegDate, 0, 10)}</td>
             </tr>
         </c:forEach>
         </tbody>
@@ -35,15 +38,14 @@
 
     <div class="pagination">
         <c:if test="${noticePage.hasPrevious}">
-            <a href="<c:url value='/notices?page=${noticePage.startPage - 1}' />">이전</a>
+            <a href="<c:url value='/notices?page=${noticePage.startPage - 1}' />"><i class="ri-arrow-left-s-line"></i> 이전</a>
         </c:if>
         <c:forEach begin="${noticePage.startPage}" end="${noticePage.endPage}" var="pageNum">
             <a class="${pageNum == noticePage.currentPage ? 'active' : ''}" href="<c:url value='/notices?page=${pageNum}' />">${pageNum}</a>
         </c:forEach>
         <c:if test="${noticePage.hasNext}">
-            <a href="<c:url value='/notices?page=${noticePage.endPage + 1}' />">다음</a>
+            <a href="<c:url value='/notices?page=${noticePage.endPage + 1}' />">다음 <i class="ri-arrow-right-s-line"></i></a>
         </c:if>
     </div>
 </section>
 <%@ include file="../include/footer.jspf" %>
-

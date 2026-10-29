@@ -14,31 +14,31 @@
     <c:set var="toolbarButtonLabel" value="요청 올리기" />
     <%@ include file="../include/list-toolbar.jspf" %>
 
-    <p class="board-guide">필요한 기능이나 개선 아이디어가 있다면 편하게 올려 주세요. 운영자가 확인 후 답변 또는 반영 안내를 드립니다.</p>
+    <p class="board-guide"><i class="ri-lightbulb-flash-line" style="font-size:18px;"></i> 배우고 싶은 원데이 클래스나 플랫폼 개선 아이디어가 있다면 편하게 올려 주세요. 강사님과 운영자가 확인 후 답변을 드립니다.</p>
 
     <table class="table board-table">
         <thead>
         <tr>
-            <th>번호</th>
+            <th style="width:80px;">번호</th>
             <th>제목</th>
-            <th>작성자</th>
-            <th>상태</th>
-            <th>작성일</th>
+            <th style="width:140px;">작성자</th>
+            <th style="width:110px;">상태</th>
+            <th style="width:130px;">작성일</th>
         </tr>
         </thead>
         <tbody>
         <c:forEach var="item" items="${requestPage.items}">
             <tr>
-                <td>${item.reqNum}</td>
+                <td class="muted">#${item.reqNum}</td>
                 <td><a href="<c:url value='/requests/${item.reqNum}' />">${item.reqTitle}</a></td>
                 <td>${item.reqUid}</td>
                 <td>
                     <c:choose>
-                        <c:when test="${item.reqStatus eq 3}">삭제</c:when>
-                        <c:otherwise>접수</c:otherwise>
+                        <c:when test="${item.reqStatus eq 3}"><span class="status-badge is-danger">삭제</span></c:when>
+                        <c:otherwise><span class="status-badge is-ok">접수</span></c:otherwise>
                     </c:choose>
                 </td>
-                <td>${fn:substring(item.reqRegDate, 0, 10)}</td>
+                <td class="muted">${fn:substring(item.reqRegDate, 0, 10)}</td>
             </tr>
         </c:forEach>
         </tbody>
@@ -46,15 +46,14 @@
 
     <div class="pagination">
         <c:if test="${requestPage.hasPrevious}">
-            <a href="<c:url value='/requests?page=${requestPage.startPage - 1}&keyField=${selectedKeyField}&keyword=${keyword}' />">이전</a>
+            <a href="<c:url value='/requests?page=${requestPage.startPage - 1}&keyField=${selectedKeyField}&keyword=${keyword}' />"><i class="ri-arrow-left-s-line"></i> 이전</a>
         </c:if>
         <c:forEach begin="${requestPage.startPage}" end="${requestPage.endPage}" var="pageNum">
             <a class="${pageNum == requestPage.currentPage ? 'active' : ''}" href="<c:url value='/requests?page=${pageNum}&keyField=${selectedKeyField}&keyword=${keyword}' />">${pageNum}</a>
         </c:forEach>
         <c:if test="${requestPage.hasNext}">
-            <a href="<c:url value='/requests?page=${requestPage.endPage + 1}&keyField=${selectedKeyField}&keyword=${keyword}' />">다음</a>
+            <a href="<c:url value='/requests?page=${requestPage.endPage + 1}&keyField=${selectedKeyField}&keyword=${keyword}' />">다음 <i class="ri-arrow-right-s-line"></i></a>
         </c:if>
     </div>
 </section>
 <%@ include file="../include/footer.jspf" %>
-

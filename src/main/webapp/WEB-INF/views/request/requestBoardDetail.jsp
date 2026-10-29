@@ -8,20 +8,23 @@
 <%@ include file="../include/header.jsp" %>
 <section class="panel detail">
     <div class="section-head">
-        <h2>${requestItem.reqTitle}</h2>
-        <a class="btn secondary" href="<c:url value='/requests' />">목록으로</a>
+        <div>
+            <span class="badge badge-indigo" style="margin-bottom:8px;"><i class="ri-lightbulb-flash-line"></i> 클래스 &amp; 기능 요청</span>
+            <h2>${requestItem.reqTitle}</h2>
+        </div>
+        <a class="btn secondary" href="<c:url value='/requests' />"><i class="ri-list-check"></i> 목록으로</a>
     </div>
-    <dl><dt>작성자</dt><dd>${requestItem.reqUid}</dd></dl>
-    <dl><dt>요청번호</dt><dd>${requestItem.reqRef}</dd></dl>
-    <dl><dt>작성일</dt><dd>${fn:substring(requestItem.reqRegDate, 0, 10)}</dd></dl>
-    <dl><dt>내용</dt><dd>${requestItem.reqContent}</dd></dl>
-    <div class="actions">
+    <dl><dt><i class="ri-user-line"></i> 작성자</dt><dd>${requestItem.reqUid}</dd></dl>
+    <dl><dt><i class="ri-hashtag"></i> 요청번호</dt><dd>#${requestItem.reqRef}</dd></dl>
+    <dl><dt><i class="ri-calendar-line"></i> 작성일</dt><dd>${fn:substring(requestItem.reqRegDate, 0, 10)}</dd></dl>
+    <dl><dt><i class="ri-file-text-line"></i> 내용</dt><dd><div class="content-body-box">${requestItem.reqContent}</div></dd></dl>
+    <div class="actions" style="margin-top:8px;">
         <c:if test="${loginMember != null}">
             <button type="button" class="btn secondary reply-toggle" data-target="requestMainReplyForm" data-label-default="답변 작성" data-label-active="작성 중" aria-expanded="false">답변 작성</button>
         </c:if>
         <c:if test="${loginMember != null and (loginMember.UId eq requestItem.reqUid or loginMember.ULevel eq '3' or loginMember.ULevel eq '4')}">
-            <form method="post" action="<c:url value='/requests/${requestItem.reqNum}/delete' />" class="inline-form">
-                <button type="submit">요청 삭제</button>
+            <form method="post" action="<c:url value='/requests/${requestItem.reqNum}/delete' />" class="inline-form" onsubmit="return confirm('이 요청을 삭제하시겠습니까?');">
+                <button type="submit" class="danger"><i class="ri-delete-bin-line"></i> 요청 삭제</button>
             </form>
         </c:if>
     </div>
@@ -29,8 +32,8 @@
 
 <section class="panel">
     <div class="section-head">
-        <h2>답변</h2>
-        <span class="muted">${replies.size()}개</span>
+        <h2><i class="ri-chat-3-line"></i> 답변 스레드</h2>
+        <span class="badge badge-indigo">${replies.size()}개</span>
     </div>
     <c:if test="${empty replies}">
         <p class="muted">아직 등록된 답변이 없습니다.</p>
@@ -149,4 +152,3 @@
     })();
 </script>
 <%@ include file="../include/footer.jspf" %>
-

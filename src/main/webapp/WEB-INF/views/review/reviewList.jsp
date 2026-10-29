@@ -7,7 +7,7 @@
 <%@ taglib prefix="fn" uri="jakarta.tags.functions" %>
 <%@ include file="../include/header.jsp" %>
 <section class="panel">
-    <c:set var="toolbarTitle" value="사용자 후기" />
+    <c:set var="toolbarTitle" value="수강생 후기" />
     <c:url var="toolbarAction" value="/reviews" />
     <c:set var="toolbarScope" value="review" />
     <c:choose>
@@ -24,30 +24,30 @@
     <table class="table board-table">
         <thead>
         <tr>
-            <th>번호</th>
-            <th>제목</th>
-            <th>클래스</th>
-            <th>작성자</th>
-            <th>조회/추천</th>
-            <th>작성일</th>
+            <th style="width:80px;">번호</th>
+            <th>후기 제목</th>
+            <th>수강 클래스</th>
+            <th style="width:120px;">작성자</th>
+            <th style="width:160px;">조회 / 추천</th>
+            <th style="width:120px;">작성일</th>
         </tr>
         </thead>
         <tbody>
         <c:forEach var="item" items="${reviewPage.items}">
             <tr>
-                <td>${item.RNum}</td>
+                <td class="muted">#${item.RNum}</td>
                 <td><a href="<c:url value='/reviews/${item.RNum}' />">${item.RTitle}</a></td>
                 <td>
                     <c:choose>
                         <c:when test="${not empty item.CTitle}">
-                            <a href="<c:url value='/classes/${item.CNum}' />">${item.CTitle}</a>
+                            <a href="<c:url value='/classes/${item.CNum}' />" class="badge badge-indigo"><i class="ri-book-open-line"></i> ${item.CTitle}</a>
                         </c:when>
                         <c:otherwise>-</c:otherwise>
                     </c:choose>
                 </td>
                 <td>${item.RUid}</td>
-                <td>조회 ${item.RCnt} / 좋아요 ${item.RLikes}</td>
-                <td>${fn:substring(item.RRegDate, 0, 10)}</td>
+                <td><span class="muted"><i class="ri-eye-line"></i> ${item.RCnt}</span> &middot; <span style="color:var(--primary); font-weight:600;"><i class="ri-heart-3-fill"></i> ${item.RLikes}</span></td>
+                <td class="muted">${fn:substring(item.RRegDate, 0, 10)}</td>
             </tr>
         </c:forEach>
         </tbody>
@@ -55,15 +55,14 @@
 
     <div class="pagination">
         <c:if test="${reviewPage.hasPrevious}">
-            <a href="<c:url value='/reviews?page=${reviewPage.startPage - 1}&keyField=${selectedKeyField}&keyword=${keyword}' />">이전</a>
+            <a href="<c:url value='/reviews?page=${reviewPage.startPage - 1}&keyField=${selectedKeyField}&keyword=${keyword}' />"><i class="ri-arrow-left-s-line"></i> 이전</a>
         </c:if>
         <c:forEach begin="${reviewPage.startPage}" end="${reviewPage.endPage}" var="pageNum">
             <a class="${pageNum == reviewPage.currentPage ? 'active' : ''}" href="<c:url value='/reviews?page=${pageNum}&keyField=${selectedKeyField}&keyword=${keyword}' />">${pageNum}</a>
         </c:forEach>
         <c:if test="${reviewPage.hasNext}">
-            <a href="<c:url value='/reviews?page=${reviewPage.endPage + 1}&keyField=${selectedKeyField}&keyword=${keyword}' />">다음</a>
+            <a href="<c:url value='/reviews?page=${reviewPage.endPage + 1}&keyField=${selectedKeyField}&keyword=${keyword}' />">다음 <i class="ri-arrow-right-s-line"></i></a>
         </c:if>
     </div>
 </section>
 <%@ include file="../include/footer.jspf" %>
-
